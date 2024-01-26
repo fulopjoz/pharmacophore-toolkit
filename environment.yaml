@@ -1,3 +1,5 @@
+# Add environments (can copy some from the requirements.txt)
+
 name: molecular-toolkit
 channels:
   - conda-forge
@@ -7,3 +9,5 @@ dependencies:
 
   - pip:
       - python>=3.9
+      - streamlit
+      - streamlit-activities-menu
