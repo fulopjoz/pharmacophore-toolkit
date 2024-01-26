@@ -1,0 +1,11 @@
+# Services for multipage Streamlit app
+-
+  name: 'Welcome'
+  description: 'Home Page'
+  url: "Welcome.py"
+
+-
+  name: 'Protein'
+  description: 'Protein'
+  url: "Protein.py"
+
