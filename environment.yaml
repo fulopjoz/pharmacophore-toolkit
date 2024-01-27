@@ -13,3 +13,5 @@ dependencies:
       - streamlit-activities-menu
       - streamlit-extras
       - streamlit-ketcher
+      - stmol==0.0.9
+      - ipython_genutils # For stmol
