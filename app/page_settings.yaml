@@ -2,10 +2,20 @@
 -
   name: 'Welcome'
   description: 'Home Page'
-  url: "Welcome.py"
+  url: 'Home.py'
+
+-
+  name: 'Molecule Sketcher'
+  description: 'Draw Molecules'
+  url: 'Molecule-Sketcher.py'
 
 -
   name: 'Protein'
   description: 'Protein'
-  url: "Protein.py"
+  url: 'Protein.py'
+
+-
+  name: 'Changelog'
+  description: 'Changelog'
+  url: 'Changelog.py'
 
