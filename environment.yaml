@@ -11,3 +11,5 @@ dependencies:
       - python>=3.9
       - streamlit
       - streamlit-activities-menu
+      - streamlit-extras
+      - streamlit-ketcher
