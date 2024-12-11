@@ -1,17 +1,10 @@
-# Add environments (can copy some from the requirements.txt)
-
 name: molecular-toolkit
 channels:
   - conda-forge
   - defaults
 dependencies:
-  - python ==3.9
-
+  - python
+  - datamol
+  - pip
   - pip:
-      - python>=3.9
-      - streamlit
-      - streamlit-activities-menu
-      - streamlit-extras
-      - streamlit-ketcher
-      - stmol==0.0.9
-      - ipython_genutils # For stmol
+      - notebook
