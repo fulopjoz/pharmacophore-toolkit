@@ -1,4 +1,4 @@
-name: molecular-toolkit
+name: pharmacophore-model
 channels:
   - conda-forge
   - defaults
