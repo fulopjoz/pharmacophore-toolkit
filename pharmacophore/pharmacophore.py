@@ -6,19 +6,24 @@ from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem, RDConfig
 
+class Pharmacophore:
+    def __init__(self):
+        self.sdf = None
 
-def read_sdf(sdf_file: str = None, verbose: bool = True):
-    supplier = Chem.SDMolSupplier(sdf_file)
-    # extract ROMols into a list
-    mol_list = []
-    if verbose:
-        for mol in tqdm(supplier, desc="Reading Molecules"):
-            mol_list.append(mol)
-    else:
-        for mol in supplier:
-            mol_list.append(mol)
+    def read_sdf(self, sdf_file: str = None, verbose: bool = True):
+        supplier = Chem.SDMolSupplier(sdf_file)
+        # extract ROMols into a list
+        mol_list = []
+        if verbose:
+            for mol in tqdm(supplier, desc="Reading Molecules"):
+                mol_list.append(mol)
+        else:
+            for mol in supplier:
+                mol_list.append(mol)
 
-    return mol_list
+        self.sdf = mol_list
+
+        return mol_list
 
 
 def feature_factory():
@@ -89,9 +94,7 @@ def output_features(savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sph
                 pos = feat.GetPos()
                 f.write(f"pseudoatom LumpedHydrophobe_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=green\n"
                         )
-        aromatic_ring_5_center = [0.0, 0.0, 0.0]
 
-        f.write(f"pseudoatom AromaticRing_5, pos={aromatic_ring_5_center}, color=purple\n")
         f.write("show spheres, Acceptor_*\n")
         f.write("show spheres, Donor_*\n")
         f.write("show spheres, Hydrophobe_*\n")
