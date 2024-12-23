@@ -67,7 +67,7 @@ class Pharmacophore:
                     feature_list.append(feat[0])
                 feature_frequency = collections.Counter(feature_list)
                 molecule_feature_frequencies.append(feature_frequency)
-                feature_list = [] # reset list to avoid double counting
+                feature_list = []  # reset list to avoid double counting
 
         # # for troubleshooting
         # print(molecule_feature_frequencies)
@@ -105,6 +105,54 @@ class Pharmacophore:
             pharmacophore = self._calc_pharmacophore(mol)
 
         return pharmacophore
+
+    def output_features(self, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
+        """
+
+        :param savepath: str = None
+            Must be a file in .pml format.
+        :param mol: rdkit.Chem.rdchem.Mol = None
+            Input RDKit Mol. 3D conformational form must be generated. Or input must be RDKit Mol read from an sdf file.
+        :param sphere_size: float = 0.5
+            Set size of spheres.
+        :return:
+        """
+        with open(savepath, "w") as f:
+            feat_factory = feature_factory
+            features = feat_factory.GetFeaturesForMol(mol)
+            print(f"Number of features: {len(features)}")
+
+            # to give sequential numbering for each group:
+            feature_counts = {"Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0}
+
+            # get features
+            for feat in features:
+                type = feat.GetFamily()
+                if type in feature_counts:  # Check if the type is in the dictionary
+                    feature_counts[type] += 1  # give count for feat
+                    count = feature_counts[type]  # Get the current count
+                    pos = feat.GetPos()  # get feat position
+
+                    # Write to file with numbering
+                    color = {
+                        "Acceptor": "red",
+                        "Donor": "marine",
+                        "Hydrophobe": "green",
+                        "Aromatic": "pink",
+                        "LumpedHydrophobe": "green"
+                    }[type]
+
+                    f.write(
+                        f"pseudoatom {type}_{count}, pos=[{pos.x}, {pos.y}, {pos.z}], color={color}\n"
+                    )
+
+            f.write("show spheres, Acceptor_*\n")
+            f.write("show spheres, Donor_*\n")
+            f.write("show spheres, Hydrophobe_*\n")
+            f.write("show spheres, Aromatic_*\n")
+            f.write("show spheres, LumpedHydrophobe_*\n")
+            f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
+        print(f"Feature visualization script written to {savepath}.")
 
     def _calc_pharmacophore(self, mol: Chem.Mol = None):
         """
@@ -167,54 +215,6 @@ class Pharmacophore:
             pharmacophore_item = [fam, atom_indices, pos[0], pos[1], pos[2]]
             pharmacophore.append(pharmacophore_item)
         return pharmacophore
-
-    def output_features(self, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
-        """
-
-        :param savepath: str = None
-            Must be a file in .pml format.
-        :param mol: rdkit.Chem.rdchem.Mol = None
-            Input RDKit Mol. 3D conformational form must be generated. Or input must be RDKit Mol read from an sdf file.
-        :param sphere_size: float = 0.5
-            Set size of spheres.
-        :return:
-        """
-        with open(savepath, "w") as f:
-            feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
-            features = feature_factory.GetFeaturesForMol(mol)
-            print(f"Number of features: {len(features)}")
-            for i, feat in enumerate(features):
-                type = feat.GetFamily()
-                if type == "Acceptor":
-                    pos = feat.GetPos()  # Feature position
-                    f.write(
-                        f"pseudoatom Acceptor_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=red\n"
-                    )
-                if type == "Donor":
-                    pos = feat.GetPos()  # Feature position
-                    f.write(
-                        f"pseudoatom Donor_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=marine\n"
-                    )
-                if type == "Hydrophobe":
-                    pos = feat.GetPos()
-                    f.write(f"pseudoatom Hydrophobe_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=green\n"
-                            )
-                if type == 'Aromatic':
-                    pos = feat.GetPos()
-                    f.write(f"pseudoatom Aromatic_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=pink\n"
-                            )
-                if type == 'LumpedHydrophobe':
-                    pos = feat.GetPos()
-                    f.write(f"pseudoatom LumpedHydrophobe_{i}, pos=[{pos.x}, {pos.y}, {pos.z}], color=green\n"
-                            )
-
-            f.write("show spheres, Acceptor_*\n")
-            f.write("show spheres, Donor_*\n")
-            f.write("show spheres, Hydrophobe_*\n")
-            f.write("show spheres, Aromatic_*\n")
-            f.write("show spheres, LumpedHydrophobe_*\n")
-            f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
-        print(f"Feature visualization script written to {savepath}.")
 
 
 def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None):
