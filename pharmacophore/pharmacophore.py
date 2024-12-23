@@ -1,11 +1,13 @@
 import os
 import collections
 import pandas as pd
+import numpy as np
 import rdkit
 from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem, RDConfig
-from pharmacophore.constants import feature_factory
+from pharmacophore.constants import feature_factory, FEATURES
+
 
 class Pharmacophore:
     def __init__(self):
@@ -26,7 +28,6 @@ class Pharmacophore:
 
         return mol_list
 
-
     def default_features(self):
         """
         A tuple containing default features from RDKit
@@ -35,7 +36,6 @@ class Pharmacophore:
         # feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
         phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
         return phrase
-
 
     def to_df(self, mols: list = None, mol_name: list = None, features: str = 'rdkit'):
         """
@@ -51,10 +51,21 @@ class Pharmacophore:
         # use default features
         if features == 'rdkit':
             feat_factory = feature_factory
-        for mol in mols:
-            features = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
-            feature_frequency = collections.Counter(features)
-            molecule_feature_frequencies.append(feature_frequency)
+            # get default features, count frequency, and append into list
+            for mol in mols:
+                feats = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
+                feature_frequency = collections.Counter(feats)
+                molecule_feature_frequencies.append(feature_frequency)
+        elif features == 'pharmacophore':
+            feat_factory = FEATURES
+            for mol in mols:
+                feats = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
+                feature_frequency = collections.Counter(feats)
+                molecule_feature_frequencies.append(feature_frequency)
+
+
+        print(molecule_feature_frequencies)
+        # print(len(molecule_feature_frequencies))
 
         feature_frequencies_df = (
             pd.DataFrame(
@@ -82,24 +93,75 @@ class Pharmacophore:
         """
         global pharmacophore
 
-        # build feature factory
+        # calculate pharmacophore by rdkit or pharmacophore dict
         if features == 'rdkit':
-            feat_factory = feature_factory
-
-            # get list of features for molecule
-            features = feat_factory.GetFeaturesForMol(mol)
-
-            # store pharmacophore features
-            pharmacophore = []
-            for feature in features:
-                fam = feature.GetFamily()
-                pos = feature.GetPos()
-                atom_indices = feature.GetAtomIds()
-                p = [fam, atom_indices, pos[0], pos[1], pos[2]]
-                pharmacophore.append(p)
+            pharmacophore = self._calc_rdkit(mol)
+        elif features == 'pharmacophore':
+            pharmacophore = self._calc_pharmacophore(mol)
 
         return pharmacophore
 
+    def _calc_pharmacophore(self, mol: Chem.Mol = None):
+        """
+        Calculate pharmacophore features from a molecule using dict from constants
+        :param mol: Chem.Mol
+            Input molecule in ROMol format.
+        :return:
+            List of pharmacophore type and centroid coordinates.
+        """
+        global pharmacophore
+        # read in custom feature dict
+        constant_feats = FEATURES
+        matches = {}
+
+        # Identify matches to feature dict
+        for key, value in constant_feats.items():
+            try:
+                query = [Chem.MolFromSmarts(smarts) for smarts in value]
+                matches[key] = find_matches(mol, query)
+            except:
+                pass
+        # remove duplicate SMARTS matches
+        cleaned_matches = {}
+        for key, value in matches.items():
+            unique_lists = []
+            for lst in value:
+                if lst not in unique_lists:
+                    unique_lists.append(lst)
+            cleaned_matches[key] = unique_lists
+        # create list containing pharmacophore and centroid coordinates
+        pharmacophore = []
+        for key, value in cleaned_matches.items():
+            for match in value:
+                p = [key, match[0], match[1]]
+                pharmacophore.append(p)
+        return pharmacophore
+
+    def _calc_rdkit(self, mol: Chem.Mol = None):
+        """
+        Calculate pharmacophore features from a molecule using default RDKit methods.
+        :param mol: Chem.Mol
+            input molecule in ROMol format.
+        :return:
+            List of pharmacophore type and centroid coordinates.
+        """
+        global pharmacophore
+
+        # load default RDKit feature factory file
+        feat_factory = feature_factory
+
+        # get list of features for molecule
+        features = feat_factory.GetFeaturesForMol(mol)
+
+        # store pharmacophore features as list
+        pharmacophore = []
+        for feature in features:
+            fam = feature.GetFamily()
+            pos = feature.GetPos()
+            atom_indices = feature.GetAtomIds()
+            pharmacophore_item = [fam, atom_indices, pos[0], pos[1], pos[2]]
+            pharmacophore.append(pharmacophore_item)
+        return pharmacophore
 
     def output_features(self, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
         """
@@ -148,3 +210,24 @@ class Pharmacophore:
             f.write("show spheres, LumpedHydrophobe_*\n")
             f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
         print(f"Feature visualization script written to {savepath}.")
+
+
+def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None):
+    matches = []
+    for pattern in patterns:
+        # Get all matches for that pattern
+        matched = mol.GetSubstructMatches(pattern)
+        # get centroid and coordinates for each match
+        for m in matched:
+            centroid = _compute_match_centroid(mol, m)
+            matches.append([m, centroid])
+    return matches
+
+
+def _compute_match_centroid(mol, matched_pattern):
+    conf = mol.GetConformer()
+    positions = [conf.GetAtomPosition(i) for i in matched_pattern]
+    center = np.mean(positions, axis=0)
+    # convert result to float
+    center = center.tolist()
+    return tuple(center)
