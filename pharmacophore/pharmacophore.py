@@ -56,16 +56,21 @@ class Pharmacophore:
                 feats = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
                 feature_frequency = collections.Counter(feats)
                 molecule_feature_frequencies.append(feature_frequency)
+
+        # use custom features
         elif features == 'pharmacophore':
-            feat_factory = FEATURES
+            feature_list = []
+            # get features from constant file, count pharmacophore type, append to list
             for mol in mols:
-                feats = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
-                feature_frequency = collections.Counter(feats)
+                feats = self._calc_pharmacophore(mol)
+                for feat in feats:
+                    feature_list.append(feat[0])
+                feature_frequency = collections.Counter(feature_list)
                 molecule_feature_frequencies.append(feature_frequency)
+                feature_list = [] # reset list to avoid double counting
 
-
-        print(molecule_feature_frequencies)
-        # print(len(molecule_feature_frequencies))
+        # # for troubleshooting
+        # print(molecule_feature_frequencies)
 
         feature_frequencies_df = (
             pd.DataFrame(
