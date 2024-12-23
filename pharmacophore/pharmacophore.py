@@ -5,6 +5,7 @@ import rdkit
 from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem, RDConfig
+from pharmacophore.constants import feature_factory
 
 class Pharmacophore:
     def __init__(self):
@@ -31,21 +32,27 @@ class Pharmacophore:
         A tuple containing default features from RDKit
         :return:
         """
-        feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
-        return feature_factory.GetFeatureFamilies()
+        # feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
+        phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
+        return phrase
 
 
-    def molecule_features_df(self, mols: list = None, mol_name: list = None):
+    def to_df(self, mols: list = None, mol_name: list = None, features: str = 'rdkit'):
         """
         From a list of ROMols and molecule names, create a dataframe of features. Defaults to features from RDKit.
         :param mols:
         :param mol_name:
+
         :return:
         """
+        global feat_factory
         molecule_feature_frequencies = []
-        feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
+
+        # use default features
+        if features == 'rdkit':
+            feat_factory = feature_factory
         for mol in mols:
-            features = [feature.GetFamily() for feature in feature_factory.GetFeaturesForMol(mol)]
+            features = [feature.GetFamily() for feature in feat_factory.GetFeaturesForMol(mol)]
             feature_frequency = collections.Counter(features)
             molecule_feature_frequencies.append(feature_frequency)
 
@@ -64,6 +71,35 @@ class Pharmacophore:
 
         return feature_frequencies_df
 
+    def calc_pharm(self, mol: Chem.Mol = None, features: str = 'rdkit'):
+        """
+        Generate a list of pharmacophore features and position from a molecule.
+        :param mol: Chem.Mol
+            A molecule in ROMol format.
+        :param features: str
+            Designate the type of pharmacophore features to calculate from. Defaults to 'rdkit'.
+        :return:
+        """
+        global pharmacophore
+
+        # build feature factory
+        if features == 'rdkit':
+            feat_factory = feature_factory
+
+            # get list of features for molecule
+            features = feat_factory.GetFeaturesForMol(mol)
+
+            # store pharmacophore features
+            pharmacophore = []
+            for feature in features:
+                fam = feature.GetFamily()
+                pos = feature.GetPos()
+                atom_indices = feature.GetAtomIds()
+                p = [fam, atom_indices, pos[0], pos[1], pos[2]]
+                pharmacophore.append(p)
+
+        return pharmacophore
+
 
     def output_features(self, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
         """
@@ -77,7 +113,6 @@ class Pharmacophore:
         :return:
         """
         with open(savepath, "w") as f:
-            # todo create class structure?
             feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
             features = feature_factory.GetFeaturesForMol(mol)
             print(f"Number of features: {len(features)}")
