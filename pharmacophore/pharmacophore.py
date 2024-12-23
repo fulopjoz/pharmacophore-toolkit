@@ -26,32 +26,43 @@ class Pharmacophore:
         return mol_list
 
 
-def feature_factory():
-    feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
-    return feature_factory.GetFeatureFamilies()
+    def default_features(self):
+        """
+        A tuple containing default features from RDKit
+        :return:
+        """
+        feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
+        return feature_factory.GetFeatureFamilies()
 
 
-def molecule_features(mols: list = None, mol_name: list = None):
-    molecule_feature_frequencies = []
-    for mol in mols:
-        features = [feature.GetFamily() for feature in feature_factory.GetFeaturesForMol(mol)]
-        feature_frequency = collections.Counter(features)
-        molecule_feature_frequencies.append(feature_frequency)
+    def molecule_features_df(self, mols: list = None, mol_name: list = None):
+        """
+        From a list of ROMols and molecule names, create a dataframe of features. Defaults to features from RDKit.
+        :param mols:
+        :param mol_name:
+        :return:
+        """
+        molecule_feature_frequencies = []
+        feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
+        for mol in mols:
+            features = [feature.GetFamily() for feature in feature_factory.GetFeaturesForMol(mol)]
+            feature_frequency = collections.Counter(features)
+            molecule_feature_frequencies.append(feature_frequency)
 
-    feature_frequencies_df = (
-        pd.DataFrame(
-            molecule_feature_frequencies,
-            index=[f"Mol{i}" for i, _ in enumerate(mols, 1)]
+        feature_frequencies_df = (
+            pd.DataFrame(
+                molecule_feature_frequencies,
+                index=[f"Mol{i}" for i, _ in enumerate(mols, 1)]
+            )
+            .fillna(0)
+            .astype(int)
         )
-        .fillna(0)
-        .astype(int)
-    )
 
-    # reformat table and rename columns to molecule list
-    feature_frequencies_df = feature_frequencies_df.transpose()
-    feature_frequencies_df = feature_frequencies_df.set_axis(mol_name, axis=1)
+        # reformat table and rename columns to molecule list
+        feature_frequencies_df = feature_frequencies_df.transpose()
+        feature_frequencies_df = feature_frequencies_df.set_axis(mol_name, axis=1)
 
-    return feature_frequencies_df
+        return feature_frequencies_df
 
 
 def output_features(savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
