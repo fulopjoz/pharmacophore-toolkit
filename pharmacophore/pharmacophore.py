@@ -106,20 +106,26 @@ class Pharmacophore:
 
         return pharmacophore
 
-    def output_features(self, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None, sphere_size: float = 0.5):
+    def output_features(self, features: list = None, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None,
+                        sphere_size: float = 0.5, color: dict = None):
         """
-
+        Output features as a .pml format for visualization in PyMol.
+        :param features: list
+            A list containing features, corresponding atom number, and 3D position. Preferably genreated using
+            calc_pharm.
         :param savepath: str = None
             Must be a file in .pml format.
         :param mol: rdkit.Chem.rdchem.Mol = None
             Input RDKit Mol. 3D conformational form must be generated. Or input must be RDKit Mol read from an sdf file.
         :param sphere_size: float = 0.5
             Set size of spheres.
+        :param color: dict
+            Set color of pharmacophores
         :return:
         """
         with open(savepath, "w") as f:
-            feat_factory = feature_factory
-            features = feat_factory.GetFeaturesForMol(mol)
+            # feat_factory = feature_factory
+            # features = feat_factory.GetFeaturesForMol(mol)
             print(f"Number of features: {len(features)}")
 
             # to give sequential numbering for each group:
@@ -127,24 +133,29 @@ class Pharmacophore:
 
             # get features
             for feat in features:
-                type = feat.GetFamily()
-                if type in feature_counts:  # Check if the type is in the dictionary
-                    feature_counts[type] += 1  # give count for feat
-                    count = feature_counts[type]  # Get the current count
-                    pos = feat.GetPos()  # get feat position
+                feature = feat[0]  # extract feature type
+                feature_counts[feature] += 1  # give feature count
+                count = feature_counts[feature]  # get current count
+                # get feature position
+                pos_x = feat[2]
+                pos_y = feat[3]
+                pos_z = feat[4]
 
-                    # Write to file with numbering
-                    color = {
+                # Write to file with numbering
+                if color is None:
+                    color_type = {
                         "Acceptor": "red",
                         "Donor": "marine",
                         "Hydrophobe": "green",
                         "Aromatic": "pink",
                         "LumpedHydrophobe": "green"
-                    }[type]
+                    }[feature]
+                else:
+                    color = {color}[feature]
 
-                    f.write(
-                        f"pseudoatom {type}_{count}, pos=[{pos.x}, {pos.y}, {pos.z}], color={color}\n"
-                    )
+                f.write(
+                    f"pseudoatom {feature}_{count}, pos=[{pos_x}, {pos_y}, {pos_z}], color={color_type}\n"
+                )
 
             f.write("show spheres, Acceptor_*\n")
             f.write("show spheres, Donor_*\n")
@@ -186,7 +197,8 @@ class Pharmacophore:
         pharmacophore = []
         for key, value in cleaned_matches.items():
             for match in value:
-                p = [key, match[0], match[1]]
+                # extarct feature type, atom match, and XYZ position
+                p = [key, match[0], match[1][0], match[1][1], match[1][2]]
                 pharmacophore.append(p)
         return pharmacophore
 
