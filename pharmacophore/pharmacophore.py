@@ -1,11 +1,8 @@
-import os
 import collections
 import pandas as pd
 import numpy as np
-import rdkit
 from tqdm import tqdm
 from rdkit import Chem
-from rdkit.Chem import AllChem, RDConfig
 from pharmacophore.constants import feature_factory, FEATURES
 
 
