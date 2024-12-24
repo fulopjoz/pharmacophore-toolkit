@@ -29,13 +29,15 @@ class Pharmacophore:
 
         return mol_list
 
-    def default_features(self):
+    def feature_types(self, features="default"):
         """
         A tuple containing default features from RDKit
         :return:
         """
-        # feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
-        phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
+        if features == "default":
+            phrase = f"Default features: \n('Donor', 'Acceptor', 'Aromatic', 'Hydrophobe')"
+        elif features == "rdkit":
+            phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
         return phrase
 
     def to_df(self, mols: list = None, mol_name: list = None, features: str = 'rdkit'):
