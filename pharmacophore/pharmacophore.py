@@ -12,6 +12,7 @@ from pharmacophore.constants import feature_factory, FEATURES
 class Pharmacophore:
     def __init__(self):
         self.sdf = None
+        self.features = None
 
     def read_sdf(self, sdf_file: str = None, verbose: bool = True):
         supplier = Chem.SDMolSupplier(sdf_file)
@@ -87,7 +88,7 @@ class Pharmacophore:
 
         return feature_frequencies_df
 
-    def calc_pharm(self, mol: Chem.Mol = None, features: str = 'rdkit'):
+    def calc_pharm(self, mol: Chem.Mol = None, features: str = 'default'):
         """
         Generate a list of pharmacophore features and position from a molecule.
         :param mol: Chem.Mol
@@ -101,13 +102,49 @@ class Pharmacophore:
         # calculate pharmacophore by rdkit or pharmacophore dict
         if features == 'rdkit':
             pharmacophore = self._calc_rdkit(mol)
-        elif features == 'pharmacophore':
+        elif features == 'default':
             pharmacophore = self._calc_pharmacophore(mol)
+
+        # set features to self
+        self.features = pharmacophore
 
         return pharmacophore
 
-    def output_features(self, features: list = None, savepath: str = None, mol: rdkit.Chem.rdchem.Mol = None,
-                        sphere_size: float = 0.5, color: dict = None):
+    def add_feats(self, mol: Chem.Mol = None, substruct: str = None, type: str = None):
+        """
+        Add specific features if not present using default or RDKit rules.
+        :param mol: Chem.Mol
+            Main molecule in ROMol format.
+        :param substruct: str
+            A SMARTS string for specific substructure to match
+        :param type: str
+            Set the type of interaction for substructure. Only 'Donor', 'Acceptor', 'Aromatic', and 'Hydrophobe' is
+            allowed!
+        :return:
+        """
+        # convert substruct smarts string into ROMol
+        query = [Chem.MolFromSmarts(substruct)]
+
+        # find matches
+        matches = find_matches(mol, query)
+
+        # check type
+        if type == 'Donor' or type == 'Acceptor' or type == 'Aromatic' or type == 'Hydrophobe':
+            pass
+        else:
+            raise ValueError(f"Type {type} not supported! Only 'Donor', 'Acceptor', 'Aromatic', and 'Hydrophobe' is "
+                             f"allowed!")
+
+        # obtain specific data from each match
+        for match in matches:
+            result = [type, match[0], match[1][0], match[1][1], match[1][2]]
+            # add custom feats to self.features
+            self.features.append(result)
+
+        return self.features
+
+    def output_features(self, features: list = None, savepath: str = None, sphere_size: float = 0.5,
+                        color: dict = None):
         """
         Output features as a .pml format for visualization in PyMol.
         :param features: list
@@ -115,8 +152,6 @@ class Pharmacophore:
             calc_pharm.
         :param savepath: str = None
             Must be a file in .pml format.
-        :param mol: rdkit.Chem.rdchem.Mol = None
-            Input RDKit Mol. 3D conformational form must be generated. Or input must be RDKit Mol read from an sdf file.
         :param sphere_size: float = 0.5
             Set size of spheres.
         :param color: dict
@@ -151,7 +186,7 @@ class Pharmacophore:
                         "LumpedHydrophobe": "green"
                     }[feature]
                 else:
-                    color = {color}[feature]
+                    color_type = color
 
                 f.write(
                     f"pseudoatom {feature}_{count}, pos=[{pos_x}, {pos_y}, {pos_z}], color={color_type}\n"
@@ -182,16 +217,16 @@ class Pharmacophore:
         for key, value in constant_feats.items():
             try:
                 query = [Chem.MolFromSmarts(smarts) for smarts in value]
-                matches[key] = find_matches(mol, query)
+                matches[key] = find_matches(mol, query, verbose=False)
             except:
                 pass
         # remove duplicate SMARTS matches
         cleaned_matches = {}
         for key, value in matches.items():
             unique_lists = []
-            for lst in value:
-                if lst not in unique_lists:
-                    unique_lists.append(lst)
+            for list in value:
+                if list not in unique_lists:
+                    unique_lists.append(list)
             cleaned_matches[key] = unique_lists
         # create list containing pharmacophore and centroid coordinates
         pharmacophore = []
@@ -229,15 +264,23 @@ class Pharmacophore:
         return pharmacophore
 
 
-def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None):
+def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=True):
     matches = []
     for pattern in patterns:
-        # Get all matches for that pattern
         matched = mol.GetSubstructMatches(pattern)
         # get centroid and coordinates for each match
         for m in matched:
-            centroid = _compute_match_centroid(mol, m)
-            matches.append([m, centroid])
+            try:
+                centroid = _compute_match_centroid(mol, m)
+                matches.append([m, centroid])
+            except:
+                pass
+        # output statement if no matches
+        if verbose is True:
+            if len(matches) == 0:
+                output_message = Chem.MolToSmarts(pattern)
+                print(f"NO Matches to {output_message}!")
+                return matches
     return matches
 
 
