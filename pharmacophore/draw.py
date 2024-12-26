@@ -3,17 +3,19 @@ Script to draw pharmacophore in 2D figure
 """
 
 import os
+import io
 import matplotlib.image as img
 import matplotlib.pyplot as plt
 from typing import Optional
+from PIL import Image
 from collections import defaultdict
 from cairosvg import svg2png
 from IPython.display import SVG
-from pharmacophore.constants import FEATURES, FEATURE_COLORS
+from pharmacophore.constants import FEATURE_COLORS
 from pharmacophore import Pharmacophore
 from rdkit import Chem
 from rdkit.Chem import rdDepictor, AllChem
-from rdkit.Chem.Draw import rdMolDraw2D
+from rdkit.Chem.Draw import rdMolDraw2D, SimilarityMaps
 from rdkit.Chem.Draw.MolDrawing import DrawingOptions
 
 
@@ -107,8 +109,8 @@ class Draw:
 
         # Data for the circles
         circle_radii = [0, 50, 100, 150, 200, 250]
-        feature_values = list(FEATURE_COLORS.values()) # extract color values
-        circle_colors = [i for i in feature_values] # match circle to color values
+        feature_values = list(FEATURE_COLORS.values())  # extract color values
+        circle_colors = [i for i in feature_values]  # match circle to color values
         circle_annotations = [
             "Donor",
             "Acceptor",
@@ -154,6 +156,10 @@ class Draw:
             Determine the size of the molecule to draw.
         :return:
         """
+        # set instance variable
+        if mol is None:
+            mol = self.mol
+
         # Check if 2D coordinates are missing, and compute them if necessary. This will also strip away 3D coordinates.
         if not mol.GetNumConformers() or mol.GetConformer().Is3D():
             AllChem.Compute2DCoords(mol)
@@ -170,5 +176,38 @@ class Draw:
 
         return img
 
-    def similarity_maps(self, mol: Chem.Mol = None):
-        pass
+    def similarity_maps(self, refmol: Chem.Mol = None, querymol: Chem.Mol = None, radius: int = 2, nbits: int = 2048,
+                        fpType: str = 'bv'):
+        """
+        Generate similarity map between query molecule and reference molecule. Only Morgan fingerprints are used.
+        :param refmol: Chem.Mol
+            Reference molecule. Must be in ROMol format.
+        :param querymol: Chem.Mol
+            Query molecule. Must be in ROMol format.
+        :param radius: int
+            Set the radius for the MorganFingerprint. Default to 2.
+        :param nbits: int
+            Set the number of bits for the generated fingerprint. Default to 2048.
+        :param fpType: str
+            Set the fingerprint type. Default to 'bv'. Can only use 'bv' or 'count'
+        :return:
+        """
+        # set instance variable
+        if refmol is None:
+            refmol = self.mol
+
+        # check fpType
+        if fpType not in ['bv', 'count']:
+            raise ValueError("Only 'bv' or 'count' accepted!")
+
+        d = Chem.Draw.MolDraw2DCairo(400, 400)
+        function = lambda m, i: SimilarityMaps.GetMorganFingerprint(m, i, radius=radius, fpType=fpType, nBits=nbits)
+        _, maxWeight = SimilarityMaps.GetSimilarityMapForFingerprint(refMol=refmol, probeMol=querymol,
+                                                                     fpFunction=function, draw2d=d)
+        # finish drawing
+        d.FinishDrawing()
+        img_data = d.GetDrawingText()
+
+        bio = io.BytesIO(img_data)
+        img = Image.open(bio)
+        return img
