@@ -2,6 +2,7 @@
 Hold constant values
 """
 import os
+import matplotlib.colors as mcolors
 from rdkit.Chem import AllChem, RDConfig
 
 feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
@@ -39,3 +40,20 @@ FEATURE_COLORS = {
     "Aromatic": (1.0, 0.8862745098039215, 0.5019607843137255),
     "Hydrophobe": (0.5019607843137255, 1.0, 0.5019607843137255)
 }
+
+
+def color_convert(color: str = None):
+    """
+    helper funciton to convert color to rgb.
+    :param color: str
+        Color to convert to rgb. Can be hex or color name.
+    :return:
+    """
+    try:
+        # convert color to rgb
+        rgb = mcolors.to_rgb(color)
+        # scale to 0-255
+        rgb_scaled = tuple(int(c * 255) for c in rgb)
+        return rgb_scaled
+    except:
+        raise ValueError(f"{color} is not a valid color!")
