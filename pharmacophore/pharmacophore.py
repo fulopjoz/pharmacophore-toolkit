@@ -238,7 +238,26 @@ class Pharmacophore:
                 p = [key, match[0], match[1][0], match[1][1], match[1][2]]
                 pharmacophore.append(p)
 
-        return pharmacophore
+        # remove duplicates for aromatic/hydrophobe set
+        atom_indices = set()
+        final_pharmacophore = []
+
+        # extract aromatic/hydrophobe matches by atom index adn remove hydrophobe
+        for entry in pharmacophore:
+            label, atom_indexes, *rest = entry
+            index = frozenset(atom_indexes)  # Convert atom indexes to a frozenset so order does not matter
+
+            # Check if the atom indexes are already in the set
+            if index not in atom_indices:
+                final_pharmacophore.append(entry)
+                atom_indices.add(index)
+            # keep Aromatic
+            elif label == 'Aromatic':
+                final_pharmacophore = [e for e in final_pharmacophore if not (e[0] == 'Hydrophobe' and frozenset(e[1]) == index)]
+                final_pharmacophore.append(entry)
+                atom_indices.add(index)
+
+        return final_pharmacophore
 
     def _calc_rdkit(self, mol: Chem.Mol = None):
         """
