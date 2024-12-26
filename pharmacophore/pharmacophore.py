@@ -1,10 +1,11 @@
+import warnings
 import collections
 import pandas as pd
 import numpy as np
-from collections import defaultdict
 from tqdm import tqdm
 from rdkit import Chem
-from pharmacophore.constants import feature_factory, FEATURES
+
+from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, color_convert
 
 
 class Pharmacophore:
@@ -157,13 +158,27 @@ class Pharmacophore:
         :param sphere_size: float = 0.5
             Set size of spheres.
         :param color: dict
-            Set color of pharmacophores
+            Set color for the pharmacophores. Must be given as Acceptor: color where color is a tuple for RGB or a
+            string for a specific color to be translated into RGB format.
         :return:
         """
         with open(savepath, "w") as f:
             # feat_factory = feature_factory
             # features = feat_factory.GetFeaturesForMol(mol)
             print(f"Number of features: {len(features)}")
+
+            # set feature colors
+            if color is None:
+                for feat in FEATURE_COLORS:
+                    f.write(f"set_color {feat}_color, {FEATURE_COLORS[feat]}\n")
+            # if custom color, convert to RGB
+            elif isinstance(color, dict):
+                for shade in color:
+                    rgb = color_convert(color[shade])
+                    # print(rgb)  # for troubleshooting
+                    f.write(f"set_color {shade}_color, {rgb}\n")
+            else:
+                warnings.warn("Issue with color features!")
 
             # to give sequential numbering for each group:
             feature_counts = {"Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0}
@@ -178,28 +193,24 @@ class Pharmacophore:
                 pos_y = feat[3]
                 pos_z = feat[4]
 
-                # Write to file with numbering
-                if color is None:
-                    color_type = {
-                        "Acceptor": "red",
-                        "Donor": "marine",
-                        "Hydrophobe": "green",
-                        "Aromatic": "pink",
-                        "LumpedHydrophobe": "green"
-                    }[feature]
-                else:
-                    color_type = color
-
                 f.write(
-                    f"pseudoatom {feature}_{count}, pos=[{pos_x}, {pos_y}, {pos_z}], color={color_type}\n"
+                    # f"pseudoatom {feature}_{count}, pos=[{pos_x}, {pos_y}, {pos_z}], color={color_type}\n"
+                    f"pseudoatom {feature}_{count}, pos=[{pos_x}, {pos_y}, {pos_z}]\n"
                 )
 
+            # set color and sphere size
             f.write("show spheres, Acceptor_*\n")
+            f.write("color acceptor_color, Acceptor_*\n")
             f.write("show spheres, Donor_*\n")
+            f.write("color donor_color, Donor_*\n")
             f.write("show spheres, Hydrophobe_*\n")
+            f.write("color hydrophobe_color, Hydrophobe_*\n")
             f.write("show spheres, Aromatic_*\n")
+            f.write("color aromatic_color, Aromatic_*\n")
             f.write("show spheres, LumpedHydrophobe_*\n")
+            f.write("color lumpedhydrophobe, LumpedHydrophobe_*\n")
             f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
+
         print(f"Feature visualization script written to {savepath}.")
 
     def _calc_pharmacophore(self, mol: Chem.Mol = None):
