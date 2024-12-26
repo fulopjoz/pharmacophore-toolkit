@@ -1,6 +1,7 @@
 import collections
 import pandas as pd
 import numpy as np
+from collections import defaultdict
 from tqdm import tqdm
 from rdkit import Chem
 from pharmacophore.constants import feature_factory, FEATURES
@@ -31,10 +32,12 @@ class Pharmacophore:
         A tuple containing default features from RDKit
         :return:
         """
+        global phrase
         if features == "default":
             phrase = f"Default features: \n('Donor', 'Acceptor', 'Aromatic', 'Hydrophobe')"
         elif features == "rdkit":
             phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
+
         return phrase
 
     def to_df(self, mols: list = None, mol_name: list = None, features: str = 'rdkit'):
@@ -234,6 +237,7 @@ class Pharmacophore:
                 # extarct feature type, atom match, and XYZ position
                 p = [key, match[0], match[1][0], match[1][1], match[1][2]]
                 pharmacophore.append(p)
+
         return pharmacophore
 
     def _calc_rdkit(self, mol: Chem.Mol = None):
@@ -260,6 +264,7 @@ class Pharmacophore:
             atom_indices = feature.GetAtomIds()
             pharmacophore_item = [fam, atom_indices, pos[0], pos[1], pos[2]]
             pharmacophore.append(pharmacophore_item)
+
         return pharmacophore
 
 
@@ -280,6 +285,7 @@ def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=
                 output_message = Chem.MolToSmarts(pattern)
                 print(f"NO Matches to {output_message}!")
                 return matches
+
     return matches
 
 
