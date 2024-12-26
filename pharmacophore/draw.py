@@ -5,10 +5,11 @@ Script to draw pharmacophore in 2D figure
 import os
 import matplotlib.image as img
 import matplotlib.pyplot as plt
+from typing import Optional
 from collections import defaultdict
 from cairosvg import svg2png
 from IPython.display import SVG
-from pharmacophore.constants import FEATURES
+from pharmacophore.constants import FEATURES, FEATURE_COLORS
 from pharmacophore import Pharmacophore
 from rdkit import Chem
 from rdkit.Chem import rdDepictor, AllChem
@@ -17,27 +18,52 @@ from rdkit.Chem.Draw.MolDrawing import DrawingOptions
 
 
 class Draw:
-    def __init__(self, ):
-        pass
+    def __init__(self, mol: Optional[Chem.Mol] = None):
+        self.mol = mol
 
-    def pharm(self, mol: Chem.Mol = None, features='default'):
+    def draw_pharm(self, mol: Chem.Mol, features: str = 'default', savepath: str = None):
+        """
+        Draw a 2D pharmacophore image
+        :param mol: Chem.Mol
+            A molecule in ROMol format.
+        :param features: str
+            Determines which feature algorithm to use. Can use 'default' or 'rdkit'.
+        :param savepath: str
+            Set the savepath to save the iamge.
+        :return:
+        """
+        # set instance variables
+        if mol is None:
+            mol = self.mol
+
+        # calculate pharmacophore features
         pharm = Pharmacophore()
-        pharmacophore = pharm.calc_pharm(mol=mol, features=features)
-        return pharmacophore
+        if features == 'default' or features == 'rdkit':
+            calc_features = pharm.calc_pharm(mol=mol, features=features)
+        else:
+            raise ValueError('Unknown features! Only "default" or "rdkit" are supported!')
 
-    def draw_pharm(self, rdkit_mol, features, savepath="pharm.jpg"):
+        # dictionaries to highlight atoms and highlight radius
         atom_highlights = defaultdict(list)
         highlight_rads = {}
-        for feature in features:
-            if feature[0] in FEATURES:
-                color = FEATURES[feature[0]]
+
+        # calc features and append results to atom_highlights and highlight_rads
+        for feature in calc_features:
+            if feature[0] in FEATURE_COLORS:
+                # extract colors from constants
+                color = FEATURE_COLORS[feature[0]]
+                # # for troubleshooting
+                # print(color)
                 for atom_id in feature[1]:
                     atom_highlights[atom_id].append(color)
                     highlight_rads[atom_id] = 0.5
 
-        rdDepictor.Compute2DCoords(rdkit_mol)
+        # flatten molecule into 2D
+        rdDepictor.Compute2DCoords(mol)
         rdDepictor.SetPreferCoordGen(True)
         drawer = rdMolDraw2D.MolDraw2DSVG(800, 800)
+
+        # set drawing optinos
         # Use black for all elements
         drawer.drawOptions().updateAtomPalette(
             {k: (0, 0, 0) for k in DrawingOptions.elemDict.keys()}
@@ -48,27 +74,31 @@ class Draw:
         drawer.drawOptions().splitBonds = False
         drawer.drawOptions().fillHighlights = True
 
-        for atom in rdkit_mol.GetAtoms():
+        # get atom label
+        for atom in mol.GetAtoms():
             atom.SetProp("atomLabel", atom.GetSymbol())
-        print(atom_highlights)
-        print(highlight_rads)
         drawer.DrawMoleculeWithHighlights(
-            rdkit_mol, "", dict(atom_highlights), {}, highlight_rads, {}
+            mol, "", dict(atom_highlights), {}, highlight_rads, {}
         )
         drawer.FinishDrawing()
+
+        # draw molecule and save a temporary file
         svg = drawer.GetDrawingText().replace("svg:", "")
         SVG(svg)
         with open(f"pharm.svg", "w") as f:
             f.write(svg)
 
+        # convert svg into png
         svg2png(bytestring=svg, write_to=f"image.png")
 
+        # Set figure legend for feature and color type
         fig, (ax, picture) = plt.subplots(
             nrows=2,
             figsize=(4, 4),
             gridspec_kw={"height_ratios": [1, 5]},
         )
 
+        # draw image and remove temporary file
         mol_image = img.imread(f"image.png")
         picture.imshow(mol_image)
         picture.axis("off")
@@ -77,14 +107,12 @@ class Draw:
 
         # Data for the circles
         circle_radii = [0, 50, 100, 150, 200, 250]
-        feature_values = list(FEATURES.values())
-        circle_colors = [i[2] for i in feature_values]
+        feature_values = list(FEATURE_COLORS.values()) # extract color values
+        circle_colors = [i for i in feature_values] # match circle to color values
         circle_annotations = [
             "Donor",
             "Acceptor",
-            "Cation",
-            "Anion",
-            "Ring",
+            "Aromatic",
             "Hydrophobe",
         ]
         # Draw the circles and annotations
@@ -110,7 +138,8 @@ class Draw:
 
         # Set aspect ratio to equal
         ax.set_aspect("equal", adjustable="box")
-        plt.savefig(f"{savepath}", dpi=300)
+        if savepath:
+            plt.savefig(f"{savepath}", dpi=300)
 
     # support function to draw molecule with atom index
     def atom_number(self, mol: Chem.Mol = None, label: str = "atomNote", size: tuple = (300, 300)):
