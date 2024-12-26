@@ -35,10 +35,11 @@ FEATURES = {
 }
 
 FEATURE_COLORS = {
-    "Donor": (0.0, 0.5, 0.5),
-    "Acceptor": (1.0, 0.5019607843137255, 0.5019607843137255),
-    "Aromatic": (1.0, 0.8862745098039215, 0.5019607843137255),
-    "Hydrophobe": (0.5019607843137255, 1.0, 0.5019607843137255)
+    "Donor": (0.2549019607843137, 0.4117647058823529, 0.8823529411764706),  # royalblue
+    "Acceptor": (1.0, 0.27058823529411763, 0.0),  # orangered
+    "Aromatic": (0.8549019607843137, 0.6470588235294118, 0.12549019607843137),  # goldenrod
+    "Hydrophobe": (0.1803921568627451, 0.5450980392156862, 0.3411764705882353),  # seagreen
+    "LumpedHydrophobe": (0.1803921568627451, 0.5450980392156862, 0.3411764705882353)  # seagreen
 }
 
 
@@ -52,8 +53,6 @@ def color_convert(color: str = None):
     try:
         # convert color to rgb
         rgb = mcolors.to_rgb(color)
-        # scale to 0-255
-        rgb_scaled = tuple(int(c * 255) for c in rgb)
-        return rgb_scaled
+        return rgb
     except:
         raise ValueError(f"{color} is not a valid color!")
