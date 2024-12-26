@@ -10,23 +10,27 @@ from cairosvg import svg2png
 from IPython.display import SVG
 from pharmacophore.constants import FEATURES
 from pharmacophore import Pharmacophore
+from rdkit import Chem
 from rdkit.Chem import rdDepictor, AllChem
 from rdkit.Chem.Draw import rdMolDraw2D
 from rdkit.Chem.Draw.MolDrawing import DrawingOptions
 
+
 class Draw:
-    def __init__(self,):
+    def __init__(self, ):
         pass
 
-    def pharm(self):
-        Pharmacophore.calc_pharm()
+    def pharm(self, mol: Chem.Mol = None, features='default'):
+        pharm = Pharmacophore()
+        pharmacophore = pharm.calc_pharm(mol=mol, features=features)
+        return pharmacophore
 
-    def draw_pharm(rdkit_mol, features, savepath="pharm.jpg"):
+    def draw_pharm(self, rdkit_mol, features, savepath="pharm.jpg"):
         atom_highlights = defaultdict(list)
         highlight_rads = {}
         for feature in features:
             if feature[0] in FEATURES:
-                color = FEATURES[feature[0]][2]
+                color = FEATURES[feature[0]]
                 for atom_id in feature[1]:
                     atom_highlights[atom_id].append(color)
                     highlight_rads[atom_id] = 0.5
@@ -46,6 +50,8 @@ class Draw:
 
         for atom in rdkit_mol.GetAtoms():
             atom.SetProp("atomLabel", atom.GetSymbol())
+        print(atom_highlights)
+        print(highlight_rads)
         drawer.DrawMoleculeWithHighlights(
             rdkit_mol, "", dict(atom_highlights), {}, highlight_rads, {}
         )
@@ -83,7 +89,7 @@ class Draw:
         ]
         # Draw the circles and annotations
         for radius, color, annotation in zip(
-            circle_radii, circle_colors, circle_annotations
+                circle_radii, circle_colors, circle_annotations
         ):
             x = radius
             circle = plt.Circle((x, -5), 5, color=color)  # , alpha=0.5)
@@ -107,14 +113,33 @@ class Draw:
         plt.savefig(f"{savepath}", dpi=300)
 
     # support function to draw molecule with atom index
-    def atom_number(mol, label):
-        # Check if 2D coordinates are missing, and compute them if necessary
+    def atom_number(self, mol: Chem.Mol = None, label: str = "atomNote", size: tuple = (300, 300)):
+        """
+        Draw query molecule with labeled RDKit atom indices.
+        :param mol: Chem.Mol
+            A molecule in ROMol format.
+        :param label: str
+            Determines which style to label the molecule. Defaults to atomNote. In total, can use 'atomNote',
+            'atomLabel', and 'molAtomMapNumber'.
+        :param size: tuple
+            Determine the size of the molecule to draw.
+        :return:
+        """
+        # Check if 2D coordinates are missing, and compute them if necessary. This will also strip away 3D coordinates.
         if not mol.GetNumConformers() or mol.GetConformer().Is3D():
             AllChem.Compute2DCoords(mol)
 
+        # get atom indices
         for atom in mol.GetAtoms():
             if label == 'atomNote' or label == 'atomLabel' or label == 'molAtomMapNumber':
-                atom.SetProp(label, str(atom.GetIdx() + 1))
+                atom.SetProp(label, str(atom.GetIdx()))
             else:
                 raise ValueError("Only 'atomNote', 'atomLabel', and 'molAtomMapNumber' accepted!")
-        return mol
+
+        # draw molecule
+        img = Chem.Draw.MolToImage(mol, size=size)
+
+        return img
+
+    def similarity_maps(self, mol: Chem.Mol = None):
+        pass
