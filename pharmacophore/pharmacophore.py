@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, color_convert
 
@@ -264,7 +265,8 @@ class Pharmacophore:
                 atom_indices.add(index)
             # keep Aromatic
             elif label == 'Aromatic':
-                final_pharmacophore = [e for e in final_pharmacophore if not (e[0] == 'Hydrophobe' and frozenset(e[1]) == index)]
+                final_pharmacophore = [e for e in final_pharmacophore if
+                                       not (e[0] == 'Hydrophobe' and frozenset(e[1]) == index)]
                 final_pharmacophore.append(entry)
                 atom_indices.add(index)
 
@@ -296,6 +298,49 @@ class Pharmacophore:
             pharmacophore.append(pharmacophore_item)
 
         return pharmacophore
+
+
+# Support function to fix bond order of molecule
+def fix_bond_order(mol: Chem.Mol, template_smi: str, savepath: str = None):
+    """
+    Fix bond order for a given molecule. A template smiles string must be given.
+    :param mol: Chem.Mol
+        Molecule to fix. Must be in ROMol format.
+    :param template_smi: str
+        A smiles string for molecule to fix. Recommend canonical smiles string if possible.
+    :param savepath: str
+        Set the save path for the molecule. Output will be in sdf format.
+    :return:
+    """
+    # remove hydrogen if present
+    mol_prep = Chem.RemoveHs(mol)
+
+    # read template
+    template = Chem.MolFromSmiles(template_smi)
+
+    # assign bond orders to crystal ligand
+    fixed_mol = AllChem.AssignBondOrdersFromTemplate(mol_prep, template)
+
+    # Map atoms from the template to the docked pose
+    template_mapping = mol_prep.GetSubstructMatch(template)
+
+    if not template_mapping:
+        raise ValueError("Failed to match template to docked pose.")
+
+    # Transfer 3D coordinates from docked_pose to fixed_mol
+    new_conformer = Chem.Conformer(fixed_mol.GetNumAtoms())
+    original_conformer = mol_prep.GetConformer()
+
+    # set coordinates of heavy atoms to fixed_mol
+    for new_idx, origin_idx in enumerate(template_mapping):
+        pos = original_conformer.GetAtomPosition(origin_idx)
+        new_conformer.SetAtomPosition(new_idx, pos)
+
+    # Add 3D coordinates to the molecule
+    fixed_mol.AddConformer(new_conformer, assignId=True)
+
+    # save file
+    Chem.MolToMolFile(fixed_mol, savepath)
 
 
 def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=True):
