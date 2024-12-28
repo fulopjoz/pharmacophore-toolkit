@@ -1,11 +1,22 @@
-# pharmacophore-toolkit
+# A Simple Pharmacophore-Toolkit
 
+![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.0.1-blue)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](URL_TO_YOUR_APP)
 
-The beginnings of a side project. I plan to incorporate simple molecular tools into a 
-web application using Streamlit. The goal of this is the following:
+The Pharmacophore-Toolkit is built on RDKit and allows for simple building of pharmacophore models. Models are output as 
+.pml files to be rendered molecules in 3D using PyMol.
 
-- To improve my own coding skills
-- To better understand how to organize my code for Streamlit
-- Develop easy to use tools for teaching coworkers/classmates/etc
+INSERT IMAGE
+
+Additional images can highlight pharmacophores as 2D images.
+
+INSERT IMAGE
+
+## Tutorials
+Tutorials are written as JupyterNotebooks and can be found [here](tutorial/). 
+
+## Install
+```python
+pip install git+https://github.com/tlint101/pharmacophore-toolkit.git
+```
+
