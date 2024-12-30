@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from typing import Union
+from typing import Union, Optional
 
 from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, color_convert
 
@@ -15,7 +15,16 @@ class Pharmacophore:
         self.sdf = None
         self.features = None
 
-    def read_sdf(self, sdf_file: str = None, verbose: bool = True):
+    def read_sdf(self, sdf_file: str = None, verbose: bool = False):
+        """
+        Read sdf files.
+        :param sdf_file: Str
+            File path to .sdf file.
+        :param verbose: Bool
+            Output description when reading .sdf file.
+        :return: list
+            A list of molecules in Chem.Mol format.
+        """
         supplier = Chem.SDMolSupplier(sdf_file)
         # extract ROMols into a list
         mol_list = []
@@ -32,8 +41,13 @@ class Pharmacophore:
 
     def feature_types(self, features: Union[str, dict] = "default"):
         """
-        A tuple containing default features from RDKit
+        Output feature types that will be displayed in the pharmacophore model. This will default to 'default' settings.
+        However, default RDKit features can also be used or a dictionary containing a dictionary of features with SMARTS
+        string can be used.
         :param features: Union[str, dict]
+            The feature type to be used in the pharmacophore model. This will default to "default" settings. Using
+            "rdkit" will set the model to default RDKit features. Custom features can be used by giving a dictionary
+            with feature:list pair, where the list contains SMARTS string for a given feature.
 
         :return:
         """
@@ -49,10 +63,18 @@ class Pharmacophore:
 
     def to_df(self, mols: list = None, mol_name: list = None, features: Union[str, dict] = 'default'):
         """
-        From a list of ROMols and molecule names, create a dataframe of features. Defaults to features from RDKit.
-        :param mols:
-        :param mol_name:
-
+        From a list of containing Chem.MOl and a list containing molecule names, create a dataframe displaying matching
+        features the molecules. Method will default to "default" settings. Users can use "rdkit" to set the model to
+        default RDKit features, or give a dictionary with feature:list pair, where the list contains SMARTS string for a
+        given feature.
+        :param mols: list
+            A list containing molecules in Chem.Mol format.
+        :param mol_name: list
+            A list containing names of molecules.
+        :param features: Union[str, dict]
+            The feature type to be used in the pharmacophore model. This will default to "default" settings. Using
+            "rdkit" will set the model to default RDKit features. Custom features can be used by giving a dictionary
+            with feature:list pair, where the list contains SMARTS string for a given feature.
         :return:
         """
         global feat_factory
@@ -118,8 +140,11 @@ class Pharmacophore:
         :param mol: Chem.Mol
             A molecule in ROMol format.
         :param features: str
-            Designate the type of pharmacophore features to calculate from. Defaults to 'rdkit'.
-        :return:
+            Designate the type of pharmacophore features to calculate from. Will default to "default" settings. This
+            param can also accept "rdkit" to use RDKit default features or give a dictionary containing feature:list
+            pair, where the list contains SMARTS string for a given feature.
+        :return: list
+            A list of pharmacophore features, matching atom index, and position from a molecule.
         """
         global pharmacophore
 
@@ -140,7 +165,7 @@ class Pharmacophore:
 
     def add_feats(self, mol: Chem.Mol = None, substruct: str = None, type: str = None):
         """
-        Add specific features if not present using default or RDKit rules.
+        Optional method to add specific features if not present using default or RDKit rules.
         :param mol: Chem.Mol
             Main molecule in ROMol format.
         :param substruct: str
@@ -171,13 +196,13 @@ class Pharmacophore:
 
         return self.features
 
-    def output_features(self, features: list = None, savepath: str = None, sphere_size: float = 0.5,
+    def output_features(self, feature_list: list = None, savepath: str = None, sphere_size: float = 0.5,
                         color: dict = None):
         """
         Output features as a .pml format for visualization in PyMol.
-        :param features: list
-            A list containing features, corresponding atom number, and 3D position. Preferably genreated using
-            calc_pharm.
+        :param feature_list: list
+            A list containing features, corresponding atom number, and 3D position. Preferably genreated using the
+            calc_pharm method.
         :param savepath: str = None
             Must be a file in .pml format.
         :param sphere_size: float = 0.5
@@ -190,7 +215,7 @@ class Pharmacophore:
         with open(savepath, "w") as f:
             # feat_factory = feature_factory
             # features = feat_factory.GetFeaturesForMol(mol)
-            print(f"Number of features: {len(features)}")
+            print(f"Number of features: {len(feature_list)}")
 
             # set feature colors
             if color is None:
@@ -209,7 +234,7 @@ class Pharmacophore:
             feature_counts = {"Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0}
 
             # get features
-            for feat in features:
+            for feat in feature_list:
                 feature = feat[0]  # extract feature type
                 feature_counts[feature] += 1  # give feature count
                 count = feature_counts[feature]  # get current count
@@ -238,11 +263,13 @@ class Pharmacophore:
 
         print(f"Feature visualization script written to {savepath}.")
 
-    def _calc_pharmacophore(self, mol: Chem.Mol = None, features: dict = None):
+    def _calc_pharmacophore(self, mol: Chem.Mol = None, features: Optional[dict] = None):
         """
         Calculate pharmacophore features from a molecule using dict from constants
         :param mol: Chem.Mol
             Input molecule in ROMol format.
+        :param features: Optional[dict]
+            Include custom features for calculating features.
         :return:
             List of pharmacophore type and centroid coordinates.
         """
@@ -373,6 +400,16 @@ def fix_bond_order(mol: Chem.Mol, template_smi: str, savepath: str = None):
 
 
 def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=True):
+    """
+    Support function to visualize matches between query molecule and features.
+    :param mol: Chem.Mol
+        Query molecule. Must be in ROMol format.
+    :param patterns: list[Chem.Mol]
+        A list of molecules to match against the query molecule.
+    :param verbose: Bool
+        Output messages for matches.
+    :return:
+    """
     matches = []
     for pattern in patterns:
         matched = mol.GetSubstructMatches(pattern)
@@ -394,6 +431,12 @@ def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=
 
 
 def _compute_match_centroid(mol, matched_pattern):
+    """
+    Support function to calculate centroid of matches between query molecule and features.
+    :param mol:
+    :param matched_pattern:
+    :return:
+    """
     conf = mol.GetConformer()
     positions = [conf.GetAtomPosition(i) for i in matched_pattern]
     center = np.mean(positions, axis=0)
