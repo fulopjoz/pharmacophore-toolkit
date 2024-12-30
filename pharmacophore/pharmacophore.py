@@ -216,11 +216,11 @@ class Pharmacophore:
 
         return self.features_list
 
-    def output_features(self, feature_list: list = None, savepath: str = None, sphere_size: float = 0.5,
+    def output_features(self, feature_list: Optional[list] = None, savepath: str = None, sphere_size: float = 0.5,
                         color: dict = None):
         """
         Output features as a .pml format for visualization in PyMol.
-        :param feature_list: list
+        :param feature_list: Optional[list]
             A list containing features, corresponding atom number, and 3D position. Preferably genreated using the
             calc_pharm method.
         :param savepath: str = None
