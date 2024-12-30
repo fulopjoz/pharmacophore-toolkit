@@ -20,10 +20,11 @@ from rdkit.Chem.Draw.MolDrawing import DrawingOptions
 
 
 class Draw:
-    def __init__(self, mol: Optional[Chem.Mol] = None):
+    def __init__(self, mol: Optional[Chem.Mol] = None, features: Optional[Union[str, dict]] = None):
         self.mol = mol
+        self.features = features
 
-    def draw_pharm(self, mol: Chem.Mol, features: Union[str, dict] = 'default', color: dict = None,
+    def draw_pharm(self, mol: Chem.Mol, features: Optional[Union[str, dict]] = None, color: dict = None,
                    savepath: str = None):
         """
         Draw a 2D pharmacophore image
@@ -42,14 +43,14 @@ class Draw:
         global color_palette
         if mol is None:
             mol = self.mol
+        if features is None:
+            features = self.features
 
         # calculate pharmacophore features
-        pharm = Pharmacophore()
-        if features == 'default' or features == 'rdkit':
-            calc_features = pharm.calc_pharm(mol=mol, features=features)
-        elif isinstance(features, dict):
-            calc_features = pharm.calc_pharm(mol=mol, features=features)
-        else:
+        try:
+            pharm = Pharmacophore(features=features)
+            calc_features = pharm.calc_pharm(mol=mol)
+        except:
             raise ValueError('Unknown features! Only "default" or "rdkit", or custom features as dict are supported!')
 
         # dictionaries to highlight atoms and highlight radius
@@ -126,10 +127,20 @@ class Draw:
         circle_radii = [0, 50, 100, 150, 200, 250]
         feature_values = list(color_palette.values())  # extract color values
         circle_colors = [i for i in feature_values]  # match circle to color values
+        print(circle_colors)
 
         # get color labels for fig legend
         if isinstance(features, dict):
             circle_annotations = list(features.keys())
+        elif features is "rdkit":
+            circle_annotations = [
+                "Donor",
+                "Acceptor",
+                "Aromatic",
+                "Hydrophobe",
+                "LumpedHydrophobe",
+                "PosIonizable",
+            ]
         else:
             circle_annotations = [
                 "Donor",
@@ -138,6 +149,10 @@ class Draw:
                 "Hydrophobe",
             ]
         # Draw the circles and annotations
+        fontsize = 6
+        if features == "rdkit":
+            fontsize = 4
+
         for radius, color, annotation in zip(
                 circle_radii, circle_colors, circle_annotations
         ):
@@ -149,7 +164,7 @@ class Draw:
                 (x, 10),
                 va="center",
                 ha="center",
-                fontsize=6,
+                fontsize=fontsize,
                 fontweight="bold",
             )
 
