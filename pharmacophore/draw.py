@@ -6,12 +6,12 @@ import os
 import io
 import matplotlib.image as img
 import matplotlib.pyplot as plt
-from typing import Optional
+from typing import Optional, Union
 from PIL import Image
 from collections import defaultdict
 from cairosvg import svg2png
 from IPython.display import SVG
-from pharmacophore.constants import FEATURE_COLORS
+from pharmacophore.constants import FEATURE_COLORS, color_convert
 from pharmacophore import Pharmacophore
 from rdkit import Chem
 from rdkit.Chem import rdDepictor, AllChem
@@ -23,18 +23,23 @@ class Draw:
     def __init__(self, mol: Optional[Chem.Mol] = None):
         self.mol = mol
 
-    def draw_pharm(self, mol: Chem.Mol, features: str = 'default', savepath: str = None):
+    def draw_pharm(self, mol: Chem.Mol, features: Union[str, dict] = 'default', color: dict = None,
+                   savepath: str = None):
         """
         Draw a 2D pharmacophore image
         :param mol: Chem.Mol
             A molecule in ROMol format.
         :param features: str
             Determines which feature algorithm to use. Can use 'default' or 'rdkit'.
+        :param color: dict
+            Options to modify color of features. Must contain the name of the features. Colors can be given as either
+            distinct name or hex codes.
         :param savepath: str
-            Set the savepath to save the iamge.
+            Set the savepath to save the image.
         :return:
         """
         # set instance variables
+        global color_palette
         if mol is None:
             mol = self.mol
 
@@ -42,18 +47,28 @@ class Draw:
         pharm = Pharmacophore()
         if features == 'default' or features == 'rdkit':
             calc_features = pharm.calc_pharm(mol=mol, features=features)
+        elif isinstance(features, dict):
+            calc_features = pharm.calc_pharm(mol=mol, features=features)
         else:
-            raise ValueError('Unknown features! Only "default" or "rdkit" are supported!')
+            raise ValueError('Unknown features! Only "default" or "rdkit", or custom features as dict are supported!')
 
         # dictionaries to highlight atoms and highlight radius
         atom_highlights = defaultdict(list)
         highlight_rads = {}
 
+        # set to default or custom colors
+        if color is None:
+            color_palette = FEATURE_COLORS
+        elif isinstance(color, dict):
+            for key in color:
+                color[key] = color_convert(color[key])
+            color_palette = color
+
         # calc features and append results to atom_highlights and highlight_rads
         for feature in calc_features:
-            if feature[0] in FEATURE_COLORS:
+            if feature[0] in color_palette:
                 # extract colors from constants
-                color = FEATURE_COLORS[feature[0]]
+                color = color_palette[feature[0]]
                 # # for troubleshooting
                 # print(color)
                 for atom_id in feature[1]:
@@ -65,7 +80,7 @@ class Draw:
         rdDepictor.SetPreferCoordGen(True)
         drawer = rdMolDraw2D.MolDraw2DSVG(800, 800)
 
-        # set drawing optinos
+        # set drawing options
         # Use black for all elements
         drawer.drawOptions().updateAtomPalette(
             {k: (0, 0, 0) for k in DrawingOptions.elemDict.keys()}
@@ -109,14 +124,19 @@ class Draw:
 
         # Data for the circles
         circle_radii = [0, 50, 100, 150, 200, 250]
-        feature_values = list(FEATURE_COLORS.values())  # extract color values
+        feature_values = list(color_palette.values())  # extract color values
         circle_colors = [i for i in feature_values]  # match circle to color values
-        circle_annotations = [
-            "Donor",
-            "Acceptor",
-            "Aromatic",
-            "Hydrophobe",
-        ]
+
+        # get color labels for fig legend
+        if isinstance(features, dict):
+            circle_annotations = list(features.keys())
+        else:
+            circle_annotations = [
+                "Donor",
+                "Acceptor",
+                "Aromatic",
+                "Hydrophobe",
+            ]
         # Draw the circles and annotations
         for radius, color, annotation in zip(
                 circle_radii, circle_colors, circle_annotations
@@ -211,3 +231,9 @@ class Draw:
         bio = io.BytesIO(img_data)
         img = Image.open(bio)
         return img
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
