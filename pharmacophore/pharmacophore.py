@@ -67,7 +67,7 @@ class Pharmacophore:
         elif features == "rdkit":
             phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
         elif isinstance(features, dict):
-            phrase = f"Custom features: \n{features.keys()}"
+            phrase = f"Custom features: \n{list(features.keys())}"
 
         return phrase
 
@@ -117,6 +117,9 @@ class Pharmacophore:
 
         # use custom features
         elif isinstance(features, dict):
+            # reset instance variable
+            self.features = features
+
             feature_list = []
             # get features from constant file, count pharmacophore type, append to list
             for mol in mols:
