@@ -11,9 +11,10 @@ from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, c
 
 
 class Pharmacophore:
-    def __init__(self):
+    def __init__(self, features='default'):
         self.sdf = None
-        self.features = None
+        self.features = features
+        self.features_list = None
 
     def read_sdf(self, sdf_file: str = None, verbose: bool = False):
         """
@@ -51,6 +52,10 @@ class Pharmacophore:
 
         :return:
         """
+        # set instance variable
+        if features is None:
+            features = self.features
+
         global phrase
         if features == "default":
             phrase = f"Default features: \n('Donor', 'Acceptor', 'Aromatic', 'Hydrophobe')"
@@ -78,6 +83,10 @@ class Pharmacophore:
         :return:
         """
         global feat_factory
+        # set instance variable
+        if features is None:
+            features = self.features
+
         molecule_feature_frequencies = []
 
         # use default features
@@ -147,6 +156,9 @@ class Pharmacophore:
             A list of pharmacophore features, matching atom index, and position from a molecule.
         """
         global pharmacophore
+        # set instance variable
+        if features is None:
+            features = self.features
 
         # calculate pharmacophore by rdkit or pharmacophore dict
         if features == 'rdkit':
@@ -159,7 +171,7 @@ class Pharmacophore:
             raise ValueError("Only 'default', 'rdkit', or custom features as dictionary are supported!")
 
         # set features to self
-        self.features = pharmacophore
+        self.features_list = pharmacophore
 
         return pharmacophore
 
@@ -191,10 +203,10 @@ class Pharmacophore:
         # obtain specific data from each match
         for match in matches:
             result = [type, match[0], match[1][0], match[1][1], match[1][2]]
-            # add custom feats to self.features
-            self.features.append(result)
+            # add custom feats to self.features_list
+            self.features_list.append(result)
 
-        return self.features
+        return self.features_list
 
     def output_features(self, feature_list: list = None, savepath: str = None, sphere_size: float = 0.5,
                         color: dict = None):
@@ -212,6 +224,9 @@ class Pharmacophore:
             string for a specific color to be translated into RGB format.
         :return:
         """
+        if feature_list is None:
+            feature_list = self.features_list
+
         with open(savepath, "w") as f:
             # feat_factory = feature_factory
             # features = feat_factory.GetFeaturesForMol(mol)
