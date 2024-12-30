@@ -11,7 +11,12 @@ from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, c
 
 
 class Pharmacophore:
-    def __init__(self, features='default'):
+    def __init__(self, features: Union[str, dict] = 'default'):
+        """
+        Initialize the Pharmacophore class.
+        :param features: Union[str, dict]
+            Set features to use. Will default to 'default'. Can also accept RDKit features or a dictionary of features.
+        """
         self.sdf = None
         self.features = features
         self.features_list = None
