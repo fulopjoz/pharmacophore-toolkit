@@ -5,6 +5,7 @@ import numpy as np
 from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from typing import Union
 
 from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, color_convert
 
@@ -29,9 +30,11 @@ class Pharmacophore:
 
         return mol_list
 
-    def feature_types(self, features="default"):
+    def feature_types(self, features: Union[str, dict] = "default"):
         """
         A tuple containing default features from RDKit
+        :param features: Union[str, dict]
+
         :return:
         """
         global phrase
@@ -39,10 +42,12 @@ class Pharmacophore:
             phrase = f"Default features: \n('Donor', 'Acceptor', 'Aromatic', 'Hydrophobe')"
         elif features == "rdkit":
             phrase = f"Default features from RDKit: \n{feature_factory.GetFeatureFamilies()}"
+        elif isinstance(features, dict):
+            phrase = f"Custom features: \n{features.keys()}"
 
         return phrase
 
-    def to_df(self, mols: list = None, mol_name: list = None, features: str = 'rdkit'):
+    def to_df(self, mols: list = None, mol_name: list = None, features: Union[str, dict] = 'default'):
         """
         From a list of ROMols and molecule names, create a dataframe of features. Defaults to features from RDKit.
         :param mols:
@@ -62,8 +67,8 @@ class Pharmacophore:
                 feature_frequency = collections.Counter(feats)
                 molecule_feature_frequencies.append(feature_frequency)
 
-        # use custom features
-        elif features == 'pharmacophore':
+        # use default features
+        elif features == 'default':
             feature_list = []
             # get features from constant file, count pharmacophore type, append to list
             for mol in mols:
@@ -73,6 +78,21 @@ class Pharmacophore:
                 feature_frequency = collections.Counter(feature_list)
                 molecule_feature_frequencies.append(feature_frequency)
                 feature_list = []  # reset list to avoid double counting
+
+        # use custom features
+        elif isinstance(features, dict):
+            feature_list = []
+            # get features from constant file, count pharmacophore type, append to list
+            for mol in mols:
+                feats = self._calc_pharmacophore(mol, features)
+                for feat in feats:
+                    feature_list.append(feat[0])
+                feature_frequency = collections.Counter(feature_list)
+                molecule_feature_frequencies.append(feature_frequency)
+                feature_list = []  # reset list to avoid double counting
+
+        else:
+            raise ValueError("Only 'default', 'rdkit', or custom features as dictionary are supported!")
 
         # # for troubleshooting
         # print(molecule_feature_frequencies)
@@ -92,7 +112,7 @@ class Pharmacophore:
 
         return feature_frequencies_df
 
-    def calc_pharm(self, mol: Chem.Mol = None, features: str = 'default'):
+    def calc_pharm(self, mol: Chem.Mol = None, features: Union[str, dict] = 'default'):
         """
         Generate a list of pharmacophore features and position from a molecule.
         :param mol: Chem.Mol
@@ -108,6 +128,10 @@ class Pharmacophore:
             pharmacophore = self._calc_rdkit(mol)
         elif features == 'default':
             pharmacophore = self._calc_pharmacophore(mol)
+        elif isinstance(features, dict):
+            pharmacophore = self._calc_pharmacophore(mol, features)
+        else:
+            raise ValueError("Only 'default', 'rdkit', or custom features as dictionary are supported!")
 
         # set features to self
         self.features = pharmacophore
@@ -214,7 +238,7 @@ class Pharmacophore:
 
         print(f"Feature visualization script written to {savepath}.")
 
-    def _calc_pharmacophore(self, mol: Chem.Mol = None):
+    def _calc_pharmacophore(self, mol: Chem.Mol = None, features: dict = None):
         """
         Calculate pharmacophore features from a molecule using dict from constants
         :param mol: Chem.Mol
@@ -224,7 +248,12 @@ class Pharmacophore:
         """
         global pharmacophore
         # read in custom feature dict
-        constant_feats = FEATURES
+        if features is None:
+            constant_feats = FEATURES
+        else:
+            constant_feats = features
+
+        # hold matches
         matches = {}
 
         # Identify matches to feature dict
@@ -358,7 +387,7 @@ def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=
         if verbose is True:
             if len(matches) == 0:
                 output_message = Chem.MolToSmarts(pattern)
-                print(f"NO Matches to {output_message}!")
+                print(f"No Matches to {output_message}!")
                 return matches
 
     return matches
