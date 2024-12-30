@@ -45,12 +45,12 @@ class Pharmacophore:
 
         return mol_list
 
-    def feature_types(self, features: Union[str, dict] = "default"):
+    def feature_types(self, features: Optional[Union[str, dict]] = None):
         """
         Output feature types that will be displayed in the pharmacophore model. This will default to 'default' settings.
         However, default RDKit features can also be used or a dictionary containing a dictionary of features with SMARTS
         string can be used.
-        :param features: Union[str, dict]
+        :param features: Optional[Union[str, dict]]
             The feature type to be used in the pharmacophore model. This will default to "default" settings. Using
             "rdkit" will set the model to default RDKit features. Custom features can be used by giving a dictionary
             with feature:list pair, where the list contains SMARTS string for a given feature.
@@ -71,7 +71,7 @@ class Pharmacophore:
 
         return phrase
 
-    def to_df(self, mols: list = None, mol_name: list = None, features: Union[str, dict] = 'default'):
+    def to_df(self, mols: list = None, mol_name: list = None, features: Optional[Union[str, dict]] = None):
         """
         From a list of containing Chem.MOl and a list containing molecule names, create a dataframe displaying matching
         features the molecules. Method will default to "default" settings. Users can use "rdkit" to set the model to
@@ -148,7 +148,7 @@ class Pharmacophore:
 
         return feature_frequencies_df
 
-    def calc_pharm(self, mol: Chem.Mol = None, features: Union[str, dict] = 'default'):
+    def calc_pharm(self, mol: Chem.Mol = None, features: Optional[Union[str, dict]] = None):
         """
         Generate a list of pharmacophore features and position from a molecule.
         :param mol: Chem.Mol
@@ -251,7 +251,8 @@ class Pharmacophore:
                 warnings.warn("Issue with color features!")
 
             # to give sequential numbering for each group:
-            feature_counts = {"Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0}
+            feature_counts = {
+                "Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0, "PosIonizable":0}
 
             # get features
             for feat in feature_list:
@@ -279,6 +280,8 @@ class Pharmacophore:
             f.write("color aromatic_color, Aromatic_*\n")
             f.write("show spheres, LumpedHydrophobe_*\n")
             f.write("color lumpedhydrophobe, LumpedHydrophobe_*\n")
+            f.write("show spheres, PosIonizable*\n")
+            f.write("color posionizable, PosIonizable*\n")
             f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
 
         print(f"Feature visualization script written to {savepath}.")
@@ -463,3 +466,9 @@ def _compute_match_centroid(mol, matched_pattern):
     # convert result to float
     center = center.tolist()
     return tuple(center)
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()

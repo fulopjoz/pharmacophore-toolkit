@@ -39,7 +39,8 @@ FEATURE_COLORS = {
     "Acceptor": (1.0, 0.27058823529411763, 0.0),  # orangered
     "Aromatic": (0.8549019607843137, 0.6470588235294118, 0.12549019607843137),  # goldenrod
     "Hydrophobe": (0.1803921568627451, 0.5450980392156862, 0.3411764705882353),  # seagreen
-    "LumpedHydrophobe": (0.1803921568627451, 0.5450980392156862, 0.3411764705882353)  # seagreen
+    "LumpedHydrophobe": (0.1803921568627451, 0.5450980392156862, 0.3411764705882353),  # seagreen
+    "PosIonizable": (0.0, 0.7490196078431373, 1.0)  # deepskyblue
 }
 
 
@@ -56,3 +57,9 @@ def color_convert(color: str = None):
         return rgb
     except:
         raise ValueError(f"{color} is not a valid color!")
+
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
