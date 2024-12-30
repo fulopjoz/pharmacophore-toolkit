@@ -127,7 +127,6 @@ class Draw:
         circle_radii = [0, 50, 100, 150, 200, 250]
         feature_values = list(color_palette.values())  # extract color values
         circle_colors = [i for i in feature_values]  # match circle to color values
-        print(circle_colors)
 
         # get color labels for fig legend
         if isinstance(features, dict):
