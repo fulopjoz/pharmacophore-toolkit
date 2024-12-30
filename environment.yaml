@@ -7,5 +7,6 @@ dependencies:
   - datamol
   - pip
   - pip:
+      - pandas
       - nglview
       - notebook
