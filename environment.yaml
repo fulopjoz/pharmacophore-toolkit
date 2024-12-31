@@ -1,4 +1,4 @@
-name: pharmacophore-model
+name: pharmacophore-toolkit
 channels:
   - conda-forge
   - defaults
@@ -10,3 +10,4 @@ dependencies:
       - pandas
       - nglview
       - notebook
+      - cairosvg
