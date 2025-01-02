@@ -131,7 +131,7 @@ class Draw:
         # get color labels for fig legend
         if isinstance(features, dict):
             circle_annotations = list(features.keys())
-        elif features is "rdkit":
+        elif features == "rdkit":
             circle_annotations = [
                 "Donor",
                 "Acceptor",
@@ -211,9 +211,10 @@ class Draw:
         return img
 
     def similarity_maps(self, refmol: Chem.Mol = None, querymol: Chem.Mol = None, radius: int = 2, nbits: int = 2048,
-                        fpType: str = 'bv'):
+                        fpType: str = 'bv', savepath: str = None):
         """
         Generate similarity map between query molecule and reference molecule. Only Morgan fingerprints are used.
+        Image must be in png format.
         :param refmol: Chem.Mol
             Reference molecule. Must be in ROMol format.
         :param querymol: Chem.Mol
@@ -224,6 +225,8 @@ class Draw:
             Set the number of bits for the generated fingerprint. Default to 2048.
         :param fpType: str
             Set the fingerprint type. Default to 'bv'. Can only use 'bv' or 'count'
+        :param savepath: str
+            Set image savepath.
         :return:
         """
         # set instance variable
@@ -242,8 +245,14 @@ class Draw:
         d.FinishDrawing()
         img_data = d.GetDrawingText()
 
+        # draw image as png file
         bio = io.BytesIO(img_data)
         img = Image.open(bio)
+
+        # if savepath given in params
+        if savepath:
+            img.save(savepath)
+
         return img
 
 
