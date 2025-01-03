@@ -44,5 +44,5 @@ conda env create -f environment.yaml
 
 #### NOTE:
 The Pharmacophore-Toolkit relies on cairosvg to create images. By default, images will be created in .png format. 
-Depending on your workstation/machine, this package will need to be installed manually. Installation instructions can be 
-found [here](https://cairosvg.org)
+Depending on your workstation/machine, the [CairoSVG](https://github.com/Kozea/CairoSVG) package will need to be 
+installed manually. Installation instructions can be found [here](https://cairosvg.org). 
