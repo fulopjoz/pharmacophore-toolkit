@@ -5,9 +5,10 @@ channels:
 dependencies:
   - python
   - datamol
+  - cairo  # ensures Cairo installation
   - pip
   - pip:
       - pandas
-      - nglview
-      - notebook
+      - numpy
       - cairosvg
+      - pharmacophore-toolkit
