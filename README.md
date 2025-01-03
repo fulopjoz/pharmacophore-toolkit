@@ -1,6 +1,7 @@
 # A Simple Pharmacophore-Toolkit
 
 ![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.1.0-blue)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/py50?style=flat&logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 The Pharmacophore-Toolkit is built on RDKit and allows for building simple pharmacophore models. The
@@ -32,12 +33,16 @@ Tutorials are written as JupyterNotebooks and can be found [here](tutorial/).
 
 ## Install
 You can install the Pharmacophore-Toolkit using pip:
-```python
+```
 pip install pharmacophore-toolkit
 ```
 
-or directly from the github repository as follows:
-```python
-pip install git+https://github.com/tlint101/pharmacophore-toolkit.git
+Alternatively, the environemnt can be created by cloning the repository and then running the following conda script:
+```
+conda env create -f environment.yaml
 ```
 
+#### NOTE:
+The Pharmacophore-Toolkit relies on cairosvg to create images. By default, images will be created in .png format. 
+Depending on your workstation/machine, this package will need to be installed manually. Installation instructions can be 
+found [here](https://cairosvg.org)
