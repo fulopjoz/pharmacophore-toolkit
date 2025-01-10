@@ -1,6 +1,6 @@
 # A Simple Pharmacophore-Toolkit
 
-![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.1.0-blue)
+![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.0.2-blue)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/py50?style=flat&logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -42,7 +42,13 @@ Alternatively, the environemnt can be created by cloning the repository and then
 conda env create -f environment.yaml
 ```
 
-#### NOTE:
-The Pharmacophore-Toolkit relies on cairosvg to create images. By default, images will be created in .png format. 
-Depending on your workstation/machine, the [CairoSVG](https://github.com/Kozea/CairoSVG) package will need to be 
-installed manually. Installation instructions can be found [here](https://cairosvg.org). 
+> [!NOTE]
+> Note: The Pharmacophore-Toolkit relies on cairosvg to create images before being converted into .png format. Depending on your 
+workstation/machine, the [CairoSVG](https://github.com/Kozea/CairoSVG) package will need to be installed manually. 
+Installation instructions can be found [here](https://cairosvg.org). If it is already installed on your machine globally, 
+on my set up, I used conda to install cairosvg:
+```
+conda install conda-forge::cairosvg
+```
+
+This solved the problem on my machine, but may differ from yours.
