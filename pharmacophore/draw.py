@@ -20,7 +20,7 @@ from rdkit.Chem.Draw.MolDrawing import DrawingOptions
 
 
 class Draw:
-    def __init__(self, mol: Optional[Chem.Mol] = None, features: Optional[Union[str, dict]] = None):
+    def __init__(self, mol: Optional[Chem.Mol] = None, features: Optional[Union[str, dict]] = 'default'):
         self.mol = mol
         self.features = features
 
