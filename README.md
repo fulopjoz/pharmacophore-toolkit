@@ -15,16 +15,17 @@ defined. The final 3D image can be rendered in PyMOL. Additional information can
 <figure>
     <img src="img/3d_example.png" width="400">
     <figcaption>3D conformation of molecules and alignment was performed using RDKit. Spheres were generated based on 
-                Serotonin. Blue spheres represent hydrogen donors and gold spheres represent aromatic rings. 
+                Serotonin. Blue spheres represent hydrogen donors and gold spheres represent aromatic rings. The 3D 
+                images were generated in PyMOL.
     </figcaption>
 </figure>
-
-The 3D images were generated in PyMOL. 
 
 ### 2D Model
 <figure>
     <img src="img/similarity_exmaple.png" width="400">
-    <figcaption>Similarity map of molecules. All molecules were compared to Serotonin. </figcaption>
+    <figcaption>Similarity map of molecules. All molecules were compared to Serotonin. More information can be seen 
+                at RDKit documentation. 
+    </figcaption>
 </figure>
 
 ## Tutorials
