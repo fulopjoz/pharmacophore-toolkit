@@ -1,6 +1,6 @@
 # A Simple Pharmacophore-Toolkit
 
-![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.0.2-blue)
+![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolset-v0.0.3-blue)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/py50?style=flat&logo=python&logoColor=white)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
