@@ -8,7 +8,7 @@ The Pharmacophore-Toolkit is built on RDKit and allows for building simple pharm
 Pharmacophore-Toolset can generate models from crystal structures, docking poses, or SMILES string. To generate a 3D
 model, a .pml file will be generated. This files contains scripts to generate spheres with color and XYZ coordinates 
 defined. The final 3D image can be rendered in PyMOL. Additional information can be found under the
-[Tutorials](tutorial/) section. The Pharmacophore-Toolkit can result in two types:
+[Tutorials](tutorials/) section. The Pharmacophore-Toolkit can result in two types:
 
 ### 3D Model
 
@@ -30,7 +30,7 @@ defined. The final 3D image can be rendered in PyMOL. Additional information can
 
 ## Tutorials
 
-Tutorials are written as JupyterNotebooks and can be found [here](tutorial/).
+Tutorials are written as JupyterNotebooks and can be found [here](tutorials/).
 
 ## Install
 You can install the Pharmacophore-Toolkit using pip:
