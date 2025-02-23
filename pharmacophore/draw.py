@@ -6,6 +6,7 @@ import os
 import io
 import matplotlib.image as img
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from typing import Optional, Union
 from PIL import Image
 from collections import defaultdict
@@ -211,7 +212,7 @@ class Draw:
         return img
 
     def similarity_maps(self, refmol: Chem.Mol = None, querymol: Chem.Mol = None, radius: int = 2, nbits: int = 2048,
-                        fpType: str = 'bv', savepath: str = None):
+                        fpType: str = 'bv', cmap: Optional[Union[str, list]] = None, savepath: str = None):
         """
         Generate similarity map between query molecule and reference molecule. Only Morgan fingerprints are used.
         Image must be in png format.
@@ -225,6 +226,8 @@ class Draw:
             Set the number of bits for the generated fingerprint. Default to 2048.
         :param fpType: str
             Set the fingerprint type. Default to 'bv'. Can only use 'bv' or 'count'
+        :param cmap: Optional[Union[str, list]]
+            Set the colormap of figure. Uses matplotlib color scheme: https://matplotlib.org/stable/users/explain/colors/colormaps.html
         :param savepath: str
             Set image savepath.
         :return:
@@ -237,10 +240,17 @@ class Draw:
         if fpType not in ['bv', 'count']:
             raise ValueError("Only 'bv' or 'count' accepted!")
 
+        # convert list into a matplotlib colormap
+        if isinstance(cmap, list):
+            if len(cmap) != 3:
+                raise ValueError("Only three colors are accepted!")
+            cmap = LinearSegmentedColormap.from_list("custom_similarity_colors", cmap)
+
         d = Chem.Draw.MolDraw2DCairo(400, 400)
         function = lambda m, i: SimilarityMaps.GetMorganFingerprint(m, i, radius=radius, fpType=fpType, nBits=nbits)
         _, maxWeight = SimilarityMaps.GetSimilarityMapForFingerprint(refMol=refmol, probeMol=querymol,
-                                                                     fpFunction=function, draw2d=d)
+                                                                     fpFunction=function, draw2d=d, colorMap=cmap)
+
         # finish drawing
         d.FinishDrawing()
         img_data = d.GetDrawingText()
