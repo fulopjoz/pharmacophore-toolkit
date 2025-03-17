@@ -38,7 +38,7 @@ You can install the Pharmacophore-Toolkit using pip:
 pip install pharmacophore-toolkit
 ```
 
-Alternatively, the environemnt can be created by cloning the repository and then running the following conda script:
+Alternatively, the environment can be created by cloning the repository and then running the following conda script:
 ```
 conda env create -f environment.yaml
 ```
