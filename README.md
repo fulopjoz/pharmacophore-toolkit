@@ -47,7 +47,7 @@ conda env create -f environment.yaml
 > **Note:** The Pharmacophore-Toolkit relies on cairosvg to create images before being converted into .png format. Depending on your 
 workstation/machine, the [CairoSVG](https://github.com/Kozea/CairoSVG) package will need to be installed manually. 
 Installation instructions can be found [here](https://cairosvg.org). If it is already installed on your machine globally, 
-on my set up, I used conda to install cairosvg:
+on my machine, I used conda to install cairosvg:
 ```
 conda install conda-forge::cairosvg
 ```
