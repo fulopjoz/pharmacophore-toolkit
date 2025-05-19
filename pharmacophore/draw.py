@@ -4,6 +4,7 @@ Script to draw pharmacophore in 2D figure
 
 import os
 import io
+import py3Dmol
 import matplotlib.image as img
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
@@ -12,7 +13,7 @@ from PIL import Image
 from collections import defaultdict
 from cairosvg import svg2png
 from IPython.display import SVG
-from pharmacophore.constants import FEATURE_COLORS, color_convert
+from pharmacophore.constants import FEATURE_COLORS, INTERACTIVE_COLORS, color_convert
 from pharmacophore import Pharmacophore
 from rdkit import Chem
 from rdkit.Chem import rdDepictor, AllChem
@@ -264,6 +265,107 @@ class Draw:
             img.save(savepath)
 
         return img
+
+
+class View:
+    def __init__(self, mol: Optional[Union[Chem.Mol, list[Chem.Mol]]] = None,
+                 pharmacophore: Optional[Union[str, dict]] = 'default'):
+        self.mol = mol
+        self.pharmacophore = pharmacophore
+
+    def view(self, mol: Union[list[Chem.Mol], Chem.Mol], pharmacophore: list = None, color: dict = None,
+             labels: bool = True, window: tuple = (500, 500)):
+        """
+        Generate an interactive py3d mol image of the molecule and its pharmacophores. Method only works when used in
+        Jupyter notebooks. Must include a list of molecules and a list of pharmacophores generated using
+        Pharmacophore.calc_pharm().
+        :param mol: Union[list[Chem.Mol], Chem.Mol]
+            A molecule in ROMol format. Can be a single molecule or a list of molecules.
+        :param pharmacophore: list
+            A list containing a list of pharmacophore data generated from Pharmacophore.calc_pharm().
+        :param color: dict
+            A dictionary containing the following: {pharmacophore:color}. The color name can be in hex code or color
+            name. If None given, will use default colors.
+        :param labels: bool
+            Whether to generate labels overlayed on the pharmacophore sphres.
+        :param window: tuple
+            Set the window size of the py3dmol figure.
+        :return:
+        """
+        # instantiate variables
+        if pharmacophore is None:
+            pharmacophore = self.pharmacophore
+
+        # set to default or custom colors
+        if color is None:
+            color = INTERACTIVE_COLORS
+        elif isinstance(color, dict):
+            for key in color:
+                color[key] = color_convert(color[key])
+            color = color
+
+        # convert rdkit mol into mol_block
+        if not isinstance(mol, list):
+            mol = [mol]
+
+        # set vars to self for use in _render
+        self.mols = mol
+        self.pharmacophore = pharmacophore
+        self.colors = color
+        self.labels = labels
+        self.window = window
+
+        # dropdown menu
+        import ipywidgets as widgets
+        dropdown = widgets.Dropdown(
+            options=[(f"Molecule {i + 1}", i) for i in range(len(mol))],
+            value=0,
+            description="Select:",
+            style={"description_width": "initial"}
+        )
+
+        widgets.interact(self._render, index=dropdown)
+
+    def _render(self, index):
+        """Function to render molecules and its pharmacophore"""
+        mol = self.mols[index]
+        mol_block = Chem.MolToMolBlock(mol)
+
+        viewer = py3Dmol.view(width=self.window[0], height=self.window[1])
+        viewer.setBackgroundColor("white")
+        viewer.addModel(mol_block, "mol")
+        viewer.setStyle({"stick": {}})
+        viewer.zoomTo()
+
+        # map pharmacophore based on list of list inputs
+        if isinstance(self.pharmacophore[0][0], str):
+            pharma_index = self.pharmacophore  # if multiple pharmacophore is given
+        else:
+            pharma_index = self.pharmacophore[index]  # single pharmacophore
+        for pharma in pharma_index:
+            label = pharma[0]
+            x = pharma[2]
+            y = pharma[3]
+            z = pharma[4]
+            color = self.colors.get(label, )
+
+            viewer.addSphere({
+                "center": {"x": x, "y": y, "z": z},
+                "radius": 0.5,
+                "color": color,
+                "opacity": 0.9,
+            })
+
+            if self.labels:
+                viewer.addLabel(label, {
+                    "position": {"x": x, "y": y, "z": z},
+                    "fontSize": 12,
+                    "showBackground": True,
+                    "backgroundColor": color,
+                    "fontColor": "white"
+                })
+
+        viewer.show()
 
 
 if __name__ == "__main__":
