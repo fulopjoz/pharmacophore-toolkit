@@ -43,6 +43,16 @@ FEATURE_COLORS = {
     "PosIonizable": (0.0, 0.7490196078431373, 1.0)  # deepskyblue
 }
 
+# for rendering py3dmol
+INTERACTIVE_COLORS = {
+    "Donor": "royalblue",
+    "Acceptor": "orangered",
+    "Aromatic": "goldenrod",
+    "Hydrophobe": "seagreen",
+    "LumpedHydrophobe": "seagreen",
+    "PosIonizable": "deepskyblue"
+}
+
 
 def color_convert(color: str = None):
     """
