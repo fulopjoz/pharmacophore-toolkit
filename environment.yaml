@@ -10,6 +10,7 @@ dependencies:
   - pip:
       - pandas
       - numpy
-      - cairosvg
+      - CairoSVG
       - py3Dmol
+      - ipywidgets
 #      - pharmacophore-toolkit
