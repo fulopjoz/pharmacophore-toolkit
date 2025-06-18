@@ -1,7 +1,8 @@
 # A Simple Pharmacophore-Toolkit
 
-![Static Badge](https://img.shields.io/badge/Pharmacophore--Toolkit-v0.0.5-blue)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/py50?style=flat&logo=python&logoColor=white)
+[![Pharmacophore-Toolkit Versions](https://img.shields.io/pypi/v/pharmacophore-toolkit.svg?label=Pharmacophore-Toolkit&color=blue)](https://pypi.org/project/pharmacophore-toolkit/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pharmacophore-toolkit?style=flat&logo=python&logoColor=white)](https://pypi.org/project/mol-inspector/)
+[![PyPI - Python Version](https://img.shields.io/pypi/v/pharmacophore-toolkit.svg)](https://pypi.org/project/pharmacophore-toolkit/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 The Pharmacophore-Toolkit is built on RDKit and allows for building simple pharmacophore models. The
