@@ -216,8 +216,8 @@ class Pharmacophore:
 
         return self.features_list
 
-    def output_features(self, feature_list: Optional[list] = None, savepath: str = None, sphere_size: float = 0.5,
-                        color: dict = None):
+    def output_features(self, feature_list: Optional[list] = None, savepath: str = None, type: str = "sphere",
+                        sphere_size: float = 0.7, transparency: float = 0.2, color: dict = None):
         """
         Output features as a .pml format for visualization in PyMol.
         :param feature_list: Optional[list]
@@ -225,8 +225,13 @@ class Pharmacophore:
             calc_pharm method.
         :param savepath: str = None
             Must be a file in .pml format.
+        :param type: str = "Sphere"
+            Set the pharmacophore representation. Can be "sphere" or "surface". If surface is used, transparency can be
+            set for each pharmacophore.
         :param sphere_size: float = 0.5
             Set size of spheres.
+        :param transparency: float = 0.2
+            Set teh transparency of pharmacophore. Only works when the pharmacophore type is set to "surface".
         :param color: dict
             Set color for the pharmacophores. Must be given as Acceptor: color where color is a tuple for RGB or a
             string for a specific color to be translated into RGB format.
@@ -255,7 +260,7 @@ class Pharmacophore:
 
             # to give sequential numbering for each group:
             feature_counts = {
-                "Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0, "PosIonizable":0}
+                "Acceptor": 0, "Donor": 0, "Hydrophobe": 0, "Aromatic": 0, "LumpedHydrophobe": 0, "PosIonizable": 0}
 
             # get features
             for feat in feature_list:
@@ -273,19 +278,54 @@ class Pharmacophore:
                 )
 
             # set color and sphere size
-            f.write("show spheres, Acceptor_*\n")
-            f.write("color acceptor_color, Acceptor_*\n")
-            f.write("show spheres, Donor_*\n")
-            f.write("color donor_color, Donor_*\n")
-            f.write("show spheres, Hydrophobe_*\n")
-            f.write("color hydrophobe_color, Hydrophobe_*\n")
-            f.write("show spheres, Aromatic_*\n")
-            f.write("color aromatic_color, Aromatic_*\n")
-            f.write("show spheres, LumpedHydrophobe_*\n")
-            f.write("color lumpedhydrophobe, LumpedHydrophobe_*\n")
-            f.write("show spheres, PosIonizable*\n")
-            f.write("color posionizable, PosIonizable*\n")
-            f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
+            f.write("\n")
+            if type == "sphere":
+                f.write("show spheres, Acceptor_*\n")
+                f.write("color acceptor_color, Acceptor_*\n")
+                f.write("\n")
+                f.write("show spheres, Donor_*\n")
+                f.write("color donor_color, Donor_*\n")
+                f.write("\n")
+                f.write("show spheres, Hydrophobe_*\n")
+                f.write("color hydrophobe_color, Hydrophobe_*\n")
+                f.write("\n")
+                f.write("show spheres, Aromatic_*\n")
+                f.write("color aromatic_color, Aromatic_*\n")
+                f.write("\n")
+                f.write("show spheres, LumpedHydrophobe_*\n")
+                f.write("color lumpedhydrophobe, LumpedHydrophobe_*\n")
+                f.write("\n")
+                f.write("show spheres, PosIonizable*\n")
+                f.write("color posionizable, PosIonizable*\n")
+                f.write("\n")
+                f.write(f"set sphere_scale, {sphere_size}\n")  # Adjust sphere size in PyMOL
+            elif type == "surface":
+                f.write("show surface, Acceptor_*\n")
+                f.write("color acceptor_color, Acceptor_*\n")
+                f.write(f"set transparency, {transparency}, Acceptor_*")
+                f.write("\n")
+                f.write("show surface, Donor_*\n")
+                f.write("color donor_color, Donor_*\n")
+                f.write(f"set transparency, {transparency}, Donor_*\n")
+                f.write("\n")
+                f.write("show surface, Hydrophobe_*\n")
+                f.write("color hydrophobe_color, Hydrophobe_*\n")
+                f.write(f"set transparency, {transparency}, Hydrophobe_*\n")
+                f.write("\n")
+                f.write("show surface, Aromatic_*\n")
+                f.write("color aromatic_color, Aromatic_*\n")
+                f.write(f"set transparency, {transparency}, Aromatic_*\n")
+                f.write("\n")
+                f.write("show surface, LumpedHydrophobe_*\n")
+                f.write("color lumpedhydrophobe, LumpedHydrophobe_*\n")
+                f.write(f"set transparency, {transparency}, LumpedHydrophobe_*\n")
+                f.write("\n")
+                f.write("show surface, PosIonizable*\n")
+                f.write("color posionizable, PosIonizable*\n")
+                f.write(f"set transparency, {transparency}, PosIonizable*\n")
+                f.write("\n")
+            else:
+                raise ValueError("Issue with type {type}! Only 'sphere' or 'surface' allowed!")
 
         print(f"Feature visualization script written to {savepath}.")
 
