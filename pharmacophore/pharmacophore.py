@@ -130,23 +130,23 @@ class Pharmacophore:
                 molecule_feature_frequencies.append(feature_frequency)
                 feature_list = []  # reset list to avoid double counting
 
-        else:
+        elif isinstance(features, dict) is False:
             raise ValueError("Only 'default', 'rdkit', or custom features as dictionary are supported!")
+
+        # check if mol_name is given
+        if mol_name is None:
+            mol_name = []
+            for x in range(len(mols)):
+                name = "Mol" + str(x)
+                mol_name.append(name)
 
         # # for troubleshooting
         # print(molecule_feature_frequencies)
 
-        feature_frequencies_df = (
-            pd.DataFrame(
-                molecule_feature_frequencies,
-                index=[f"Mol{i}" for i, _ in enumerate(mols, 1)]
-            )
-            .fillna(0)
-            .astype(int)
-        )
-
         # reformat table and rename columns to molecule list
-        feature_frequencies_df = feature_frequencies_df.transpose()
+        df = pd.DataFrame(molecule_feature_frequencies)
+        feature_frequencies_df = df.transpose()
+        feature_frequencies_df = feature_frequencies_df.fillna(0).astype(int)
         feature_frequencies_df = feature_frequencies_df.set_axis(mol_name, axis=1)
 
         return feature_frequencies_df
