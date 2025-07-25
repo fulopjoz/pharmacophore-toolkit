@@ -55,12 +55,22 @@ molecules can be generated in 3D using two methods:
 - **[py3Dmol](https://github.com/3dmol/3Dmol.js)**
 
 <figure>
-    <img src="img/3d_example_py3dmol.png" width="400">
+    <img src="img/pharmacophore-demo.gif" width="400">
     <figcaption>
-    Images rendered in Jupyter Notebook using py3Dmol. Pharmacophore features for each molecule is highlighted. Blue 
-    spheres represent Hydrogen Bond Donors, gold spheres for Aromatic rings, and green for Hydrophobes. 
+    The 3D model can be interactive in a Jupyter Notebook.
     </figcaption>
 </figure>
+
+<figure>
+    <img src="img/3d_example_py3dmol.png" width="400">
+    <figcaption>
+    Images rendered in Jupyter Notebook using py3Dmol using a screenshot. Pharmacophore features for each molecule is 
+    highlighted. Blue spheres represent Hydrogen Bond Donors, gold spheres for Aromatic rings, and green for 
+    Hydrophobes. 
+    </figcaption>
+</figure>
+
+
 
 - **[PyMOL](https://pymol.org)**
 
