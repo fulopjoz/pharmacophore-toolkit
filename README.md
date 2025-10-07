@@ -42,7 +42,25 @@ Conda installation solved the problem on my machine, but may differ with yours.
 ## Tutorials
 
 Tutorials are written as JupyterNotebooks and can be found [here](tutorials/). The Pharmacophore-Toolkit can generate 
-several types of images:
+several types of images and models:
+
+### Consensus Pharmacophore
+
+The toolkit now includes a `consensus_pharm` method that generates consensus pharmacophore models from multiple aligned 3D molecular structures. This is useful for:
+- Structure-based drug design with multiple ligand binding poses
+- Identifying common pharmacophoric features across active compounds
+- Ligand-based pharmacophore modeling
+
+Example usage:
+```python
+from pharmacophore import Pharmacophore
+
+# Create consensus from aligned molecules
+pharm = Pharmacophore()
+consensus = pharm.consensus_pharm(aligned_mols, distance_threshold=2.0)
+```
+
+See the [Consensus Pharmacophore Tutorial](tutorials/consensus_pharmacophore_tutorial.ipynb) for detailed examples.
 
 ## Example Images
 

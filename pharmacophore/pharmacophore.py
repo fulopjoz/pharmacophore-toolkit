@@ -183,6 +183,75 @@ class Pharmacophore:
 
         return pharmacophore
 
+    def consensus_pharm(self, mols: list[Chem.Mol], distance_threshold: float = 2.0, 
+                       features: Optional[Union[str, dict]] = None):
+        """
+        Generate a consensus pharmacophore model from multiple aligned 3D molecules.
+        
+        :param mols: list[Chem.Mol]
+            List of molecules with 3D conformations (assumed to be pre-aligned).
+        :param distance_threshold: float
+            Distance threshold in Angstroms for clustering features (default: 2.0).
+        :param features: Optional[Union[str, dict]]
+            Feature type to use (default: 'default'). Can be 'rdkit' or custom dictionary.
+        :return: list
+            A list of consensus pharmacophore features [type, atom_indices, x, y, z].
+        """
+        from sklearn.cluster import DBSCAN
+        
+        # Collect all features from all molecules
+        all_features = []
+        for mol in mols:
+            mol_features = self.calc_pharm(mol, features=features)
+            all_features.extend(mol_features)
+        
+        # Group features by type
+        features_by_type = {}
+        for feature in all_features:
+            feat_type = feature[0]
+            if feat_type not in features_by_type:
+                features_by_type[feat_type] = []
+            features_by_type[feat_type].append(feature)
+        
+        # Cluster features of the same type and create consensus features
+        consensus_features = []
+        
+        for feat_type, type_features in features_by_type.items():
+            # Extract coordinates for clustering
+            coords = np.array([[f[2], f[3], f[4]] for f in type_features])
+            
+            # Use DBSCAN for clustering (eps is the distance threshold)
+            # min_samples=1 means even single points form clusters
+            clustering = DBSCAN(eps=distance_threshold, min_samples=1, metric='euclidean')
+            labels = clustering.fit_predict(coords)
+            
+            # Create consensus feature for each cluster
+            for cluster_id in set(labels):
+                if cluster_id == -1:  # Skip noise points (shouldn't happen with min_samples=1)
+                    continue
+                    
+                cluster_mask = labels == cluster_id
+                cluster_coords = coords[cluster_mask]
+                
+                # Calculate centroid of the cluster
+                centroid = np.mean(cluster_coords, axis=0)
+                
+                # For atom indices, we use an empty tuple for consensus features
+                # since they represent merged features from multiple molecules
+                consensus_feature = [
+                    feat_type,
+                    (),  # Empty tuple for atom indices in consensus
+                    float(centroid[0]),
+                    float(centroid[1]),
+                    float(centroid[2])
+                ]
+                consensus_features.append(consensus_feature)
+        
+        # Set consensus features to self
+        self.features_list = consensus_features
+        
+        return consensus_features
+
     def add_feats(self, mol: Chem.Mol = None, substruct: str = None, type: str = None):
         """
         Optional method to add specific features if not present using default or RDKit rules.
