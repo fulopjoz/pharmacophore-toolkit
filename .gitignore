@@ -2,3 +2,6 @@ notes
 .idea
 personal
 dist
+__pycache__
+*.pyc
+*.pyo
