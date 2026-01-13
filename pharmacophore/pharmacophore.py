@@ -5,7 +5,8 @@ import numpy as np
 from tqdm import tqdm
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from typing import Union, Optional
+from typing import Union, Optional, List, Dict, Tuple
+import warnings
 
 from pharmacophore.constants import feature_factory, FEATURES, FEATURE_COLORS, color_convert
 
@@ -183,10 +184,109 @@ class Pharmacophore:
 
         return pharmacophore
 
+    def generate_consensus_models(
+        self,
+        mols: List[Chem.Mol],
+        tolerance: float = 2.0,
+        occurrence_threshold: float = 0.5,
+        linkage: str = 'average',
+        model_set: str = 'standard',
+        features: Optional[Union[str, dict]] = None,
+        return_mols: bool = True
+    ) -> Dict[str, Union[List, Tuple[List, Chem.Mol]]]:
+        """Generate multiple consensus pharmacophore models.
+        
+        This method creates a set of consensus pharmacophore models with
+        different stringency levels using deterministic agglomerative
+        hierarchical clustering. Each model is also converted to an RDKit
+        Mol object for shape-based alignment.
+        
+        The new implementation uses:
+        - Agglomerative clustering (deterministic, explainable)
+        - MOE-style dual parameters (tolerance + occurrence_threshold)
+        - RDKit molecule representation for shape alignment
+        
+        :param mols: List[Chem.Mol]
+            List of aligned molecules with 3D conformations.
+        :param tolerance: float
+            Distance threshold in Angstroms for feature clustering (default: 2.0).
+        :param occurrence_threshold: float
+            Minimum fraction (0.0-1.0) of molecules that must contain a
+            feature (default: 0.5).
+        :param linkage: str
+            Clustering linkage method: 'average', 'complete', 'single', 'ward'
+            (default: 'average').
+        :param model_set: str
+            Model set to generate: 'standard' (3 models) or 'comprehensive'
+            (5 models) (default: 'standard').
+        :param features: Optional[Union[str, dict]]
+            Feature type to use (default: None, uses 'default').
+        :param return_mols: bool
+            If True, return both features and RDKit Mol for each model
+            (default: True).
+        
+        :return: Dict[str, Union[List, Tuple[List, Chem.Mol]]]
+            Dictionary mapping model name to:
+            - features list (if return_mols=False), or
+            - tuple of (features list, RDKit Mol) (if return_mols=True)
+            
+            Standard model set includes: 'strict', 'moderate', 'relaxed'
+            Comprehensive set adds: 'very_strict', 'very_relaxed'
+        
+        Example:
+            >>> pharm = Pharmacophore()
+            >>> models = pharm.generate_consensus_models(aligned_mols)
+            >>> strict_features, strict_mol = models['strict']
+            >>> moderate_features, moderate_mol = models['moderate']
+            >>> 
+            >>> # Use for shape alignment
+            >>> from rdkit.Chem import rdShapeHelpers
+            >>> dist = rdShapeHelpers.ShapeProtrudeDist(
+            ...     strict_mol, moderate_mol
+            ... )
+        """
+        from pharmacophore.consensus import PharmacophoreConsensus
+        from pharmacophore.mol_converter import PharmacophoreToMol
+        
+        # Create consensus generator
+        consensus_gen = PharmacophoreConsensus(
+            tolerance=tolerance,
+            occurrence_threshold=occurrence_threshold,
+            linkage=linkage
+        )
+        
+        # Generate multiple models
+        feature_models = consensus_gen.generate_models(
+            mols=mols,
+            model_set=model_set,
+            features=features
+        )
+        
+        # Convert to RDKit Mols if requested
+        if return_mols:
+            result = {}
+            for model_name, model_features in feature_models.items():
+                # Convert features to RDKit Mol with color feature support
+                mol = PharmacophoreToMol.convert(
+                    features=model_features,
+                    name=f'Consensus_{model_name}',
+                    enable_color_features=True  # Enable pharmacophore color matching
+                )
+                result[model_name] = (model_features, mol)
+            return result
+        else:
+            return feature_models
+
     def consensus_pharm(self, mols: list[Chem.Mol], distance_threshold: float = 2.0, 
                        features: Optional[Union[str, dict]] = None):
         """
         Generate a consensus pharmacophore model from multiple aligned 3D molecules.
+        
+        .. deprecated:: 0.0.2
+            This method uses non-deterministic DBSCAN clustering and is
+            deprecated. Use :meth:`generate_consensus_models` instead,
+            which provides deterministic agglomerative clustering with
+            MOE-style parameters and RDKit molecule output.
         
         :param mols: list[Chem.Mol]
             List of molecules with 3D conformations (assumed to be pre-aligned).
@@ -197,6 +297,14 @@ class Pharmacophore:
         :return: list
             A list of consensus pharmacophore features [type, atom_indices, x, y, z].
         """
+        warnings.warn(
+            "consensus_pharm() is deprecated and will be removed in a future version. "
+            "Use generate_consensus_models() instead for deterministic clustering "
+            "with MOE-style parameters and RDKit molecule output.",
+            DeprecationWarning,
+            stacklevel=2
+        )
+        
         from sklearn.cluster import DBSCAN
         
         # Collect all features from all molecules

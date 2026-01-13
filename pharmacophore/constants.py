@@ -2,10 +2,48 @@
 Hold constant values
 """
 import os
+import sys
 import matplotlib.colors as mcolors
 from rdkit.Chem import AllChem, RDConfig
 
-feature_factory = AllChem.BuildFeatureFactory(os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef'))
+
+def _find_base_features_file():
+    """
+    Find the BaseFeatures.fdef file in the RDKit installation.
+    Handles both properly configured and misconfigured RDKit installations.
+    """
+    # Try the official RDConfig path first
+    default_path = os.path.join(RDConfig.RDDataDir, 'BaseFeatures.fdef')
+    if os.path.exists(default_path):
+        return default_path
+
+    # If RDDataDir is relative or incorrect, search for it
+    import rdkit
+    rdkit_path = os.path.dirname(rdkit.__file__)
+
+    # Common locations relative to rdkit package
+    search_paths = [
+        # Conda installations
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(rdkit_path))),
+                     'share', 'RDKit', 'Data', 'BaseFeatures.fdef'),
+        # System installations
+        os.path.join(rdkit_path, 'Data', 'BaseFeatures.fdef'),
+        # Alternative conda structure
+        os.path.join(sys.prefix, 'share', 'RDKit', 'Data', 'BaseFeatures.fdef'),
+    ]
+
+    for path in search_paths:
+        if os.path.exists(path):
+            return path
+
+    raise FileNotFoundError(
+        f"Could not find BaseFeatures.fdef file. "
+        f"RDConfig.RDDataDir points to: {RDConfig.RDDataDir} "
+        f"Searched in: {search_paths}"
+    )
+
+
+feature_factory = AllChem.BuildFeatureFactory(_find_base_features_file())
 
 FEATURES = {
     "Donor": ["[#7!H0&!$(N-[SX4](=O)(=O)[CX4](F)(F)F)]",  # nitrogen in rings or amines

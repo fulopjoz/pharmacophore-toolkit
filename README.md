@@ -46,19 +46,41 @@ several types of images and models:
 
 ### Consensus Pharmacophore
 
-The toolkit now includes a `consensus_pharm` method that generates consensus pharmacophore models from multiple aligned 3D molecular structures. This is useful for:
+The toolkit now includes advanced consensus pharmacophore generation with deterministic clustering and RDKit molecule output. This enables:
 - Structure-based drug design with multiple ligand binding poses
 - Identifying common pharmacophoric features across active compounds
-- Ligand-based pharmacophore modeling
+- Shape-based virtual screening using consensus models
+- Interactive 3D visualization of aligned molecules with consensus overlay
 
 Example usage:
 ```python
 from pharmacophore import Pharmacophore
+from pharmacophore.draw import View
 
-# Create consensus from aligned molecules
+# Generate consensus models with different stringency levels
 pharm = Pharmacophore()
-consensus = pharm.consensus_pharm(aligned_mols, distance_threshold=2.0)
+models = pharm.generate_consensus_models(
+    mols=aligned_molecules,
+    tolerance=2.0,
+    occurrence_threshold=0.5,
+    model_set='standard'
+)
+
+# Interactive visualization with molecule selection and model switching
+v = View()
+v.view_consensus(
+    mols=aligned_molecules,
+    mol_names=['Molecule 1', 'Molecule 2', 'Molecule 3'],
+    consensus_models=models,
+    default_model='moderate'
+)
 ```
+
+Features:
+- Multi-select molecule display with interactive checkboxes
+- Consensus model switching (strict, moderate, relaxed)
+- Real-time pharmacophore overlay toggle
+- Shape and color Tanimoto scoring with proper combo calculation
 
 See the [Consensus Pharmacophore Tutorial](tutorials/consensus_pharmacophore_tutorial.ipynb) for detailed examples.
 

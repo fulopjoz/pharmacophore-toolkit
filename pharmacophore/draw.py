@@ -268,10 +268,24 @@ class Draw:
 
 
 class View:
-    def __init__(self, mol: Optional[Union[Chem.Mol, list[Chem.Mol]]] = None,
-                 pharmacophore: Optional[Union[str, dict]] = 'default'):
+    def __init__(
+        self,
+        mol: Optional[Union[Chem.Mol, list[Chem.Mol]]] = None,
+        pharmacophore: Optional[Union[str, dict, list]] = 'default',
+        consensus_models: Optional[dict] = None
+    ):
+        """Initialize View for interactive 3D visualization.
+
+        Args:
+            mol: Single molecule or list of molecules.
+            pharmacophore: Pharmacophore features ('default', 'rdkit', dict,
+                or list of features).
+            consensus_models: Dictionary of consensus models in format
+                {model_name: (features, rdkit_mol)}.
+        """
         self.mol = mol
         self.pharmacophore = pharmacophore
+        self.consensus_models = consensus_models
 
     def view(self, mol: Union[list[Chem.Mol], Chem.Mol], pharmacophore: list = None, color: dict = None,
              labels: bool = True, window: tuple = (500, 500)):
@@ -325,6 +339,196 @@ class View:
         )
 
         widgets.interact(self._render, index=dropdown)
+
+    def view_consensus(
+        self,
+        mols: list[Chem.Mol],
+        mol_names: Optional[list[str]] = None,
+        consensus_models: Optional[dict] = None,
+        default_model: str = 'moderate',
+        color: Optional[dict] = None,
+        labels: bool = True,
+        window: tuple = (800, 600)
+    ) -> None:
+        """Interactive viewer for aligned molecules with consensus models.
+
+        Displays multiple aligned molecules with interactive controls for:
+        - Selecting which molecules to display (checkboxes)
+        - Switching between consensus pharmacophore models (dropdown)
+        - Toggling consensus pharmacophore visibility
+
+        Args:
+            mols: List of aligned RDKit Mol objects.
+            mol_names: Names for molecules. Defaults to "Molecule 1", etc.
+            consensus_models: Dict of {model_name: (features, rdkit_mol)}.
+            default_model: Initial consensus model to display.
+            color: Custom pharmacophore feature colors. Uses default if None.
+            labels: Whether to show feature type labels on spheres.
+            window: Viewer dimensions (width, height) in pixels.
+
+        Example:
+            >>> from pharmacophore import View
+            >>> v = View()
+            >>> v.view_consensus(
+            ...     mols=aligned_mols,
+            ...     mol_names=['Serotonin', 'Dopamine'],
+            ...     consensus_models=models,
+            ...     default_model='moderate'
+            ... )
+        """
+        import ipywidgets as widgets
+        from IPython.display import display, clear_output
+
+        if consensus_models is None:
+            if self.consensus_models is None:
+                raise ValueError(
+                    "consensus_models must be provided either in constructor "
+                    "or as parameter"
+                )
+            consensus_models = self.consensus_models
+
+        if mol_names is None:
+            mol_names = [f"Molecule {i+1}" for i in range(len(mols))]
+
+        if len(mol_names) != len(mols):
+            raise ValueError(
+                f"mol_names length ({len(mol_names)}) must match "
+                f"mols length ({len(mols)})"
+            )
+
+        if color is None:
+            color = INTERACTIVE_COLORS
+        elif isinstance(color, dict):
+            for key in color:
+                color[key] = color_convert(color[key])
+
+        self.mols_consensus = mols
+        self.mol_names_consensus = mol_names
+        self.consensus_models_consensus = consensus_models
+        self.colors_consensus = color
+        self.labels_consensus = labels
+        self.window_consensus = window
+
+        mol_checkboxes = [
+            widgets.Checkbox(
+                value=True,
+                description=name,
+                indent=False,
+                layout=widgets.Layout(width='200px')
+            )
+            for name in mol_names
+        ]
+
+        model_dropdown = widgets.Dropdown(
+            options=list(consensus_models.keys()),
+            value=default_model if default_model in consensus_models else list(
+                consensus_models.keys()
+            )[0],
+            description='Consensus Model:',
+            style={'description_width': 'initial'},
+            layout=widgets.Layout(width='300px')
+        )
+
+        show_consensus = widgets.Checkbox(
+            value=True,
+            description='Show Consensus Pharmacophore',
+            indent=False,
+            layout=widgets.Layout(width='300px')
+        )
+
+        self.mol_checkboxes_consensus = mol_checkboxes
+        self.model_dropdown_consensus = model_dropdown
+        self.show_consensus_checkbox = show_consensus
+
+        mol_selector = widgets.VBox([
+            widgets.Label('Select Molecules to Display:'),
+            *mol_checkboxes
+        ])
+
+        controls = widgets.HBox([
+            mol_selector,
+            widgets.VBox([
+                widgets.Label('Consensus Pharmacophore Options:'),
+                model_dropdown,
+                show_consensus
+            ])
+        ])
+
+        output = widgets.Output()
+
+        def render_consensus(change=None):
+            """Render molecules and consensus based on widget states."""
+            with output:
+                clear_output(wait=True)
+
+                viewer = py3Dmol.view(
+                    width=self.window_consensus[0],
+                    height=self.window_consensus[1]
+                )
+                viewer.setBackgroundColor('white')
+
+                selected_indices = [
+                    i for i, checkbox in enumerate(
+                        self.mol_checkboxes_consensus
+                    )
+                    if checkbox.value
+                ]
+
+                mol_colors = [
+                    'gray', 'lightblue', 'lightgreen',
+                    'lightyellow', 'lightcoral', 'lightpink',
+                    'lavender', 'lightgray', 'lightcyan', 'wheat'
+                ]
+
+                for idx in selected_indices:
+                    mol_block = Chem.MolToMolBlock(self.mols_consensus[idx])
+                    viewer.addModel(mol_block, 'mol')
+                    viewer.setStyle(
+                        {'model': idx},
+                        {'stick': {
+                            'color': mol_colors[idx % len(mol_colors)],
+                            'radius': 0.15
+                        }}
+                    )
+
+                if self.show_consensus_checkbox.value:
+                    selected_model = self.model_dropdown_consensus.value
+                    features, _ = self.consensus_models_consensus[
+                        selected_model
+                    ]
+
+                    for feature in features:
+                        feat_type = feature[0]
+                        x, y, z = feature[2], feature[3], feature[4]
+                        feat_color = self.colors_consensus.get(feat_type)
+
+                        viewer.addSphere({
+                            'center': {'x': x, 'y': y, 'z': z},
+                            'radius': 0.5,
+                            'color': feat_color,
+                            'opacity': 0.8
+                        })
+
+                        if self.labels_consensus:
+                            viewer.addLabel(feat_type, {
+                                'position': {'x': x, 'y': y, 'z': z},
+                                'fontSize': 12,
+                                'showBackground': True,
+                                'backgroundColor': feat_color,
+                                'fontColor': 'white'
+                            })
+
+                viewer.zoomTo()
+                viewer.show()
+
+        for checkbox in mol_checkboxes:
+            checkbox.observe(render_consensus, names='value')
+
+        model_dropdown.observe(render_consensus, names='value')
+        show_consensus.observe(render_consensus, names='value')
+
+        display(controls, output)
+        render_consensus()
 
     def _render(self, index):
         """Function to render molecules and its pharmacophore"""
