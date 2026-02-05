@@ -924,14 +924,29 @@ class UnifiedEvaluator:
 
             y_scores_ot = np.array(ot_scores)
 
-            # Reciprocal rank fusion: combine 3D and OT rankings
-            ranks_3d = _rankdata_descending(y_scores_3d)
-            ranks_ot = _rankdata_descending(y_scores_ot)
-            k = rrf_constant
-            rrf_scores = 1.0 / (k + ranks_3d) + 1.0 / (k + ranks_ot)
-            y_scores_final = rrf_scores
+            # Safety check: verify OT scores are discriminative before fusion
+            # If OT is anti-correlated with 3D scores, it will hurt performance
+            from scipy.stats import spearmanr
+            correlation, _ = spearmanr(y_scores_3d, y_scores_ot)
 
-        except (ImportError, Exception):
+            if correlation < 0.1:  # Weak or negative correlation = anti-discriminative
+                logger.warning(
+                    "OT scores poorly correlated with 3D scores (r=%.3f), "
+                    "skipping RRF fusion to avoid anti-discriminative combination",
+                    correlation
+                )
+                y_scores_final = y_scores_3d
+            else:
+                # Reciprocal rank fusion: combine 3D and OT rankings
+                ranks_3d = _rankdata_descending(y_scores_3d)
+                ranks_ot = _rankdata_descending(y_scores_ot)
+                k = rrf_constant
+                rrf_scores = 1.0 / (k + ranks_3d) + 1.0 / (k + ranks_ot)
+                y_scores_final = rrf_scores
+                logger.info("RRF fusion applied (3D-OT correlation: %.3f)", correlation)
+
+        except (ImportError, Exception) as e:
+            logger.debug("OT scoring unavailable: %s", e)
             y_scores_final = y_scores_3d
 
         # Final metrics
