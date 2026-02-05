@@ -68,12 +68,22 @@ class PharmacophoreToMol:
     }
     
     # Mapping from pharmacophore feature types to SMILES fragments (color mode)
+    # These fragments are chosen to be recognized by rdShapeAlign's color features
+    #
+    # Fragment SMILES version history:
+    # v1 (<=0.0.4): Acceptor='[O]', Hydrophobe='[CH4]'
+    #   - Did not match pharmacophore SMARTS → color scores returned 0.0
+    # v2 (>=0.0.5): Acceptor='C=O', Hydrophobe='C1CCCC1'
+    #   - Matches SMARTS patterns for color-based alignment scoring
+    #   - Breaking change: atom counts per fragment differ
+    FRAGMENT_SMILES_VERSION = 2
+
     FEATURE_TO_SMILES = {
-        'Donor': '[NH3]',          # Ammonia - matches [#7!H0]
-        'Acceptor': '[O]',          # Lone oxygen - matches acceptor patterns  
-        'Aromatic': 'c1ccccc1',     # Benzene - matches a1aaaaa1
-        'Hydrophobe': '[CH4]',      # Methane - matches hydrophobe patterns
-        'LumpedHydrophobe': '[CH4]',
+        'Donor': '[NH3]',           # Ammonia - matches [#7!H0] donor SMARTS
+        'Acceptor': 'C=O',          # Formaldehyde - matches acceptor SMARTS (v1 used [O])
+        'Aromatic': 'c1ccccc1',     # Benzene - matches a1aaaaa1 aromatic SMARTS
+        'Hydrophobe': 'C1CCCC1',    # Cyclopentane - matches hydrophobe (v1 used [CH4])
+        'LumpedHydrophobe': 'C1CCCC1',
         'PosIonizable': '[NH4+]'    # Ammonium - matches positive ionizable
     }
     
@@ -163,16 +173,29 @@ class PharmacophoreToMol:
         
         # Get conformers from all fragments and combine
         combined_mol = combined.GetMol()
+
+        # CRITICAL: Remove existing conformers from RWMol construction
+        # RWMol(fragments[0]) copies the first fragment's conformer, but it only
+        # has positions for that fragment's atoms. The new atoms added later have
+        # default (0,0,0) positions. We must remove this incomplete conformer and
+        # create a fresh one with all atom positions correctly set.
+        combined_mol.RemoveAllConformers()
+
         combined_conf = Chem.Conformer(combined_mol.GetNumAtoms())
-        
+
         atom_idx = 0
         for frag in fragments:
             frag_conf = frag.GetConformer()
             for i in range(frag.GetNumAtoms()):
                 pos = frag_conf.GetAtomPosition(i)
-                combined_conf.SetAtomPosition(atom_idx, pos)
+                # CRITICAL: Create explicit Point3D to avoid reference issues
+                # Passing pos directly from GetAtomPosition() can fail due to
+                # RDKit internal reference handling
+                combined_conf.SetAtomPosition(
+                    atom_idx, rdGeometry.Point3D(pos.x, pos.y, pos.z)
+                )
                 atom_idx += 1
-        
+
         combined_mol.AddConformer(combined_conf, assignId=True)
         
         # CRITICAL: Initialize ring info and other molecular properties

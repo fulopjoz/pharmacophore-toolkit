@@ -1,0 +1,15 @@
+{
+  "method": "Reference Alignment",
+  "parameters": {
+    "factory": "Gobbi_Pharm2D",
+    "similarity": "Tanimoto",
+    "threshold": 0.4231760144167865
+  },
+  "metrics": {
+    "roc_auc": 0.8974594594594595,
+    "bedroc": 0.8496718228593129,
+    "ef_1": 7.756756756756757,
+    "ef_5": 7.756756756756757,
+    "youden_j": 0.6578378378378378
+  }
+}

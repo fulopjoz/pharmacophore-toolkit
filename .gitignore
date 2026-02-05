@@ -44,6 +44,19 @@ ENV/
 .coverage
 htmlcov/
 
+# Archive
+archive/
+.combo_cache/
+
+# Cache directories
+.cache/
+*/.cache/
+experiments/.cache/
+
+# Research papers (PDFs too large for git)
+docs/research/papers/
+*.pdf
+
 # OS
 .DS_Store
 Thumbs.db

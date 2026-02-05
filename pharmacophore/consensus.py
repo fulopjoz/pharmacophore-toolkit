@@ -13,6 +13,8 @@ from typing import List, Tuple, Dict, Optional, Union
 from sklearn.cluster import AgglomerativeClustering
 from rdkit import Chem
 
+from .constants import SPATIAL_SCALE
+
 
 class PharmacophoreConsensus:
     """Generate consensus pharmacophores from aligned molecules.
@@ -49,10 +51,11 @@ class PharmacophoreConsensus:
         self,
         tolerance: float = 2.0,
         occurrence_threshold: float = 0.5,
-        linkage: str = 'average'
+        linkage: str = 'average',
+        use_spatial_scaling: bool = True
     ):
         """Initialize consensus pharmacophore generator.
-        
+
         Args:
             tolerance: Distance threshold in Angstroms for clustering
                 features (default: 2.0).
@@ -60,6 +63,9 @@ class PharmacophoreConsensus:
                 that must contain a feature (default: 0.5).
             linkage: Clustering method - 'average', 'complete', 'single',
                 or 'ward' (default: 'average').
+            use_spatial_scaling: Apply per-type tolerance scaling from
+                SPATIAL_SCALE constants (default: True). Set False for
+                uniform tolerance (ablation baseline).
         
         Raises:
             ValueError: If tolerance <= 0, occurrence_threshold not in
@@ -85,39 +91,46 @@ class PharmacophoreConsensus:
         self.tolerance = tolerance
         self.occurrence_threshold = occurrence_threshold
         self.linkage = linkage
+        self.use_spatial_scaling = use_spatial_scaling
     
     def generate_consensus(
         self,
         mols: List[Chem.Mol],
-        features: Optional[Union[str, dict]] = None
-    ) -> List[List]:
+        features: Optional[Union[str, dict]] = None,
+        return_metadata: bool = False
+    ) -> Union[List[List], Tuple[List[List], Dict]]:
         """Generate consensus pharmacophore from aligned molecules.
-        
+
         This method:
         1. Extracts pharmacophore features from each molecule
         2. Groups features by type
         3. Clusters features of each type by spatial proximity
         4. Filters clusters by occurrence threshold
         5. Computes consensus feature centroids
-        
+
         Args:
             mols: List of aligned molecules with 3D conformations.
             features: Feature type to use ('default', 'rdkit', or custom
                 dict). If None, uses 'default'.
-        
+            return_metadata: If True, return (features, metadata) where
+                metadata contains cluster labels, coordinates per type,
+                and cluster counts. Useful for S_Dbw validation.
+
         Returns:
-            List of consensus features, where each feature is:
-                [type, atom_indices, x, y, z]
-            atom_indices is empty tuple () since consensus features don't
-            map to specific atoms.
-        
+            If return_metadata=False: List of consensus features.
+            If return_metadata=True: Tuple of (features, metadata dict).
+            Each feature is: [type, atom_indices, x, y, z]
+
         Raises:
             ValueError: If mols is empty or molecules lack 3D conformers.
-        
+
         Example:
             >>> consensus = PharmacophoreConsensus(tolerance=2.0)
             >>> features = consensus.generate_consensus(aligned_mols)
             >>> print(f"Found {len(features)} consensus features")
+            >>> # With metadata for diagnostics:
+            >>> features, meta = consensus.generate_consensus(
+            ...     aligned_mols, return_metadata=True)
         """
         if not mols:
             raise ValueError("mols list cannot be empty")
@@ -158,32 +171,45 @@ class PharmacophoreConsensus:
         
         # Cluster and filter features of each type
         consensus_features = []
+        metadata = {} if return_metadata else None
         total_mols = len(mols)
-        
+
         for feat_type, type_features in features_by_type.items():
             # Extract coordinates and molecule indices
             coords_list = [f[0] for f in type_features]
             mol_indices = np.array([f[1] for f in type_features])
-            
-            # Cluster features
+
+            # Cluster features (tolerance scaled per feature type)
             labels, cluster_to_mols = self._cluster_features(
                 coordinates=coords_list,
-                mol_indices=mol_indices
+                mol_indices=mol_indices,
+                feat_type=feat_type
             )
-            
+
             # Calculate centroids for each cluster
             centroids = self._calculate_cluster_centroids(
                 coordinates=coords_list,
                 labels=labels
             )
-            
+
             # Filter by occurrence threshold
             valid_features = self._filter_by_occurrence(
                 centroids=centroids,
                 cluster_to_mols=cluster_to_mols,
                 total_molecules=total_mols
             )
-            
+
+            # Record metadata for diagnostics (S_Dbw, etc.)
+            if return_metadata:
+                metadata[feat_type] = {
+                    'coordinates': np.array(coords_list),
+                    'labels': labels,
+                    'cluster_to_mols': cluster_to_mols,
+                    'centroids': centroids,
+                    'n_clusters': len(centroids),
+                    'n_valid': len(valid_features),
+                }
+
             # Create consensus features
             for centroid, num_mols in valid_features:
                 # Format: [type, atom_indices, x, y, z]
@@ -195,29 +221,36 @@ class PharmacophoreConsensus:
                     float(centroid[2])
                 ]
                 consensus_features.append(consensus_feature)
-        
+
+        if return_metadata:
+            return consensus_features, metadata
         return consensus_features
     
     def _cluster_features(
         self,
         coordinates: List[np.ndarray],
-        mol_indices: np.ndarray
+        mol_indices: np.ndarray,
+        feat_type: Optional[str] = None
     ) -> Tuple[np.ndarray, Dict[int, List[int]]]:
         """Cluster features using agglomerative hierarchical clustering.
-        
+
         Uses scikit-learn's AgglomerativeClustering with distance_threshold
-        to automatically determine the number of clusters.
-        
+        to automatically determine the number of clusters. The tolerance is
+        scaled per feature type using SPATIAL_SCALE: H-bond features cluster
+        tighter, hydrophobic features cluster more loosely.
+
         Args:
             coordinates: List of 3D coordinate arrays.
             mol_indices: Array of molecule indices for each feature.
-        
+            feat_type: Feature type (e.g. 'Donor', 'Hydrophobe') for
+                spatial scaling. If None, uses unscaled tolerance.
+
         Returns:
             Tuple of:
                 - labels: Cluster labels for each feature
                 - cluster_to_mols: Dict mapping cluster ID to list of
                     unique molecule indices
-        
+
         Example:
             >>> coords = [np.array([1, 2, 3]), np.array([1.5, 2.1, 3.2])]
             >>> mol_idx = np.array([0, 1])
@@ -225,22 +258,30 @@ class PharmacophoreConsensus:
         """
         if not coordinates:
             return np.array([]), {}
-        
+
         # Convert to numpy array
         coords_array = np.array(coordinates)
-        
+
         # Single feature case
         if len(coords_array) == 1:
             return np.array([0]), {0: [int(mol_indices[0])]}
-        
+
+        # Scale tolerance by feature type: H-bond features tighter,
+        # hydrophobic features looser (PharmaGist, Schneidman-Duhovny 2008)
+        if self.use_spatial_scaling:
+            scale = SPATIAL_SCALE.get(feat_type, 1.0) if feat_type else 1.0
+        else:
+            scale = 1.0
+        effective_tolerance = self.tolerance * scale
+
         # Perform agglomerative clustering
         clustering = AgglomerativeClustering(
             n_clusters=None,
-            distance_threshold=self.tolerance,
+            distance_threshold=effective_tolerance,
             linkage=self.linkage,
             metric='euclidean'
         )
-        
+
         labels = clustering.fit_predict(coords_array)
         
         # Map clusters to molecule indices

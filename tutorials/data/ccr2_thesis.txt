@@ -1,0 +1,906 @@
+MSc Bio-Pharmaceutical Sciences
+In Silico Design of Novel Allosteric Modulators of
+Chemokine Receptor CCR2 with Shape-Matching
+Research Project 1
+Date: 08-07-2024
+First & Last nameSem Egbers
+Student numbers2824256
+Institute & DivisionLACDR, MedChem
+Daily supervisorDr.ing. Martin Šícho
+ExaminerProf.dr. G.J.P. van Westen
+Alphafold, 2020, Using AI for Scientific Discovery, coloured generated protein structure, Google Deepmind, accessed
+06 October 2023, https://www.deepmind.com/blog/alphafold-using-ai-for-scientific-discovery-2020
+1STATEMENT of ORIGINALITY
+I hereby declare that this thesis is my own original work and confirm that:
+• this work has been drafted by me without the use of any sources other than those explicitly cited
+in the text and acknowledgements
+• I have clearly referenced all sources used in the work
+• all data and findings in the work are original and have not been falsified or embellished.
+I disclose that (please check box and complete requested details if required):
+☒ I did not use a Large Language model such as ChatGPT or any other AI-assisted or personal
+writing assistance.
+☐ During the preparation of this work I used [add NAME TOOL*, version] in order to [add
+REASON]. After using this tool, I reviewed and edited the content adding my own original
+ideas. I take full responsibility that the use does not impede the evaluation of the competences
+that I have acquired.
+*In case the AI-tool is described as part of the research methods than there is no need to disclose
+it here.
+I confirm that I take full responsibility of the contents of this work understand it will be checked for
+plagiarism by the use of plagiarism detection software.
+Leiden, 03-07-2024
+Place and date
+Sem Egbers
+Name and Signature
+2TABLE of CONTENTS
+1.
+Public Summary ............................................................................................................................................. 4
+Keywords ................................................................................................................................................................ 4
+2.Abstract .......................................................................................................................................................... 4
+3.Graphical abstract ........................................................................................................................................... 5
+4.Introduction .................................................................................................................................................... 5
+5. Material and Methods ......................................................................................................................................... 7
+5.1 Datasets ......................................................................................................................................................... 7
+5.2 Reference molecules ..................................................................................................................................... 7
+5.3 Pharmacophore model .................................................................................................................................. 8
+5.4 DrugEx and synthesis scorer ......................................................................................................................... 8
+5.5 Scoring of the generated structures ............................................................................................................... 9
+6.
+Results and discussion .................................................................................................................................. 11
+6.1 most optimised pharmacophore model ....................................................................................................... 11
+6.2 Evaluation of the performance of generative models.................................................................................. 14
+6.3 generation and scoring of novel molecules ................................................................................................. 16
+6.3.1 Docking of generated molecules ......................................................................................................... 16
+6.3.2 3D visualisation of top scoring molecules ........................................................................................... 17
+7. Conclusion ........................................................................................................................................................ 19
+Acknowledgements ............................................................................................................................................... 22
+Appendix 1 ............................................................................................................................................................ 22
+APPENDIX 2. DATA MANAGEMENT ......................................................................................................... 23
+APPENDIX 3. TASK-RISK ANALYSES ....................................................................................................... 23
+APPENDIX 4. Dual-Use Assessment form ...................................................................................................... 23
+31. Public Summary
+We developed a generative workflow using DrugEx and ROCS to speed up drug discovery.
+DrugEx, a generative AI model, creates new molecules, while ROCS gives a score based on
+3D shapes. Focusing on CCR2, a protein involved in cancer, our method identified interesting
+drug candidates for further development.
+Keywords
+DrugEx, ROCS, CCR2 inhibitors, reinforcement learning, pharmacophore modelling
+2. Abstract
+The vast chemical space of approximately 1060 molecules presents a significant challenge for
+novel drug discovery, necessitating advanced techniques to streamline the process. Currently,
+43 percent of research and development expenditure is allocated to the preclinical phase.
+Despite advancements in data collection on ligand properties and therapeutic targets, enhanced
+computational methods are essential in the preclinical phase for leveraging available data to
+identify novel drug candidates. We present an integrated computational workflow combining
+DrugEx, a de novo molecular generator utilizing reinforcement learning (RL), with ROCS, a
+3D ligand-based shape-matching tool, to accelerate the identification of intracellular allosteric
+antagonists targeting the chemokine receptor CCR2, a G-protein coupled receptor involved in
+inflammatory diseases and cancer metastasis. Using a pharmacophore model built with ROCS
+and validated against a CCR2 allosteric ligand dataset, DrugEx was trained to generate
+structures likely to bind the intracellular allosteric site of CCR2. Subsequently, a large set of
+generated structures was scored with ROCS and evaluated via docking with AutoDock Vina.
+The docking studies identified promising antagonists.
+This workflow demonstrated the scientific relevance of a de novo approach by enabling the
+efficient generation and screening of novel drug candidates. By integrating RL and 3D ligand-
+based screening, our approach enhances the exploration of chemical space and optimizes
+molecular properties. This methodology holds promise for broader applications in drug
+discovery, highlighting the need for ongoing data refinement of known drug-like compounds
+as references to improve the virtual screening and generation of novel drug candidates.
+Furthermore, novel promising antagonists were identified that may inhibit inflammatory
+diseases through upregulation of CCR2.
+43. Graphical abstract
+4. Introduction
+The potential number of novel drug candidates is estimated at 1060 1. Due to the sheer size of
+potential drug candidates, modern techniques are required for faster and less resource-intensive
+drug discovery. Currently, 43 percent of research and development expenditure is allocated to
+the preclinical phase2. Despite significant advancements in data collection regarding ligand
+properties and therapeutic targets, enhanced computational methods are essential to fully
+leverage the available data3 and discover novel drug-candidates.
+De novo drug design (DNDD) is mainly used for the exploration of novel molecules. The
+determination of the specificity of these molecules for designated targets is done through multi
+objective optimisation (MOO). Reinforcement learning (RL) implements MOO objective into
+the generative process through a feedback loop. The feedback loop consists of scorers that score
+based on different objectives. These scores are incorporated as feedback and used as selection
+tool for the generator to improve the molecules.
+Recurrent neural networks (RNNs) are commonly used as generator for small molecules4,5. The
+data-driven training of these networks enables a selective approach to generation of novel
+molecules tied to a limited chemical space, and not bound to set parameters5. RNNs with Long
+Short-Term Memory (LSTM)6 units results in SMILES-based character prediction and new
+SMILES-strings sampling based on those predictions7,8. The use of LSTM units has been shown
+to be among the best sequence-based generators (networks with incorporated RL)9. The
+validation of generated SMILES-strings is executed through the reinforcement loop.
+Virtual screening protocols are used in the drug discovery process to analyse and filter
+synthesized and virtual libraries. Common protocols that are designed for molecule scoring are
+divided into two major categories, structure-based virtual screening (SBVS) and ligand-based
+virtual screening (LBVS)10,11. Structure-based approaches employ docking to analyse three-
+dimensional (3D) interactions between molecule and complex 11,12.
+5Docking enables the correct positioning of a pose of a ligand within the binding site of a
+receptor, identifying ligand-receptor interactions and calculating binding affinity11,12. Docking
+is most effective when ligand-receptor crystal structures are available for in vitro confirmation
+of receptor-ligand conformations12.
+LBVS on the other hand, compares stereo- and physiochemical properties of molecules based
+on the molecular similarity principle11,13. LBVS can be used in two-dimensional (2D) and three
+dimensional (3D) approaches. 2D shape similarity approaches such as quantitative structure-
+activity relationship (QSAR) models enable based on known active and inactive molecules the
+prediction of activity values of novel molecules13,14. These QSAR models are limited by the
+quality and amount of reference data available (the same limitation applies to 3D QSAR
+models)14. 3D-shape similarity approaches rely on the principle that similar shapes of molecules
+will results in a similar mode of binding in the binding pocket10,13.
+This process of shape-similarity is commonly referred to as shape-matching and can be based
+on volume, surface, alignment and atomic-distance10. One of the shape-matching methods
+called pharmacophore modelling. Pharmacophore modelling requires known 3D poses of active
+ligands as reference, a similar issue previously ascribed to docking. However, the number of
+required reference ligands only depends on the diversity that is desired from the screened
+molecules. Pharmacophore modelling is a form of shape-matching that enables the use of
+limited number of reference molecules. The method incorporates the electrochemical properties
+of ligands within the screening to represent docking abilities while attaining rapid analysis11,12.
+Co-crystallised ligands or ligands in clinical trial have been proven as solid references10,13.
+Papadopoulos et al.15 illustrated the effectiveness of combining 3D shape and pharmacophore
+modelling for similarity scoring in de novo molecule design using generative models trained
+with reinforcement learning. This method yielded a higher degree of chemical diversity
+compared to their conventional QSAR-based workflow.
+Building on this foundation, chemokine receptors, which are a class of G-protein coupled
+membrane receptors activated by small, secreted proteins called chemokines, represent a
+promising target for computational workflows. CCRs are involved in inflammatory and cell-
+regulated pathways16. For example, expression of chemokine receptor CCR7 in cancer leads to
+lymph node metastasis17. Overexpression of CCR2 is prevalent in cell division and tumour
+growth, atherosclerosis and diabetes 18,19. The inhibition of specific CCRs is rather difficult due
+to the non-selectivity of chemokines. Chemokines CCL2, CCL5 and CCL7 bind to CCR2, but
+CCL7 has also affinity for CCR5 18,20. While inhibition via the orthosteric binding pocket may
+seem as a potential drug target, non-competitive binding is prevalent. Intracellular allosteric
+binding has been shown as a potential target for non-competitive inhibition21,22. The
+development of potential drug candidates however, have not yet yielded any therapies. The
+accurate mode of binding to the pocket remains unknown, as only one compound has been co-
+crystallised22. Therefore, CCR2 inhibition remains an interesting target for drug discovery.
+In this project, we present a workflow where 3D shape matching is integrated in DNDD as
+scoring mechanism. To test and optimize the in silico design, we try to identify novel allosteric
+modulators that bind chemokine receptor CCR2. For DNDD, DrugEx, a tool for the design of
+small molecules with deep learning generative models in a multi-objective RL framework, was
+employed8,23. As scorer within the RL framework, a 3D ligand-based shape matching tool
+ROCS was used. ROCS structures a pharmacophore model based on the 3D-poses of reference
+molecules10,13. The reference molecules consisted of the single known crystallised compound
+and a variety of drug-candidates that have shown inhibitory properties for CCR2. Their 3D-
+poses were determined with docking.
+65. Material and Methods
+5.1 Datasets
+A dataset of intracellular allosteric ligands tested on CCR2 receptors (N=158) was extracted
+from ChEMBL3124 and Papyrus25 based on SMARTS patterns on known substructures (Figure
+1) and filtered on allosteric properties. Additional allosteric ligands from Peace et al.26 were
+extracted from ChEMBL and added to the dataset and named CCR2ALL (N=191). This dataset
+was split in a train (CCR2TRAIN) and test (CCR2TEST) set with a random split of 20 percent.
+CCR2TEST was separated on actives (CCR2ACTIVE) and inactives based on a pChEMBL
+value of seven or higher. The inactives lacked structural diversity, therefore the
+CCR2INACTIVE dataset was constructed by calculating the descriptors of CCR2ACTIVE
+and extracting molecules from CHEMBL31 based on similar parameters. Molecules with
+molecular weight (MW) <= 650, LogP <= 6, hydrogen donors (NumHDonors) <=2 and
+hydrogen acceptors (NumHAcceptors) <= 6 were stored in CCR2INACTIVE (N=500).
+Figure 1. SMARTS patterns of various subgroups of CCR2 antagonist reference molecules.
+Pattern (A) corresponds to sulfonamides, (B) to JNJ-27141491-like structures, (C) to
+Compound 39-like rings, and (D) to CCR2-RA-[R] analogues.
+5.2 Reference molecules
+To construct a ligand-based model, we utilised reference ligands, including CCR2-RA-[R], the
+only co-crystallised intracellular allosteric binder22,27,28 that accurately represents allosteric
+binding. Additionally, four ligands that have been in clinical-trial served as high-quality
+references. Ilacirnon29 (CCX140) from Chemocentryx, initially developed for focal segmental
+glomerulosclerosis (FSGS), was discontinued30,31. JNJ-2714149132,33 , Compound3934,35 and
+SD-2436,37 demonstrated high affinity in binding assays. The binding conformations of these
+ligands were generated with AutoDockVina (v.1.2.3)38.
+75.3 Pharmacophore model
+The pharmacophore model was constructed with vROCS (v. 3.6.0.1), licensed by OpenEye
+Scientific Software. VROCS, a graphical user interface (GUI) tool from OpenEye, was
+employed to build queries39. The parameters were set to a maximum of 5 molecules per model
+and 5 models to keep. The top five models, selected based on Tanimoto similarity, were retained
+for validation39, CCR2ACTIVE and CCR2INACTIVE were designated as actives and
+decoys. ROCS requires 3D conformations as input. The conformers for CCR2ACTIVE and
+CCR2INACTIVE were generated with OMEGA (v.5.0.0.3) in the command terminal
+OpenEye-applications (v.2023.1.1)40. OMEGA and ROCS are provided within OpenEye
+Toolkits (v.2023.2)41. The isomers were used as annotated in the datasets. Oeomega classic was
+employed with the maximum number of conformers generated per SMILES set to 200. Model
+performance of the five models was assessed by the AUC values from the Receiver Operating
+Characteristics (ROC) curve42, computed by ROCS. The model exhibiting the steepest ROC
+curve and highest AUC value was chosen as the final pharmacophore model.
+5.4 DrugEx and synthesis scorer
+For the de novo design, we employed the deep-learning generator DrugEx. The scoring module
+within the RL loop included isomer generation with RDKit (for details on packages used, see
+Appendix 1), conformer generation with OMEGA, and similarity scoring with ROCS. The
+isomer generation was set to a maximum of 4 isomers per SMILES, with rotatable bonds and
+heavy atoms limited to 15 and 45, respectively. Isomers that did not meet the criteria, were
+excluded from conformer generation and screening. The criteria were based on the upper limits
+of descriptors of a dataset sourced from ChEMBL31 and Papyrus specifically focused on
+allosteric CCR ligands (CCRALL) and was used in generative model training. The descriptors
+were calculated with RDKit. Evaluation of the synthesizability of these generated molecules
+incorporated the calculation of synthesis accessibility (SA) scores43, within the DrugEx
+environment. The pharmacophore model was incorporated into the reinforcement learning (RL)
+loop as a similarity scorer. The ROCS score of the generated structures was determined using
+the Tanimoto similarity coefficient, which is calculated based on the overlap volume between
+the generated structures and the pharmacophore model44,45. The overlap volume between
+molecules is determined by representing each molecule as a set of spheres. Calculating the
+volume of these spheres using integral functions is complex, especially when dealing with
+molecules composed of numerous spheres. Gaussian functions provide a more precise method
+for calculating molecular volumes. By utilizing Gaussian contractions, these functions allow
+for rapid and accurate volume calculations when comparing the volumes of two structures.
+Consequently, the molecular shape of the pharmacophore model is represented by Gaussian
+contractions, facilitating efficient computation of the Tanimoto coefficient.45,46. The script is
+open-source47.
+The generative models of DrugEx were trained using transfer learning8 , a technique involving
+the refinement of a pretrained model on CCRALL. The parameters for the fine-tuned model of
+each generative model were configured to run for 1000 epochs, where an epoch represents one
+complete iteration over the entire dataset to update the model. The validation dataset comprised
+8either 1000 or 10000 samples. To manage the computational load of large datasets, the batch
+size—the number of samples processed together—was set to 128 or 256. A patience parameter
+of thirty or 1000 epochs was implemented, meaning that if no improvement in the model was
+observed within thirty consecutive epochs, the training process was discontinued.8. An
+additional parameter, epsilon was optimised for different values. The epsilon is a parameter that
+varied between 0 and 1, influencing the similarity of generated molecules to the CCRALL
+dataset. Values explored for epsilon included 0.01, 0.1, 0.2, 0.3, and 0.4. The generative models
+were evaluated based on the desired ratio, unique ratio, and ROCS score per epoch. A
+compound was classified as desired if its modifier scores surpassed the thresholds of each
+objective8. A compound was considered unique if its corresponding SMILES differed from the
+complete list of generated molecules15.
+5.5 Scoring of the generated structures
+The scored structures were clustered based on a distance threshold, representing the maximum
+allowable distance between structures to be grouped together48. The most divergent merges in
+the clustering of the generated structures occurred at a distance above 0.7, as shown in Figure
+2. Consequently, this value was set as the distance threshold to maximize the number of unique
+clusters with similar structures. After, the top three highest ROCS scores per cluster were
+docked into the crystallised representation allosteric binding pocket of CCR2 (PDB code
+5T1A22) to evaluate their binding conformations. Docking was performed using AutoDock
+Vina (v.1.2.3)38. AutoDock Vina estimates the strength of non-covalent interactions by
+calculating interaction scores as binding affinities, which represent the change in free energy
+upon ligand binding to a receptor49,50. The 3D visualization of the complexes were visualized
+in the analysis part of the workflow as shown in Figure 3, with protein-ligand interaction
+profiler (PLIP)51 and the PyMOL Molecular Graphics System (Pymol), Schrödinger, LLC52.
+The complete list of used packages is displayed in Appendix 1.
+9Figure 2. Dendogram of clusters made of the generated dataset.
+Figure 3. Docking funnel of generated structures.
+106. Results and discussion
+6.1 most optimised pharmacophore model
+Pharmacophore models were constructed using vROCS based on reference molecules including
+CCR2-RA-[R], JNJ-27141491 (JNJ), SD-24, CCX140, and compound 39 (Comp39). The
+binding conformations of the reference molecules were determined with docking. The optimal
+model was selected based on calculated AUC values and visual inspection of ROC curves.
+Figure 4 illustrates these models alongside their respective reference molecules. Figure 5
+presents ROC curves for Model_1 (CCR2-RA-[R], CCX140, SD-24, Comp39, JNJ) and
+Model_3 (CCR2-RA-[R], CCX140, SD-24, Comp39), showing highest early enrichment.
+Model_2 (CCR2-RA-[R], CCX140, SD-24, JNJ) and Model_4 (CCR2-RA-[R], CCX140, JNJ)
+exhibit lower early enrichment but higher later enrichment compared to Model_1 and Model_3.
+Table 2 demonstrates that Model_2 (AUC 0.941), Model_3 (0.965), Model_4 (0.956) did not
+differ significantly from Model_1 (0.955). Model_5 (0.8) had the lowest performance. The
+observed differences in ROC curve between Model_1 and Model_3 versus Model_2 and
+Model_4 can be attributed to the composition of the validation dataset, which notably includes
+a substantial number of molecules featuring a imidazole pyridine scaffold, similar to Comp39.
+Notably, Models 2 and 4 do not incorporate Comp39 within their structure, as highlighted with
+pink in Figure 4, where model 2 and 4 do not have an additional hydrogen bond acceptor. This
+difference in model structure contributes to these variations in ROC analysis enrichment (Figure
+5). Such scaffold biases in validation datasets are a recognized limitation in pharmacophore
+modelling and ROC analysis53.
+11Figure 4. Top five pharmacophore models constructed from the reference ligands CCR2-RA-
+[R], CCX140, SD-24, Compound39 (Comp39) and JNJ-27141491. The pink circles indicate
+structural groups that form hydrogen bonds within the CCR2 binding pocket. Yellow denotes
+hydrophobic interactions within the lipophilic pocket, green represents π-stacking interactions,
+and red signifies halogen bonds formed by fluorine or chlorine atoms within the reference
+molecules.
+Table 2. AUC values of pharmacophore model 1 to 5 calculated with vROCS.
+Run Name model_1 model_2 p-Value model_3 p-Value model_4 p-Value model_5 p-Value
+AUC
+0.955
+0.941
+0.188
+0.966
+0.753
+0.956
+0.526
+0.800
+0.000
+The validation scores for model_1 compared model_2, model_3, model_4, and model_5 are
+expressed in an AUC (Area Under the Curve) value. An AUC value close to one indicates the
+ability of the model to differentiate true positives from false positives. The p-Value indicates
+statistical significant difference between model performances if the value is below 0.05 (five
+percent).
+12Figure 5. Enrichment of pharmacophore models 1 to 5. The curve of model_1 is displayed in
+red, model_2 in blue, model_3 in green, model_4 in yellow and model_5 in purple. A random
+classifier is indicated with a dashed black line.
+While early enrichment is an important requirement for choosing the most optimal model53,
+including capabilities to properly score non-imidazole pyridine scaffolds is essential for
+diversity within the scoring function of the model. As displayed in figure 5, the combination of
+the highest early enrichment from Model_3 and later enrichment of Model_4 may be optimal.
+Within vROCS, electrochemical properties can be adjusted and merged. Model_3 and Model_4
+were merged. At the propyl group of JNJ and at the -3-pyridyl group of CCX140, a hydrophobic
+group was added to create a larger pharmacophore model to encompass a wider variety of
+molecules during screening. This model is designated as Model_3-4v1. The performance
+comparison of Model_3-4v1 against Model_3 and Model_4 is presented in Table 3 and Figure
+6. The AUC value of model_3-4v1 (0.929) differs significantly from that of model_3 (0.966)
+and model_4 (0.956). Although the AUC value of the combined model is lower, it captures
+early enrichment similar to model_3, as demonstrated in Figure 3. Furthermore, model_3-4v1
+performs similar to model_4 in late enrichment, while maintaining a relatively high AUC value
+of 0.929. The slight difference in AUC value and ROC curve performance between the models
+is compensated by the increased structural diversity of model_3-4v1. Therefore, we integrated
+model_3-4v1 into the reinforcement learning (RL) loop.
+13Table 3. Performance metrics of model 3, model 4 and model 3-4v1, calculated with vROCS.
+Run Name model_3 model_4
+p-Value model_3-4v1 p-Value
+AUC
+0.966
+0.956
+0.250
+0.929
+0.048
+The validation scores for model_3 compared model_4, model_3, and model3-4v1 are expressed
+in an AUC (Area Under the Curve) value. An AUC value close to one indicates the ability of
+the model to differentiate true positives from false positives. The p-Value indicates statistical
+significant difference between model performances if the value is below 0.05 (five percent).
+Figure 6. Enrichment of pharmacophore models 3, 4 and merged model 3-4v1. The curve of
+model_3 is displayed in blue, model_4 in orange, and model_3-4v1 in green. A random
+classifier is indicated with a dashed black line.
+6.2 Evaluation of the performance of generative models
+The performance of the generative models was evaluated based on a number of performance
+metrics. In Figure 7, The sixteen models with a patience of thirty differed in average ROCS per
+epoch. ID_1 with a number of generated molecules of 1000 (ns1000) an epsilon (eps) of 0.01
+and batch size (bs) of 128 ended around a ROCS score of 0.5 at epoch 175. ID_6 (ns 10000,
+eps 0.01 and bs 256) ended around 0.50 ROCS score at epoch 150. ID_8 (ns 10000, eps 0.01
+and bs 128) ended around 0.55 after 150 epochs. The number of generated molecules of 10000
+14and an epsilon value of 0.01 and a batch size resulted in the highest achieved ROCS scores.
+Based on these results, we continued with an equal ns value of 10000 and increased the patience
+to a 1000 to inspect the influence of prolonged optimisation. This model is named ID_7 in
+figure 3.
+ID_7 with patience of 1000 ran for a 1000 epochs. The average ROCS score improved after
+200 epochs from 0.5 to almost 0.6. In combination with the performance metrics of desired
+ratio in plot B, it shows that a patience of 1000 results in a desired ratio close to 1, compared to
+a maximum of 0.9 for ID_6.
+The generative model with an epsilon of 0.01, batch size of 128, number of samples of 10000
+and patience of 1000 (ID_7 in figure 7) has shown to be the most optimal model and will be
+referred to as ID_7.
+Figure 7. Average ROCS per Epoch of diversely trained generative models (A) and Desired
+Ratio per Epoch (B).
+The models varied on number of generated molecules (ns 1000 or 10000), epsilon value (eps
+of 0.01, 0.1, 0.2 , 0.3 and 0.4) and batch size (bs 128 or 256). ID_7 had the parameter patience
+(pt) set to 1000 instead of 30.
+156.3 generation and scoring of novel molecules
+To identify the most promising allosteric antagonists from a generated dataset with model ID_7,
+docking studies were conducted to evaluate the binding conformations. The generated dataset
+was filtered on desired (a ROCS value larger than 0.35), clustered based on a distance threshold
+of 0.7, and the three structures with the highest ROCS score from each cluster, were docked
+into the crystallized CCR2 binding pocket to calculate interaction scores, as is depicted in
+Figure 8.
+Figure 8. Scoring funnel of the final generated dataset of structures.
+6.3.1 Docking of generated molecules
+Figure 9 presents the 2D structures of the top three molecules with the highest combined
+interaction scores. The interaction and ROCS scores for these molecules are relatively close
+(86.11, 84.26, and 83.33 respectively), although Molecule 1's chemical structure differs
+significantly from that of Molecules 2 and 3. The synthesis accessibility (SA) score indicates
+its accessibility to synthetic pathways. A lower SA score indicates a compound's chemical space
+is more easily explored and synthesized, with a threshold of 4.5 being acceptable43. All three
+molecules have SA scores well below this threshold, suggesting they should be synthetically
+feasible, though manual verification is necessary.
+16Figure 9. Top three generated molecules by model ID_7.
+The corresponding values are interaction, ROCS and SA scores respectively.
+6.3.2 3D visualisation of top scoring molecules
+Three-dimensional visualization of the docking poses of the top three molecules provides
+additional insights into the crucial binding interactions within the pocket that determine binding
+affinity and activity. The generated molecules are required to exhibit structural similarities with
+the reference compounds selected for the pharmacophore model, ensuring they encompass
+bioactive functionality. Novel chemical structures may mitigate binding issues, side effects, or
+complex synthesis pathways.
+Figure 11A illustrates the binding interactions of crystallized CCR2-RA-[R]. Notably, there are
+critical chemical features such as π-stacking with residue PHE312, where a halogen bond can
+also be formed with VAL63 at the same benzene ring. Hydrogen bond interactions in the middle
+of the molecule play an important stabilizing role with Glu310, Lys311 and PHE312.
+Additionally, the side chains of the reference molecules occupy a lipophilic pocket around
+residue VAL24422. Comp39 and CCX140 exhibit an additional hydrogen bond with residue
+LYS237.
+Figure 11B, C and D display the binding interactions of molecules 1, 2, and 3, further portraying
+the key interactions governing their binding and activity.
+Molecule 1 (Fig. 9 and 11B) exhibits close structural similarity to SD-24 (Fig. 10A), with both
+molecules belonging to the sulphonamide class. The central sulphonamide group facilitates
+hydrogen bonding within the core of the molecule. Additionally, the structure features a
+benzene ring with a chlorine atom at the third position, enabling the formation of a halogen
+bond with residue Val63 (highlighted in red) and π-stacking interactions with residues Tyr305
+and Phe312 (highlighted in green). Furthermore, this benzene ring occupies the lipophilic
+pocket between Val244 and Val308 (highlighted in yellow).
+The most notable structural difference from the reference molecules is the presence of an
+anisole. The oxygen atom of the anisole forms an additional hydrogen bond (highlighted in
+blue) with residues Glu310 and Lys311 (highlighted in pink). This benzene ring also engages
+in additional hydrophobic interactions with the surrounding residues. The binding interactions
+of Molecule 1 closely overlap with the critical interactions observed in the reference molecules,
+which explains its relatively high interaction score.
+While Molecule 1 shows close similarity to SD-24, it differs by featuring an anisole instead of
+the benzoic acid present in SD-24. Additionally, Molecule 1 lacks an extra halogen atom in the
+17lipophilic pocket. It also shares no significant structural similarities with the other reference
+molecules, reflected in its ROCS (similarity) score of 0.425.
+Molecule 2 (Fig. 9 and 11C) is based on the imidazole pyridine scaffold of Comp39 (Fig. 10B),
+with additional phenol and a methyl phenyl ether group that facilitate π-stacking interactions
+with Tyr305 and Phe312. The imidazole pyridine scaffold forms hydrogen bonds with Glu310
+and Lys311. Unlike Molecule 1, the imidazole pyridine scaffold in Molecule 2 features an
+additional nitrogen atom that forms another hydrogen bond with Glu310. The methyl phenyl
+ether group in Molecule 2 fits into the lipophilic pocket around Val244. The presence of
+additional phenyl groups and the imidazole pyridine scaffold contribute to a higher ROCS
+score of 0.625 compared to Molecule 1, as the reference molecules JNJ, CCX140, and Comp39
+share similar structural groups. The lower interaction score of Molecule 2, relative to Molecule
+1, can be attributed to the remaining space around Arg240 and Lys237, and the absence of a
+halogen bond with Val63.
+Molecule 3 shares structural similarity with Molecule 2, featuring a imidazole pyridine scaffold
+in the centre and phenylethane and 1-(2-methylphenyl)ethane as side chains. In Fig. 11D, the
+phenyl side chain engages in π-stacking interactions with Tyr305 and Phe312. The imidazole
+pyridine scaffold forms hydrogen bonds with Glu310 and Lys311, while the methyl
+phenylethane group occupies the lipophilic pocket near Val244. The ROCS score of Molecule
+3 is similar to that of Molecule 2 due to their structural similarities (Fig 9). However, the
+interaction score of Molecule 3 is influenced by the open space near Arg240 and the absence
+of additional hydrogen bonds with Glu310 or Lys237 (highlighted in pink). These factors
+contribute to its different binding interactions compared to Molecule 2.
+Figure 10. Chemical structures of SD-24 (A) and Compound 39 (B).
+18Figure 11. 3D-visualisation of the binding interactions of CCR2-RA-[R] (A) highlighted in
+green and the top scoring molecules 1 (B), 2 (C) and 3 (D) within the intracellular binding
+pocket of CCR2. The coloured residues indicate important chemical interactions for binding
+based on the interactions of the reference molecule CCR2-RA-[R]. The red residue Val63
+indicates halogen bonding (neon green line), green indicates pi-stacking (green dotted line) with
+Tyr305 and Phe312, yellow indicates he lipophilic pocket around Val244 and pink indicates
+the hydrogen bonds (blue line) formed with Glu310, Lys311 and Phe312.
+7. Conclusion
+We developed an in silico workflow that integrates shape-matching via pharmacophore
+modelling with ROCS into the reinforcement loop of the de novo generation with DrugEx. This
+approach yielded three novel molecules with high structural and binding similarity to known
+intracellular allosteric binders of the chemokine receptor CCR2, while also exhibiting unique
+structural differences. Initially applied to CCR2 antagonists, this workflow has potential for
+broader application across various targets, particularly those with limited datasets for QSAR
+modelling.
+Our study demonstrated the promise of combining pharmacophore modelling with de novo
+generation for discovering novel bioactive molecules. Future research should refine this
+workflow and explore its application to diverse pharmacological targets. In particular, to
+validate our findings, in vitro and in vivo assays are essential to determine binding affinities
+and bioactivity. Furthermore, to determine if the top-scoring de novo molecules are already
+catalogued, a search within the Enamine database54 is necessary. Should these structures not
+yet exist, synthetic pathways can be identified using advanced tools such as AIZynthfinder55.
+Additionally, molecular dynamics studies could offer deeper insights into significant binding
+interactions. Further analysis of generated and docked structures, particularly those with
+modifications, may reveal critical and novel binding interactions while also presenting more
+diverse scaffolds.
+19References
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+11.
+12.
+13.
+14.
+15.
+16.
+17.
+18.
+19.
+20.
+21.
+22.
+23.
+24.
+25.
+26.
+27.
+28.
+29.
+Reymond, J.-L. The Chemical Space Project. Acc Chem Res 48, 722–730 (2015).
+Research and Development in the Pharmaceutical Industry | Congressional Budget Office.
+https://www.cbo.gov/publication/57126.
+Sadybekov, A. V. & Katritch, V. Computational approaches streamlining drug discovery. Nature 2023
+616:7958 616, 673–685 (2023).
+Wang, M. et al. Deep learning approaches for de novo drug design: An overview. Curr Opin Struct Biol
+72, 135–144 (2022).
+Olivecrona, M., Blaschke, T., Engkvist, O. & Chen, H. Molecular de-novo design through deep
+reinforcement learning. J Cheminform 9, 48 (2017).
+Hochreiter, S. & Schmidhuber, J. Long Short-Term Memory. Neural Comput 9, 1735–1780 (1997).
+Grisoni, F., Moret, M., Lingwood, R. & Schneider, G. Bidirectional Molecule Generation with Recurrent
+Neural Networks. J. Chem. Inf. Model 60, 1175–1183 (2020).
+Šícho, M. et al. DrugEx: Deep Learning Models and Tools for Exploration of Drug-Like Chemical Space. J
+Chem Inf Model 63, 3629–3636 (2023).
+Guimaraes, G. et al. Objective-Reinforced Generative Adversarial Networks (ORGAN) for Sequence
+Generation Models. (2017).
+Gimeno, A. et al. The Light and Dark Sides of Virtual Screening: What Is There to Know? Int J Mol Sci 20,
+(2019).
+Vázquez, J., López, M., Gibert, E., Herrero, E. & Javier Luque, F. Merging Ligand-Based and Structure-
+Based Methods in Drug Discovery: An Overview of Combined Virtual Screening Approaches. Molecules
+25, (2020).
+Hawkins, P. C. D., Skillman, A. G. & Nicholls, A. Comparison of shape-matching and docking as virtual
+screening tools. J Med Chem 50, 74–82 (2007).
+Kumar, A. & Zhang, K. Y. J. Advances in the development of shape similarity methods and their
+application in drug discovery. Front Chem 6, 383861 (2018).
+Jagiello, K. et al. Advantages and limitations of classic and 3D QSAR approaches in nano-QSAR studies
+based on biological activity of fullerene derivatives. Journal of Nanoparticle Research 18, (2016).
+Papadopoulos, K., Giblin, K. A., Janet, J. P., Patronov, A. & Engkvist, O. De novo design with deep
+generative models based on 3D similarity scoring. Bioorg Med Chem 44, 116308 (2021).
+Hughes, C. E. & Nibbs, R. J. B. A guide to chemokines and their receptors. FEBS J 285, 2944 (2018).
+Jaeger, K. et al. Structural Basis for Allosteric Ligand Recognition in the Human CC Chemokine Receptor
+7. Cell 178, 1222-1230.e10 (2019).
+Fei, L., Ren, X., Yu, H. & Zhan, Y. Targeting the CCL2/CCR2 Axis in Cancer Immunotherapy: One Stone,
+Three Birds? Front Immunol 12, (2021).
+Qian, B. Z. et al. CCL2 recruits inflammatory monocytes to facilitate breast tumor metastasis. Nature
+475, 222 (2011).
+Kurihara, T., Warr, G., Loy, J. & Bravo, R. Defects in Macrophage Recruitment and Host Defense in Mice
+Lacking the CCR2 Chemokine Receptor. J Exp Med 186, 1757 (1997).
+Billen, M., Schols, D. & Verwilst, P. Targeting chemokine receptors from the inside-out: discovery and
+development of small-molecule intracellular antagonists. Chemical Communications 58, 4132–4148
+(2022).
+Zheng, Y. et al. Structure of CC Chemokine Receptor 2 with Orthosteric and Allosteric Antagonists.
+Nature 540, 458 (2016).
+Liu, X., Ye, K., van Vlijmen, H. W. T., IJzerman, A. P. & van Westen, G. J. P. DrugEx v3: scaffold-
+constrained drug design with graph transformer-based reinforcement learning. J Cheminform 15, 1–14
+(2023).
+Gaulton, A. et al. The ChEMBL database in 2017. Nucleic Acids Res 45, D945–D954 (2017).
+Béquignon, O. J. M. et al. Papyrus: a large-scale curated dataset aimed at bioactivity predictions. J
+Cheminform 15, 1–11 (2023).
+Peace, S. et al. Identification of a sulfonamide series of CCR2 antagonists. Bioorg Med Chem Lett 20,
+3961–3964 (2010).
+RCSB PDB - VT5 Ligand Summary Page. https://www.rcsb.org/ligand/VT5.
+Compound Report Card. https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4519152/.
+Compound Report Card. https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2178573/.
+2030.
+31.
+32.
+33.
+34.
+35.
+36.
+37.
+38.
+39.
+40.
+41.
+42.
+43.
+44.
+45.
+46.
+47.
+48.
+49.
+50.
+51.
+52.
+53.
+54.
+55.
+56.
+Researcher View | A Study of CCX140-B in Subjects With FSGS | ClinicalTrials.gov.
+https://clinicaltrials.gov/study/NCT03536754?term=CCX140&rank=5&tab=table.
+Sullivan, T. et al. CCR2 antagonist CCX140-B provides renal and glycemic benefits in diabetic transgenic
+human CCR2 knockin mice. Am J Physiol Renal Physiol 305, F1288 (2013).
+Buntinx, M. et al. Pharmacological Profile of JNJ-27141491 [(S)-3-[3,4-Difluorophenyl)-propyl]-5-
+isoxazol-5-yl-2-thioxo-2,3-dihydro-1H-imidazole-4-carboxyl Acid Methyl Ester], as a Noncompetitive
+and Orally Active Antagonist of the Human Chemokine Receptor CCR2. Journal of Pharmacology and
+Experimental Therapeutics 327, 1–9 (2008).
+Compound Report Card. https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4303445/.
+Compound Report Card. https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4483373/.
+Ortiz Zacarías, N. V. et al. Synthesis and Pharmacological Evaluation of Triazolopyrimidinone Derivatives
+as Noncompetitive, Intracellular Antagonists for CC Chemokine Receptors 2 and 5. J Med Chem 62,
+11035–11053 (2019).
+Compound Report Card. https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1171786/.
+Peace, S. et al. Identification of a sulfonamide series of CCR2 antagonists. Bioorg Med Chem Lett 20,
+3961–3964 (2010).
+CDD / CCR Docking and Analysis · GitLab. https://gitlab.services.universiteitleiden.nl/cdd/CCR-docking.
+Editing ROCS queries in vROCS — Applications.
+https://docs.eyesopen.com/applications/rocs/vrocs/vrocs_edit_query.html.
+Example Commands — Applications.
+https://docs.eyesopen.com/applications/omega/omega/omega_example.html.
+Toolkit Version 2023.2 — Toolkits -- Python.
+https://docs.eyesopen.com/toolkits/python/releasenotes/index.html.
+Setup a simple run and a validation run — Applications.
+https://docs.eyesopen.com/applications/rocs/vrocs/vrocs_setup_run.html.
+Ertl, P. & Schuffenhauer, A. Estimation of synthetic accessibility score of drug-like molecules based on
+molecular complexity and fragment contributions. J Cheminform 1, 1–11 (2009).
+Bolcato, G., Heid, E. & Boström, J. On the Value of Using 3D Shape and Electrostatic Similarities in Deep
+Generative Methods. Cite This: J. Chem. Inf. Model 2022, 1388–1398 (2022).
+Shape Theory — Applications. https://docs.eyesopen.com/applications/rocs/theory/shape_shape.html.
+Kumar, A. & Zhang, K. Y. J. Advances in the Development of Shape Similarity Methods and Their
+Application in Drug Discovery. Front Chem 6, 315 (2018).
+CDD / Students / 2023-2024 / RP1 Sem Egbers · GitLab.
+https://gitlab.services.universiteitleiden.nl/cdd/students/2023-2024/rp1-sem-egbers.
+Hu, M., Zeng, K., Wang, Y. & Guo, Y. Threshold-Based Hierarchical Clustering for Person Re-
+Identification. Entropy 23, (2021).
+Reddy, M. R. et al. Free Energy Calculations to Estimate Ligand-Binding Affinities in Structure-Based
+Drug Design. Curr Pharm Des 20, 3323–3337 (2014).
+Trott, O. & Olson, A. J. AutoDock Vina: improving the speed and accuracy of docking with a new scoring
+function, efficient optimization and multithreading. J Comput Chem 31, 455 (2010).
+Salentin, S., Schreiber, S., Haupt, V. J., Adasme, M. F. & Schroeder, M. PLIP: fully automated protein–
+ligand interaction profiler. Nucleic Acids Res 43, W443–W447 (2015).
+PyMOL | pymol.org. https://pymol.org/#page-top.
+Empereur-Mot, C. et al. Predictiveness curves in virtual screening. J Cheminform 7, 52 (2015).
+Shivanyuk, A. et al. Enamine real database: Making chemical diversity real. Chim Oggi 25, 58–59 (2007).
+Genheden, S. et al. AiZynthFinder: a fast, robust and flexible open-source software for retrosynthetic
+planning. J Cheminform 12, 1–9 (2020).
+CDDLeiden/QSPRpred: A tool for creating Quantitative Structure Property Relationship (QSPR) models.
+https://github.com/CDDLeiden/QSPRpred.
+21Acknowledgements
+Gratitude towards my supervisor Dr.ing Martin Ŝícho for supporting my progress in the computational
+field and during this project. Additional gratitude to Dr. Gerard van Westen for feedback. Special thanks
+to the division of Drug Discovery and Safety of the Leiden Academic Centre of Drug Research for
+providing access to ROCS and DrugEx.
+Appendix 1
+Below are the required packages and versions used for ROCS scoring, molecule generation
+and docking listed.
+Package Name
+Version
+ROCS scorer and molecule generation
+drugex83.4.6.
+Openeye-toolkits412023.2.3.
+Pandas2.2.1.
+(Papyrus-scaffold-visualizer)0.7.3.
+Python3.11.8.
+RDKit2023.9.5.
+Scikit-learn1.4.0
+Docking
+gxx_linux-64 (appendix 1.5)11.1.0
+Pandas2.2.2.
+python3.10.14
+qsprpred562.1.0
+RDKit2023.9.6.
+Spock (appendix 1.5)0.0.1.dev5+g04c2765
+(AutoDock) Vina (appendix 1.5)1.2.5.
+The PyMOL Molecular Graphics System, 2.5.0
+Schrödinger, LLC52
+22APPENDIX 2. DATA MANAGEMENT
+All final scripts used in the workflow are located on gitlab47. The raw data files were stored on
+OneDrive, a hard drive and on the server Nerva from the CDD division. Gitlab enables version control
+for safe backup. All the test files and different versions are located in the version storage of Gitlab in
+an additional branch.
+APPENDIX 3. TASK-RISK ANALYSES
+Name task: Repetitive Strain Injury (RSI)
+Nr. Action
+1 Typing on a
+keyboard for
+long hours
+Risk classification
+(before)Measures:
+- source
+-collective
+High. This indicates a
+high risk of developing
+RSI due to prolonged
+repetitive actions.Source:
+Ergonomic
+keyboards that
+reduce strain on
+the hands and
+wrists
+Collective:
+Adjustable
+chairs that
+provide proper
+support and
+alignment for
+the user
+Measures:
+- procedures
+- instructions
+- PBM's
+Procedures:
+Implementing
+frequent breaks
+to reduce
+continuous
+strain
+Risk classification (after)
+Medium. After
+implementing the above
+measures, the risk of RSI
+is reduced to a medium
+level.
+Instructions:
+Training
+employees on
+proper posture
+PBM's: Using
+wrist rests to
+maintain a
+neutral wrist
+position
+APPENDIX 4. Dual-Use Assessment form
+Questions
+1. High-risk biological agent
+Does it concern a biological agent, or parts of it, that can be considered a high-risk pathogen?
+☐ Yes
+☒ No
+☐ Unknown
+2.Host range and tropism
+Is the host range or tropism of the biological agent likely to be altered?
+☐ Yes
+☒ No
+☐ Unknown
+3.Virulence
+May the research increase the virulence of the biological agent?
+☐ Yes
+☒ No
+☐ Unknown
+4.Stability
+Is it to be expected that the stability of the biological agent outside the host will increase as a result of
+your research?
+23☐ Yes
+☒ No
+☐ Unknown
+5.Transmissibility
+Is it likely that the transmissibility or dispersion of the biological agent will increase?
+☐ Yes
+☒ No
+☐ Unknown
+6.Absorption and toxicokinetics
+Is it to be expected that the absorption of the biological agent is facilitated or is an increased
+toxicokinetic effect to be expected?
+☐ Yes
+☒ No
+☐ Unknown
+7.Drug resistance
+Is it likely that the research will increase the resistance of the biological agent to clinical and / or
+agricultural prophylactic or therapeutic interventions, including antimicrobial resistance?
+☐ Yes
+☒ No
+☐ Unknown
+8.Population immunity
+Does the biological agent possibly have a negative effect on the immunity of humans, animals, or
+plants?
+☐ Yes
+☒ No
+☐ Unknown
+9.Detection methodology and diagnostics
+Could the research impact the detection methods or diagnostics of the biological agent?
+☐ Yes
+☒ No
+☐ Unknown
+2410. Reconstruction
+Does the research contribute to the reconstruction of an eradicated or extinct biological agent?
+☐ Yes
+☒ No
+☐ Unknown
+11. Harmful effects
+May changes to the biological agent possibly generate or enhance the harmful consequences, which
+may involve "improved weaponization"?
+☐ Yes
+☒ No
+☐ Unknown
+12. Knowledge and Technology
+Is it likely that the knowledge obtained and technologies developed in the research allow others to use
+them for malicious purposes?
+☐ Yes
+☒ No
+☐ Unknown
+13. Ecological consequences
+May possible harmful ecological consequences occur due to misuse of the biological agent or the
+knowledge thereof?
+☐ Yes
+☒ No
+☐ Unknown
+14. Economic consequences
+May possible harmful economic consequences occur due to misuse of the biological agent or the
+knowledge thereof?
+☐ Yes
+☒ No
+☐ Unknown
+15. Consequences for society
+May possible harmful consequences for society occur from the misuse of biological agents or the
+knowledge thereof?
+☐ Yes
+☒ No
+☐ Unknown
+Does your study have a Dual-use aspect? If yes, please describe the Dual-use aspect:
+Assuming that this research could cause harm, how much harm could the knowledge, information, technology,
+or products from the project cause to public health and safety, agricultural crops and other plants, animals, the
+environment, materiel, or national or global security? E.g. The severity of the harms and availability of potential
+countermeasures to manage those harms.
+The project uses de novo generation. It could be used to develop chemical and bio-therapeutical weapons if
+reference compounds exist and a license from ROCS is obtained. However, parties that have such interests,
+already possess such methods and extensive organic labs for more elaborate research.
+d
+Putting aside the magnitude of potential harms, how likely is it that the knowledge, information, technology,
+or products from the research would be misused to harm society or the environment? E.g. How much technical
+25skill would it take to cause harm? How expensive or difficult would it be to acquire the necessary physical
+resources?
+Computational knowledge is required to understand the use-case and scripts used in this project. However,
+people who have this knowledge may already have found other ways to achieve their means. It will be highly
+unlikely that the knowledge would be misused.
+Explanation
+1. High-risk biological agent
+High-risk pathogens refer in particular to pathogens of risk class 3 and 4 , which are the most serious
+and deadly pathogens in the world. For example class 3: Yersinia pestis (black plague), HIV, SARS virus
+and class 4: Ebola virus, Marburg virus, Lassa virus
+2.Host range and tropism
+Tropism is the ability of a biological agent, for example a virus, to infect certain target cells and tissues.
+Changes in the tropism can result in the ability of the biological agent to infect other cells (for example
+also lung cells instead of just liver cells) that were previously not susceptible. By adjusting the host
+range, other types of hosts can be infected that were previously not susceptible to the biological
+agent, for example from animal-to-animal (infectious animal disease) to animal-to-human (zoonosis).
+On the other hand, a narrowing of the host range can potentially increase the efficiency of infection.
+3.Virulence
+Virulence refers to the amount of harm a biological agent may cause when infecting its host. This is
+also called pathogenic capacity. The virulence of a bacterium is often determined by a virulence factor
+which is a protein or a carbohydrate. The genetic code for such a virulence factor is often on a plasmid
+that can be inherited along with the bacterial genome. For example, adding a virulence factor to a
+non-pathogenic bacterium can make this bacterium more harmful.
+4.Stability
+Increasing stability indicates a change in the ability of a biological agent to remain infectious in the
+environment when exposed to various environmental conditions. Increasing resistance to lower or
+higher temperatures, dry or more humid environments, air pollution or sunlight are factors that can
+play a role in this. Resistance to disinfectant also ensures greater stability of the biological agent or
+toxin.
+5.Transmissibility
+Transmission of the biological agent can occur through inhalation, ingestion (oral), direct contact
+(dermal), blood contact (puncture/cut accident) or via vectors. Transmission routes may be changed,
+for example, from direct contact (touch) to air-borne transmission.
+6.Absorption and toxicokinetics
+Toxicokinetics refers to the kinetics and effect of a substance in the body. The kinetics are determined
+by the absorption, distribution, metabolism, biotransformation and excretion of the substance by an
+organism in relation to time. Toxicity is the relationship between exposure to a substance,
+transformation and adverse effects. For example, a toxin may be modified to alter the toxicokinetics,
+causing the toxin's harmful effect to last longer. Another example is the application of additional
+proteins on the surface of a bacterium so that it is more easily absorbed by the body.
+7.Drug resistance
+The effectiveness of vaccines and therapeutic or prophylactic agents can be reduced if microorganisms
+acquire different properties, for example through genetic modification. Adding antibiotic resistance to
+26pathogenic bacteria can prevent successful antibiotic treatment. This applies not only to medical care,
+but also, for example, to plant pathogens in the agricultural sector with (un)intended harmful effects
+as a result. Another example is proteins that have been changed resulting in the inability of a drug to
+bind, indicating that the drug becomes ineffective.
+8.Population immunity
+The immune system can be weakened by certain substances produced by viruses or bacteria, making
+people, animals or plants more susceptible to (other) pathogens. Another example of a negative effect
+on immunity is the expression of immune regulatory genes, preventing the initiation of a normal
+immune response. In addition, by modifying a certain micro-organism to which a population has
+developed (almost) complete immunity, this population might become susceptible again.
+9.Detection methodology and diagnostics
+The diagnosis (detection method) of a virus is often based on protein recognition or nucleic acid
+recognition. By adapting specific proteins or the DNA or RNA sequence, the virus may no longer be
+detected by conventional methods (for example immunoassay or PCR).
+10. Reconstruction
+Based on the knowledge of hereditary material, a new virus or bacterium can be synthesized or an
+eradicated or extinct biological agent can be reconstructed. For example, smallpox has been
+eradicated and people are no longer vaccinated against this virus. No population resistance exists
+against the Spanish flu from 1918. Reconstructing such a pathogen is hazardous and laboratory
+incidents can have major consequences.
+11. Harmful effects
+Your research may result in (un)intended outcomes, causing your biological agent to display properties
+that have not been demonstrated before. This could potentially make the biological agent or toxin
+interesting as a biological warfare agent (weaponization). This is possible, for example, when a
+bacterium secrete a toxin in a higher concentration or if a different toxin is produced. In case of
+indications of an increase in harmful effects, it may be necessary to raise the containment level
+(biosafety level, BSL) or additional risk management measures may be required.
+12. Knowledge and Technology
+Knowledge and technologies, including equipment, techniques, bioinformatics and genomics, used by
+or resulting from your research could potentially be misused. This does not directly involve the
+harmful properties of the biological agent itself, but concerns the relevant knowledge, methodologies
+and technologies used. Be aware that the results of your research can also be extrapolated to related
+biological agents or applied in a different context. For example, a virus reconstruction method can also
+be misused to synthesize a pandemic virus. Sharing knowledge does not only concern scientific
+publications, but also deals with knowledge and technologies that are shared at, for example,
+conferences, poster presentations, databases and via email even with foreign offices of your company
+or partners in your research project. This implies that sharing or publishing may be subject to export
+control measures.
+13. Ecological consequences
+Besides public health risks, other risks, such as consequences for the ecosystem should be considered
+in case of misuse of the biological agent or knowledge thereof. For example, misuse of the application
+of gene drives with the potential to genetically modify entire populations may have consequences for
+entire ecosystems. Another example is the use of insects carrying genetically modified viruses to alter
+crop chromosomes directly in the field through gene transfer. The idea is to protect crops against
+pests and diseases, but this technology can also be used to destroy plants.
+14. Economic consequences
+Besides risks to humans and the environment, also other risks should be considered in case of misuse
+27of a biological agent or the knowledge thereof. Consider, for example, the economic consequences of
+a failed harvest or an export ban for products from livestock farming. If you work with a quarantine
+plant pathogen or, for example, with the Foot and Mouth Disease virus, this can result in transport
+bans and export restrictions with all economic consequences that entails in the event of (un) intended
+spread.
+15. Consequences for society
+Misuse of a biological agent can also affect society and people's social well-being. Only the threat of a
+biological agent, such as Bacillus anthracis, can cause social disturbance in civil society. This doesn’t
+concern only high-risk biological agents. Applications with low and non-pathogenic biological agents
+can also have negative social impact. Consider, for example, the production of addictive substances by
+yeast. Microorganisms can also be used to restore the natural environment that has been altered by
+pollutants to its original state. This remediation method is called bioremediation, but possibly can be
+misused as well. An example is bacteria that can break down metals, whereby such biological agents
+could also be used to destroy working electronics.
+2829LACDR Office
+Gorlaeus laboratories
+Einsteinweg 55
+2333 CC Leiden
+www.lacdr.nl
+30

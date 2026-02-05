@@ -181,35 +181,47 @@ class TestPharmacophoreToMol(unittest.TestCase):
     """Test PharmacophoreToMol converter."""
     
     def test_convert_single_feature(self):
-        """Test conversion of single feature."""
+        """Test conversion of single feature (color mode creates NH3 fragment)."""
         features = [['Donor', (), 1.0, 2.0, 3.0]]
-        
+
         mol = PharmacophoreToMol.convert(features)
-        
-        self.assertEqual(mol.GetNumAtoms(), 1)
-        self.assertEqual(mol.GetAtomWithIdx(0).GetSymbol(), 'N')
-        
-        # Check 3D coordinates
+
+        # Donor → NH3 fragment: N + 3H = 4 atoms
+        self.assertEqual(mol.GetNumAtoms(), 4)
+        symbols = [mol.GetAtomWithIdx(i).GetSymbol()
+                   for i in range(mol.GetNumAtoms())]
+        self.assertIn('N', symbols)
+
+        # Check 3D coordinates — centroid should be near feature position
         conformer = mol.GetConformer()
-        pos = conformer.GetAtomPosition(0)
-        self.assertAlmostEqual(pos.x, 1.0)
-        self.assertAlmostEqual(pos.y, 2.0)
-        self.assertAlmostEqual(pos.z, 3.0)
+        centroid = np.zeros(3)
+        for i in range(mol.GetNumAtoms()):
+            pos = conformer.GetAtomPosition(i)
+            centroid += np.array([pos.x, pos.y, pos.z])
+        centroid /= mol.GetNumAtoms()
+        self.assertAlmostEqual(centroid[0], 1.0, places=0)
+        self.assertAlmostEqual(centroid[1], 2.0, places=0)
+        self.assertAlmostEqual(centroid[2], 3.0, places=0)
     
     def test_convert_multiple_features(self):
-        """Test conversion of multiple features."""
+        """Test conversion of multiple features (color mode creates fragments)."""
         features = [
             ['Donor', (), 1.0, 2.0, 3.0],
             ['Acceptor', (), 4.0, 5.0, 6.0],
             ['Aromatic', (), 7.0, 8.0, 9.0]
         ]
-        
+
         mol = PharmacophoreToMol.convert(features)
-        
-        self.assertEqual(mol.GetNumAtoms(), 3)
-        self.assertEqual(mol.GetAtomWithIdx(0).GetSymbol(), 'N')
-        self.assertEqual(mol.GetAtomWithIdx(1).GetSymbol(), 'O')
-        self.assertEqual(mol.GetAtomWithIdx(2).GetSymbol(), 'C')
+
+        # Fragments: NH3(4) + H2C=O(4) + C6H6(12) = 20 atoms
+        self.assertEqual(mol.GetNumAtoms(), 20)
+
+        # Verify all expected element types present
+        symbols = {mol.GetAtomWithIdx(i).GetSymbol()
+                   for i in range(mol.GetNumAtoms())}
+        self.assertIn('N', symbols)   # From Donor
+        self.assertIn('O', symbols)   # From Acceptor
+        self.assertIn('C', symbols)   # From Aromatic
     
     def test_convert_empty_features(self):
         """Test that empty features raises ValueError."""
@@ -248,8 +260,8 @@ class TestPharmacophoreToMol(unittest.TestCase):
             PharmacophoreToMol.validate_for_shape_alignment(None)
     
     def test_feature_to_element_mapping(self):
-        """Test all feature type mappings."""
-        expected_mappings = {
+        """Test all feature type mappings produce fragments with expected elements."""
+        expected_elements = {
             'Donor': 'N',
             'Acceptor': 'O',
             'Aromatic': 'C',
@@ -257,14 +269,17 @@ class TestPharmacophoreToMol(unittest.TestCase):
             'LumpedHydrophobe': 'C',
             'PosIonizable': 'N'
         }
-        
-        for feat_type, expected_element in expected_mappings.items():
+
+        for feat_type, expected_element in expected_elements.items():
             features = [[feat_type, (), 1.0, 2.0, 3.0]]
             mol = PharmacophoreToMol.convert(features)
-            
-            actual_element = mol.GetAtomWithIdx(0).GetSymbol()
-            self.assertEqual(actual_element, expected_element,
-                           f"Failed for {feat_type}")
+
+            # Check that the fragment contains the expected element
+            symbols = [mol.GetAtomWithIdx(i).GetSymbol()
+                       for i in range(mol.GetNumAtoms())]
+            self.assertIn(expected_element, symbols,
+                          f"Failed for {feat_type}: {expected_element} "
+                          f"not in {symbols}")
 
 
 class TestPharmacophoreIntegration(unittest.TestCase):

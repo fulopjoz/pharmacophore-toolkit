@@ -663,12 +663,11 @@ def find_matches(mol: Chem.Mol = None, patterns: list[Chem.Mol] = None, verbose=
                 matches.append([m, centroid])
             except:
                 pass
-        # output statement if no matches
-        if verbose is True:
-            if len(matches) == 0:
-                output_message = Chem.MolToSmarts(pattern)
-                print(f"No Matches to {output_message}!")
-                return matches
+
+        # Optional verbosity for per-pattern misses (do not early-return)
+        if verbose and len(matched) == 0:
+            output_message = Chem.MolToSmarts(pattern)
+            print(f"No Matches to {output_message}!")
 
     return matches
 
