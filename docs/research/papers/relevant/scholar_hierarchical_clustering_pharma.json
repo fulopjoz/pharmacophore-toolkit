@@ -1,0 +1,102 @@
+[
+  {
+    "title": "Combining spatial and chemical information for clustering pharmacophores",
+    "author": [
+      "L Zhou",
+      "R Griffith",
+      "B Gaeta"
+    ],
+    "year": "2014",
+    "abstract": "We apply our three-dimensional pharmacophore clustering method to two sets of experimental  data,  In cheminformatics applications, hierarchical clustering is one of the most popular"
+  },
+  {
+    "title": "3D Pharmacophore, hierarchical methods, and 5-HT4 receptor binding data",
+    "author": [
+      "T Varin",
+      "N Saettel",
+      "J Villain",
+      "A Lesnard"
+    ],
+    "year": "2008",
+    "abstract": "This comparative analysis of different combinations associated with hierarchical clustering  clearly shows the power of 2D chemical and pharmacophore fingerprints for efficiently"
+  },
+  {
+    "title": "A hierarchical clustering approach for large compound libraries",
+    "author": [
+      "A B\u00f6cker",
+      "S Derksen",
+      "E Schmidt"
+    ],
+    "year": "2005",
+    "abstract": "2D descriptors and topological pharmacophore atom types. Individual clusters were assessed  for  Significant enrichment was observed in individual branches of the cluster tree. After"
+  },
+  {
+    "title": "Hierarchical graph representation of pharmacophore models",
+    "author": [
+      "G Arthur",
+      "W Oliver",
+      "B Klaus",
+      "S Thomas"
+    ],
+    "year": "2020",
+    "abstract": "of pharmacophore models by clustering crystallographic structures or 3D pharmacophore  information, this graph representation focuses on the view of hierarchical pharmacophore"
+  },
+  {
+    "title": "Comparing 3D pharmacophore triplets and 2D fingerprints for selecting diverse compound subsets",
+    "author": [
+      "H Matter",
+      "T P\u00f6tter"
+    ],
+    "year": "1999",
+    "abstract": "(pharmacophoric definition triplets, PDTs). Both descriptors in combination with maximum  dissimilarity selections, complete linkage hierarchical cluster  hierarchical clustering (cluster"
+  },
+  {
+    "title": "NIPALSTREE: a new hierarchical clustering approach for large compound libraries and its application to virtual screening",
+    "author": [
+      "A B\u00f6cker",
+      "G Schneider"
+    ],
+    "year": "2006",
+    "abstract": "A hierarchical clustering algorithm NIPALSTREE was  To avoid distortion of clusters at the  median position, the  until the maximal distance between cluster members exceeds a user-"
+  },
+  {
+    "title": "Identification of new inhibitors with potential antitumor activity from polypeptide structures via hierarchical virtual screening",
+    "author": [
+      "EFB Ferreira",
+      "LB Silva",
+      "GV Costa",
+      "JS Costa"
+    ],
+    "year": "2019",
+    "abstract": "equal to 97.940 with 15 pharmacophoric characteristics that were statistically evaluated via   ) and hierarchical clustering analysis (HCA). A refined model generated four pharmacophoric"
+  },
+  {
+    "title": "Comparative analysis of pharmacophore screening tools",
+    "author": [
+      "MPA Sanders",
+      "AJM Barbosa",
+      "B Zarzycka"
+    ],
+    "year": "2012",
+    "abstract": "pharmacophore algorithms are often equally good, and in this respect, we also analyzed how  pharmacophore  further developments in the field of pharmacophore search algorithms, eg,"
+  },
+  {
+    "title": "PHASE: a novel approach to pharmacophore modeling and 3D database searching",
+    "author": [
+      "SL Dixon",
+      "AM Smondyrev"
+    ],
+    "year": "2006",
+    "abstract": "of approximately 2000 bits to encode the pharmacophores that it matches. Using these bit   in the pharmacophore and ligand spaces, and hierarchical, agglomerative clustering was"
+  },
+  {
+    "title": "Assessment of the performance of cluster analysis grouping using pharmacophores as molecular descriptors",
+    "author": [
+      "A Rodriguez",
+      "MS Tomas",
+      "JJ Perez"
+    ],
+    "year": "2005",
+    "abstract": "selected two different hierarchical clustering methods for our analysis: on the first hand, the  group average method (GA) [11] and on the other, Ward's hierarchical-agglomerative method"
+  }
+]

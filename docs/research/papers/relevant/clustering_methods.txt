@@ -1,0 +1,1440 @@
+1. J Vis Exp. 2025 Sep 26;(223). doi: 10.3791/68933.
+
+Pharmacophore Modeling for Targets with Extensive Ligand Libraries: A Case Study 
+on SARS-CoV-2 Mpro.
+
+Córdova-Bahena LJ(1), Pérez-Tapia SM(2), Velasco-Velázquez MA(3).
+
+Author information:
+(1)School of Medicine, Universidad Nacional Autónoma de México (UNAM); 
+Investigadores por México, Secretaría de Ciencia, Humanidades, Tecnología e 
+Innovación (SECIHTI).
+(2)Research and Development in Biotherapeutics Unit (UDIBI), National School of 
+Biological Sciences, National Polytechnic Institute; National Laboratory for 
+Specialized Services of Investigation, Development and Innovation (I+D+i) for 
+Pharma Chemicals and Biotechnological products, LANSEIDI-FarBiotec-CONAHCYT; 
+Immunology Department, National School of Biological Sciences, National 
+Polytechnic Institute.
+(3)School of Medicine, Universidad Nacional Autónoma de México (UNAM); 
+marcovelasco@unam.mx.
+
+A pharmacophore defines the spatial arrangement of molecular features required 
+for optimal interactions between a compound and its biological target. These 
+models can be derived by analyzing the intermolecular interactions between a 
+target and a set of known ligands in their binding conformations. A consensus 
+pharmacophore integrates common features from multiple ligands, reducing model 
+bias and enhancing predictive power. However, generating a robust consensus 
+pharmacophore from a large and chemically diverse ligand set presents technical 
+challenges. Here, we present a protocol for the construction of consensus 
+pharmacophores using ConPhar, an open-source informatics tool designed to 
+identify and cluster pharmacophoric features across multiple ligand-bound 
+complexes. The protocol includes model generation, refinement, and application 
+to the virtual screening of ultra-large molecular libraries. As a case study, we 
+applied the method to the SARS-CoV-2 main protease (Mpro), using one hundred 
+non-covalent inhibitors co-crystallized with the target. The resulting 
+pharmacophore model captured key interaction features in the catalytic region of 
+Mpro and enabled the identification of new potential ligands. This strategy is 
+broadly applicable to any biological target for which ligand-bound conformations 
+are available. It is particularly valuable for targets with extensive ligand 
+datasets and supports rational drug discovery by streamlining the identification 
+of novel candidates with desired interaction profiles.
+
+DOI: 10.3791/68933
+PMID: 41082460 [Indexed for MEDLINE]
+
+
+2. Sci Rep. 2025 Aug 19;15(1):30389. doi: 10.1038/s41598-025-13017-z.
+
+Unlocking the antimalarial potential of novel steroid-tetraoxane hybrids through 
+consensus molecular docking and molecular dynamics investigation.
+
+Nath D(#)(1), Debnath A(#)(2), Sarma M(3), Singh RK(4), Chetia D(3).
+
+Author information:
+(1)Department of Pharmaceutical Sciences, Faculty of Science and Engineering, 
+Dibrugarh University, Dibrugarh, 786004, Assam, India. pharmchem1209@gmail.com.
+(2)Noida Institute of Engineering and Technology [Pharmacy Institute], 19 
+Knowledge Park-II, Institutional Area, Greater Noida, Uttar Pradesh, India. 
+abhijitdebnath@outlook.in.
+(3)Department of Pharmaceutical Sciences, Faculty of Science and Engineering, 
+Dibrugarh University, Dibrugarh, 786004, Assam, India.
+(4)Department of Dravyaguna, Institute of Medical Sciences, Banaras Hindu 
+University, Varanasi, India. rajesh.singh1@bhu.ac.in.
+(#)Contributed equally
+
+The emergence of Plasmodium falciparum resistance to artemisinin-based 
+combination therapies necessitates the development of novel antimalarial agents. 
+This study presents the first computational investigation of steroid-tetraoxane 
+hybrids targeting cyclophilin, a key protein implicated in artemisinin 
+resistance mechanisms. We designed a library of 127 steroid-1,2,4,5-tetraoxane 
+hybrid compounds combining steroidal sapogenin (∆5,(6)-diosgenin-3-one) and 
+gem-dihydroperoxides, and employed consensus molecular docking across eight 
+platforms to minimize algorithm-specific biases. Compound A-CY-9C emerged as the 
+lead candidate, exhibiting superior binding stability and a favorable free 
+energy landscape during 500 ns molecular dynamics simulations. The dual 
+pharmacophore mechanism—disrupting parasite cholesterol uptake via the steroid 
+component while inducing oxidative stress through the tetraoxane moiety—offers a 
+novel strategy to combat artemisinin resistance. This first-in-class approach to 
+targeting cyclophilin with steroid-tetraoxane hybrids provides a promising 
+foundation for developing next-generation antimalarials against resistant P. 
+falciparum strains.
+SUPPLEMENTARY INFORMATION: The online version contains supplementary material 
+available at 10.1038/s41598-025-13017-z.
+
+DOI: 10.1038/s41598-025-13017-z
+PMCID: PMC12365323
+PMID: 40830358
+
+Conflict of interest statement: Declarations. Figures submitted with the 
+manuscript have been generated by the authors themselves and have not been 
+copied or adapted from other sources. The standard of the English language in 
+this article has been enhanced using LLMs, namely Llama-2-70B-GGML and OpenAI’s 
+chatbot, Chat Generative Pre-trained Transformer 4.0. We bear full 
+responsibility for the contents of this publication. We have conducted a 
+comprehensive examination, made improvements, and refined all languages 
+generated by the LLM to ensure their precise alignment with our initial research 
+outcomes and interpretations. Consent for publication: Not applicable. The study 
+does not contain data from any person. Competing interests: The authors declare 
+no competing interests. Ethical approval and consent to participate: Not 
+applicable. Human and animal rights: Not applicable.
+
+
+3. J Chem Inf Model. 2025 Jun 9;65(11):5495-5507. doi: 10.1021/acs.jcim.5c00575. 
+Epub 2025 May 29.
+
+Decoding the Structure-Activity Relationship of the Dopamine D3 
+Receptor-Selective Ligands Using Machine and Deep Learning Approaches.
+
+Won SJ(1)(2), Visayas BRB(1)(3)(4), Lee KH(1), Capangpangan RY(3)(5), Shi L(1).
+
+Author information:
+(1)Computational Chemistry and Molecular Biophysics Section, Molecular Targets 
+and Medications Discovery Branch, National Institute on Drug Abuse-Intramural 
+Research Program, National Institutes of Health, Baltimore, Maryland 21224, 
+United States.
+(2)Carle Illinois College of Medicine, University of Illinois Urbana-Champaign, 
+Urbana, Illinois 61801, United States.
+(3)Research on Environment and Nanotechnology Laboratories, Mindanao State 
+University at Naawan, Naawan 9023 Misamis Oriental, Philippines.
+(4)Department of Science and Technology, Philippine Council for Industry, Energy 
+and Emerging Technology Research and Development, Taguig City 1630-1649, 
+Philippines.
+(5)College of Marine and Allied Sciences, Mindanao State University at Naawan, 
+Naawan 9023 Misamis Oriental, Philippines.
+
+Dysfunctions of the dopamine D2 and D3 receptors (D2 and D3) are implicated in 
+neuropsychiatric conditions such as Parkinson's disease, schizophrenia, and 
+substance use disorders (SUDs). Evidence indicates that D3-selective ligands can 
+effectively modulate reward pathways, offering potential in treating SUDs with 
+reduced side effects. However, the high homology between D2 and D3 presents 
+challenges in developing subtype-selective ligands, crucial for elucidating 
+receptor-specific functions and developing targeted therapeutics. Here, to 
+facilitate selective ligand discovery, we leveraged ligand-based quantitative 
+structure-activity relationship (QSAR) modeling approaches to predict binding 
+affinity at D2 and D3, as well as ligand selectivity for D3. We first queried 
+training data from the ChEMBL database and performed a systematic curation 
+process to enhance the data quality. We then developed QSAR models using eXtreme 
+Gradient Boosting, random forest, and deep neural network (DNN) algorithms, with 
+DNN benefiting from a novel hyperparameter optimization protocol. All models 
+exhibited strong predictive performance, with DNN-based models slightly but 
+consistently outperforming the tree-based models. Integrating predictions from 
+all algorithms into a consensus metric further improved the accuracy and 
+robustness. Notably, our selectivity models outperformed the affinity models, 
+likely due to noise cancellation achieved by subtracting the binding affinities 
+of the two receptors. The Shapley Additive explanations analysis revealed key 
+pharmacophoric and physicochemical features critical for receptor affinity and 
+selectivity, while molecular docking of representative D3-selective compounds 
+highlighted the structural basis of D3 selectivity. These findings provide a 
+robust framework for modeling QSARs at D2 and D3, advancing the rational design 
+of targeted therapeutics for these receptors.
+
+DOI: 10.1021/acs.jcim.5c00575
+PMID: 40442044 [Indexed for MEDLINE]
+
+
+4. J Chem Inf Model. 2024 Mar 25;64(6):2084-2100. doi: 10.1021/acs.jcim.3c01969. 
+Epub 2024 Mar 8.
+
+Expanding FTMap for Fragment-Based Identification of Pharmacophore Regions in 
+Ligand Binding Sites.
+
+Khan O(1), Jones G(2), Lazou M(3), Joseph-McCarthy D(3), Kozakov D(2)(4), Beglov 
+D(3)(5), Vajda S(1)(3).
+
+Author information:
+(1)Department of Chemistry, Boston University, Boston, Massachusetts 02215, 
+United States.
+(2)Department of Applied Mathematics and Statistics, Stony Brook University, 
+Stony Brook, New York 11794, United States.
+(3)Department of Biomedical Engineering, Boston University, Boston, 
+Massachusetts 02215, United States.
+(4)Laufer Center for Physical and Quantitative Biology, Stony Brook University, 
+Stony Brook, New York 11794, United States.
+(5)Acpharis Inc., Holliston, Massachusetts 01746, United States.
+
+The knowledge of ligand binding hot spots and of the important interactions 
+within such hot spots is crucial for the design of lead compounds in the early 
+stages of structure-based drug discovery. The computational solvent mapping 
+server FTMap can reliably identify binding hot spots as consensus clusters, free 
+energy minima that bind a variety of organic probe molecules. However, in its 
+current implementation, FTMap provides limited information on regions within the 
+hot spots that tend to interact with specific pharmacophoric features of 
+potential ligands. E-FTMap is a new server that expands on the original FTMap 
+protocol. E-FTMap uses 119 organic probes, rather than the 16 in the original 
+FTMap, to exhaustively map binding sites, and identifies pharmacophore features 
+as atomic consensus sites where similar chemical groups bind. We validate 
+E-FTMap against a set of 109 experimentally derived structures of fragment-lead 
+pairs, finding that highly ranked pharmacophore features overlap with the 
+corresponding atoms in both fragments and lead compounds. Additionally, 
+comparisons of mapping results to ensembles of bound ligands reveal that 
+pharmacophores generated with E-FTMap tend to sample highly conserved 
+protein-ligand interactions. E-FTMap is available as a web server at 
+https://eftmap.bu.edu.
+
+DOI: 10.1021/acs.jcim.3c01969
+PMCID: PMC11694573
+PMID: 38456842 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare the following competing 
+financial interest(s): S.V and D.K. hold equity in Acpharis Inc, a company that 
+developed the ATLAS program, the extended version of FTMap. ATLAS is used in the 
+E-FTMap server. D.B. is an employee of Acpharis Inc. Acpharis offers commercial 
+licenses for the use of ATLAS. However, both the FTMap and E-FTMap servers are 
+free for academic and governmental research.
+
+
+5. Mol Inform. 2023 Jun;42(6):e2300022. doi: 10.1002/minf.202300022. Epub 2023
+Jun  7.
+
+Augmenting bioactivity by docking-generated multiple ligand poses to enhance 
+machine learning and pharmacophore modelling: discovery of new TTK inhibitors as 
+case study.
+
+Al-Imam AM(1), Daoud S(2), Hatmal MM(3), Taha MO(1).
+
+Author information:
+(1)Department of Pharmaceutical Sciences, Faculty of Pharmacy, University of 
+Jordan, Amman, 11492, Jordan.
+(2)Department of Pharmaceutical Chemistry and Pharmacognosy, Faculty of 
+Pharmacy, Applied Sciences Private University, Amman, Jordan.
+(3)Department of Medical Laboratory Sciences, Faculty of Applied Health 
+Sciences, The Hashemite University, PO. Box, 330127, Zarqa 13133, Jordan.
+
+Dual specificity protein kinase threonine/Tyrosine kinase (TTK) is one of the 
+mitotic kinases. High levels of TTK are detected in several types of cancer. 
+Hence, TTK inhibition is considered a promising therapeutic anti-cancer 
+strategy. In this work, we used multiple docked poses of TTK inhibitors to 
+augment training data for machine learning QSAR modeling. Ligand-Receptor 
+Contacts Fingerprints and docking scoring values were used as descriptor 
+variables. Escalating docking-scoring consensus levels were scanned against 
+orthogonal machine learners, and the best learners (Random Forests and XGBoost) 
+were coupled with genetic algorithm and Shapley additive explanations (SHAP) to 
+determine critical descriptors for predicting anti-TTK bioactivity and for 
+pharmacophore generation. Three successful pharmacophores were deduced and 
+subsequently used for in silico screening against the NCI database. A total of 
+14 hits were evaluated in vitro for their anti-TTK bioactivities. One hit of 
+novel chemotype showed reasonable dose-response curve with experimental IC50 of 
+1.0 μM. The presented work indicates the validity of data augmentation using 
+multiple docked poses for building successful machine learning models and 
+pharmacophore hypotheses.
+
+© 2023 Wiley-VCH GmbH.
+
+DOI: 10.1002/minf.202300022
+PMID: 37222400 [Indexed for MEDLINE]
+
+
+6. Int J Mol Sci. 2023 Feb 10;24(4):3611. doi: 10.3390/ijms24043611.
+
+Towards Arginase Inhibition: Hybrid SAR Protocol for Property Mapping of 
+Chlorinated N-arylcinnamamides.
+
+Bak A(1), Kos J(2)(3), Degotte G(4), Swietlicka A(1), Strharsky T(5), Pindjakova 
+D(3), Gonec T(5), Smolinski A(6), Francotte P(7), Frederich M(8), Kozik V(1), 
+Jampilek J(3)(9).
+
+Author information:
+(1)Institute of Chemistry, University of Silesia, Szkolna 9, 40-007 Katowice, 
+Poland.
+(2)Department of Biochemistry, Faculty of Medicine, Masaryk University, Kamenice 
+5, 625 00 Brno, Czech Republic.
+(3)Department of Analytical Chemistry, Faculty of Natural Sciences, Comenius 
+University, Ilkovicova 6, 842 15 Bratislava, Slovakia.
+(4)I2BM, Department of Molecular Chemistry, University Grenoble-Alpes, Rue de la 
+Chimie 570, 38610 Gieres, France.
+(5)Department of Chemical Drugs, Faculty of Pharmacy, Masaryk University, 
+Palackeho 1946/1, 612 00 Brno, Czech Republic.
+(6)GiG Research Institute, Pl. Gwarkow 1, 40-166 Katowice, Poland.
+(7)Laboratory of Medicinal Chemistry, CIRM, Department of Pharmacy, University 
+of Liege, Avenue Hippocrate 15, 4000 Liege, Belgium.
+(8)Laboratory of Pharmacognosy, CIRM, Department of Pharmacy, University of 
+Liege, Avenue Hippocrate 15, 4000 Liege, Belgium.
+(9)Institute of Neuroimmunology, Slovak Academy of Sciences, Dubravska cesta 9, 
+845 10 Bratislava, Slovakia.
+
+A series of seventeen 4-chlorocinnamanilides and seventeen 
+3,4-dichlorocinnamanilides were characterized for their antiplasmodial activity. 
+In vitro screening on a chloroquine-sensitive strain of Plasmodium falciparum 
+3D7/MRA-102 highlighted that 23 compounds possessed IC50 < 30 µM. Typically, 
+3,4-dichlorocinnamanilides showed a broader range of activity compared to 
+4-chlorocinnamanilides. 
+(2E)-N-[3,5-bis(trifluoromethyl)phenyl]-3-(3,4-dichlorophenyl)prop-2-en-amide 
+with IC50 = 1.6 µM was the most effective agent, while the other eight most 
+active derivatives showed IC50 in the range from 1.8 to 4.6 µM. A good 
+correlation between the experimental logk and the estimated clogP was recorded 
+for the whole ensemble of the lipophilicity generators. Moreover, the 
+SAR-mediated similarity assessment of the novel (di)chlorinated 
+N-arylcinnamamides was conducted using the collaborative (hybrid) ligand-based 
+and structure-related protocols. In consequence, an 'averaged' selection-driven 
+interaction pattern was produced based in namely 'pseudo-consensus' 3D 
+pharmacophore mapping. The molecular docking approach was engaged for the most 
+potent antiplasmodial agents in order to gain an insight into the 
+arginase-inhibitor binding mode. The docking study revealed that (di)chlorinated 
+aromatic (C-phenyl) rings are oriented towards the binuclear manganese cluster 
+in the energetically favorable poses of the chloroquine and the most potent 
+arginase inhibitors. Additionally, the water-mediated hydrogen bonds were formed 
+via carbonyl function present in the new N-arylcinnamamides and the fluorine 
+substituent (alone or in trifluoromethyl group) of N-phenyl ring seems to play a 
+key role in forming the halogen bonds.
+
+DOI: 10.3390/ijms24043611
+PMCID: PMC9968098
+PMID: 36835023 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no conflict of interest.
+
+
+7. RSC Adv. 2023 Feb 3;13(7):4623-4640. doi: 10.1039/d2ra07007c. eCollection 2023
+ Jan 31.
+
+Discovery of new STAT3 inhibitors as anticancer agents using ligand-receptor 
+contact fingerprints and docking-augmented machine learning.
+
+Jaradat NJ(1), Alshaer W(2), Hatmal M(3), Taha MO(1).
+
+Author information:
+(1)Department of Pharmaceutical Sciences, Faculty of Pharmacy, University of 
+Jordan Amman 11492 Jordan mutasem@ju.edu.jo +962 6 5339649 +962 6 5355000 ext. 
+23305.
+(2)Cell Therapy Center, The University of Jordan Amman 11942 Jordan.
+(3)Department of Medical Laboratory Sciences, Faculty of Applied Medical 
+Sciences, The Hashemite University P.O. Box 330127 Zarqa 13133 Jordan.
+
+STAT3 belongs to a family of seven vital transcription factors. High levels of 
+STAT3 are detected in several types of cancer. Hence, STAT3 inhibition is 
+considered a promising therapeutic anti-cancer strategy. In this work, we used 
+multiple docked poses of STAT3 inhibitors to augment training data for machine 
+learning QSAR modeling. Ligand-Receptor Contact Fingerprints and scoring values 
+were implemented as descriptor variables. Escalating docking-scoring consensus 
+levels were scanned against orthogonal machine learners, and the best learners 
+(Random Forests and XGBoost) were coupled with genetic algorithm and Shapley 
+additive explanations (SHAP) to identify critical descriptors that determine 
+anti-STAT3 bioactivity to be translated into pharmacophore model(s). Two 
+successful pharmacophores were deduced and subsequently used for in silico 
+screening against the National Cancer Institute (NCI) database. A total of 26 
+hits were evaluated in vitro for their anti-STAT3 bioactivities. Out of which, 
+three hits of novel chemotypes, showed cytotoxic IC50 values in the nanomolar 
+range (35 nM to 6.7 μM). However, two are potent dihydrofolate reductase (DHFR) 
+inhibitors and therefore should have significant indirect STAT3 inhibitory 
+effects. The third hit (cytotoxic IC50 = 0.44 μM) is purely direct STAT3 
+inhibitor (devoid of DHFR activity) and caused, at its cytotoxic IC50, more than 
+two-fold reduction in the expression of STAT3 downstream genes (c-Myc and 
+Bcl-xL). The presented work indicates that the concept of data augmentation 
+using multiple docked poses is a promising strategy for generating valid machine 
+learning models capable of discriminating active from inactive compounds.
+
+This journal is © The Royal Society of Chemistry.
+
+DOI: 10.1039/d2ra07007c
+PMCID: PMC9896621
+PMID: 36760267
+
+Conflict of interest statement: There are no conflicts of interest to declare.
+
+
+8. Front Mol Biosci. 2022 Jun 2;9:836572. doi: 10.3389/fmolb.2022.836572. 
+eCollection 2022.
+
+Hierarchical Virtual Screening Based on Rocaglamide Derivatives to Discover New 
+Potential Anti-Skin Cancer Agents.
+
+Dos Santos IVF(1)(2), Borges RS(1)(3), Silva GM(4)(5), de Lima LR(1)(3), Bastos 
+RS(1)(3), Ramos RS(1)(2), Silva LB(1)(3), da Silva CHTP(4)(5), Dos Santos 
+CBR(1)(2)(3).
+
+Author information:
+(1)Modeling and Computational Chemistry Laboratory, Federal University of Amapá, 
+Macapá, Brazil.
+(2)Graduate Program in Biotechnology and Biodiversity-Network BIONORTE, Federal 
+University of Amapá, Macapá, Brazil.
+(3)Graduate Program in Medicinal Chemistry and Molecular Modeling, Federal 
+University of Pará, Belém, Brazil.
+(4)Computational Laboratory of Pharmaceutical Chemistry, School of 
+Pharmaceutical Sciences of Ribeirão Preto - Universidade de São Paulo, Ribeirão 
+Preto, Brazil.
+(5)Departamento de Química, Faculdade de Filosofia, Ciências e Letras de 
+Ribeirão Preto - Universidade de São Paulo, Ribeirão Preto, Brazil.
+
+Skin Cancer (SC) is among the most common type of cancers worldwide. The search 
+for SC therapeutics using molecular modeling strategies as well as considering 
+natural plant-derived products seems to be a promising strategy. The 
+phytochemical Rocaglamide A (Roc-A) and its derivatives rise as an interesting 
+set of reference compounds due to their in vitro cytotoxic activity with SC cell 
+lines. In view of this, we performed a hierarchical virtual screening study 
+considering Roc-A and its derivatives, with the aim to find new chemical 
+entities with potential activity against SC. For this, we selected 15 molecules 
+(Roc-A and 14 derivatives) and initially used them in docking studies to predict 
+their interactions with Checkpoint kinase 1 (Chk1) as a target for SC. This 
+allowed us to compile and use them as a training set to build robust 
+pharmacophore models, validated by Pearson's correlation (p) values and 
+hierarchical cluster analysis (HCA), subsequentially submitted to prospective 
+virtual screening using the Molport® database. Outputted compounds were then 
+selected considering their similarities to Roc-A, followed by analyses of 
+predicted toxicity and pharmacokinetic properties as well as of consensus 
+molecular docking using three software. 10 promising compounds were selected and 
+analyzed in terms of their properties and structural features and, also, 
+considering their previous reports in literature. In this way, the 10 promising 
+virtual hits found in this work may represent potential anti-SC agents and 
+further investigations concerning their biological tests shall be conducted.
+
+Copyright © 2022 dos Santos, Borges, Silva, de Lima, Bastos, Ramos, Silva, da 
+Silva and dos Santos.
+
+DOI: 10.3389/fmolb.2022.836572
+PMCID: PMC9201829
+PMID: 35720115
+
+Conflict of interest statement: The authors declare that the research was 
+conducted in the absence of any commercial or financial relationships that could 
+be construed as a potential conflict of interest. The handling editor declared a 
+shared affiliation, though no other collaboration, with several of the authors 
+GS, CS at the time of the review.
+
+
+9. J Biomol Struct Dyn. 2023 Apr;41(7):2971-2980. doi: 
+10.1080/07391102.2022.2042389. Epub 2022 Feb 23.
+
+Identification of new putative inhibitors of Mycobacterium tuberculosis 
+3-dehydroshikimate dehydratase from a combination of ligand- and structure-based 
+and deep learning in silico approaches.
+
+Souza JVP(1), Kioshima ES(1), Murase LS(2), Lima DS(3), Seixas FAV(3), Maigret 
+B(4), Cardoso RF(1).
+
+Author information:
+(1)Programa de Pós-Graduação em Biociências e Fisiopatologia, Departamento de 
+Análises Clínicas e Biomedicina, Universidade Estadual de Maringá, Maringá, PR, 
+Brazil.
+(2)Programa de Pós-Graduação em Ciências da Saúde, Universidade Estadual de 
+Maringá, Maringá, PR, Brazil.
+(3)Departamento de Tecnologia, Universidade Estadual de Maringá, Umuarama, PR, 
+Brazil.
+(4)Université de Lorraine, CNRS, Nancy, France.
+
+The development of new drugs against Mycobacterium tuberculosis is an essential 
+strategy for fighting drug resistance. Although 3-dehydroquinate dehydratase 
+(MtDHQ) is known to be a highly relevant target for M. tuberculosis, current 
+research shows new putative inhibitors of MtDHQ selected by a large-scale 
+ensemble-docking strategy combining ligand- and target-based chemoinformatic 
+methods to deep learning. Initial chemical library was reduced from 216 million 
+to approximately 460 thousand after pharmacophore, toxicity and molecular weight 
+filters. Final library was subjected to an ensemble-docking protocol in GOLD 
+which selected the top 300 molecules (GHITS). GHITS displayed different 
+structures and characteristics when compared to known inhibitors (KINH). GHITS 
+were further screened by post-docking analysis in AMMOS2 and deep learning 
+virtual screening in DeepPurpose. DeepPurpose predicted that a number of GHITS 
+had comparable or better affinity for the target than KINH. The best molecule 
+was selected by consensus ranking using GOLD, AMMOS2 and DeepPurpose scores. 
+Molecular dynamics revealed that the top hit displayed consistent and stable 
+binding to MtDHQ, making strong interactions with active-site loop residues. 
+Results forward new putative inhibitors of MtDHQ and reinforce the potential 
+application of artificial intelligence methods for drug design. This work 
+represents the first step in the validation of these molecules as inhibitors of 
+MtDHQ.
+
+DOI: 10.1080/07391102.2022.2042389
+PMID: 35196960 [Indexed for MEDLINE]
+
+
+10. Int J Mol Sci. 2021 Dec 21;23(1):43. doi: 10.3390/ijms23010043.
+
+A Comparison between Enrichment Optimization Algorithm (EOA)-Based and 
+Docking-Based Virtual Screening.
+
+Spiegel J(1), Senderowitz H(1).
+
+Author information:
+(1)Department of Chemistry, Bar-Ilan University, Ramat-Gan 5290002, Israel.
+
+Virtual screening (VS) is a well-established method in the initial stages of 
+many drug and material design projects. VS is typically performed using 
+structure-based approaches such as molecular docking, or various ligand-based 
+approaches. Most docking tools were designed to be as global as possible, and 
+consequently only require knowledge on the 3D structure of the biotarget. In 
+contrast, many ligand-based approaches (e.g., 3D-QSAR and pharmacophore) require 
+prior development of project-specific predictive models. Depending on the type 
+of model (e.g., classification or regression), predictive ability is typically 
+evaluated using metrics of performance on either the training set (e.g.,QCV2) or 
+the test set (e.g., specificity, selectivity or QF1/F2/F32). However, none of 
+these metrics were developed with VS in mind, and consequently, their ability to 
+reliably assess the performances of a model in the context of VS is at best 
+limited. With this in mind we have recently reported the development of the 
+enrichment optimization algorithm (EOA). EOA derives QSAR models in the form of 
+multiple linear regression (MLR) equations for VS by optimizing an 
+enrichment-based metric in the space of the descriptors. Here we present an 
+improved version of the algorithm which better handles active compounds and 
+which also takes into account information on inactive (either known inactive or 
+decoy) compounds. We compared the improved EOA in small-scale VS experiments 
+with three common docking tools, namely, Glide-SP, GOLD and AutoDock Vina, 
+employing five molecular targets (acetylcholinesterase, human immunodeficiency 
+virus type 1 protease, MAP kinase p38 alpha, urokinase-type plasminogen 
+activator, and trypsin I). We found that EOA consistently outperformed all 
+docking tools in terms of the area under the ROC curve (AUC) and EF1% metrics 
+that measured the overall and initial success of the VS process, respectively. 
+This was the case when the docking metrics were calculated based on a consensus 
+approach and when they were calculated based on two different sets of single 
+crystal structures. Finally, we propose that EOA could be combined with 
+molecular docking to derive target-specific scoring functions.
+
+DOI: 10.3390/ijms23010043
+PMCID: PMC8744642
+PMID: 35008467 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no conflict of interest.
+
+
+11. Front Mol Biosci. 2020 Dec 14;7:599059. doi: 10.3389/fmolb.2020.599059. 
+eCollection 2020.
+
+Hierarchical Graph Representation of Pharmacophore Models.
+
+Arthur G(1), Oliver W(1), Klaus B(1), Thomas S(1), Gökhan I(2), Sharon B(2), 
+Isabelle T(3), Pierre D(1)(3), Thierry L(1).
+
+Author information:
+(1)Department of Pharmaceutical Chemistry, University of Vienna, Vienna, 
+Austria.
+(2)Inte:Ligand Software-Entwicklungs und Consulting GmbH, Vienna, Austria.
+(3)Institut de Recherches Servier (IdRS), Croissy-sur-Seine, France.
+
+For the investigation of protein-ligand interaction patterns, the current 
+accessibility of a wide variety of sampling methods allows quick access to 
+large-scale data. The main example is the intensive use of molecular dynamics 
+simulations applied to crystallographic structures which provide dynamic 
+information on the binding interactions in protein-ligand complexes. Chemical 
+feature interaction based pharmacophore models extracted from these simulations, 
+were recently used with consensus scoring approaches to identify potentially 
+active molecules. While this approach is rapid and can be fully automated for 
+virtual screening, additional relevant information from such simulations is 
+still opaque and so far the full potential has not been entirely exploited. To 
+address these aspects, we developed the hierarchical graph representation of 
+pharmacophore models (HGPM). This single graph representation enables an 
+intuitive observation of numerous pharmacophore models from long MD trajectories 
+and further emphasizes their relationship and feature hierarchy. The resulting 
+interactive depiction provides an easy-to-apprehend tool for the selection of 
+sets of pharmacophores as well as visual support for analysis of pharmacophore 
+feature composition and virtual screening results. Furthermore, the 
+representation can be adapted to include information involving interactions 
+between the same protein and multiple different ligands. Herein, we describe the 
+generation, visualization and use of HGPMs generated from MD simulations of two 
+x-ray crystallographic derived structures of the human glucokinase protein in 
+complex with allosteric activators. The results demonstrate that a large number 
+of pharmacophores and their relationships can be visualized in an interactive, 
+efficient manner, unique binding modes identified and a combination of models 
+derived from long MD simulations can be strategically prioritized for VS 
+campaigns.
+
+Copyright © 2020 Arthur, Oliver, Klaus, Thomas, Gökhan, Sharon, Isabelle, Pierre 
+and Thierry.
+
+DOI: 10.3389/fmolb.2020.599059
+PMCID: PMC7793842
+PMID: 33425991
+
+Conflict of interest statement: BS and IG are employees of the company 
+Inte:Ligand Software-Entwicklungs und Consulting GmbH, Vienna, Austria. TI and 
+DP are employees of Institut de Recherches Servier (IdRS), Croissy-sur-Seine, 
+France. The herein presented work is the result of a joint research project 
+funded by the aforementioned companies. The remaining authors declare that the 
+research was conducted in the absence of any commercial or financial 
+relationships that could be construed as a potential conflict of interest.
+
+
+12. ACS Nano. 2021 Jan 26;15(1):857-872. doi: 10.1021/acsnano.0c07383. Epub 2020
+Dec  29.
+
+Uncovering Flexible Active Site Conformations of SARS-CoV-2 3CL Proteases 
+through Protease Pharmacophore Clusters and COVID-19 Drug Repurposing.
+
+Pathak N(1)(2)(3), Chen YT(3), Hsu YC(3), Hsu NY(3), Kuo CJ(4), Tsai HP(5), Kang 
+JJ(6), Huang CH(5)(7), Chang SY(8)(9), Chang YH(5), Liang PH(10)(11), Yang 
+JM(1)(3)(12)(13).
+
+Author information:
+(1)TIGP Bioinformatics Program, Institute of Information Science, Academia 
+Sinica, Taipei 115, Taiwan.
+(2)Institute of Bioinformatics and Structural Biology, National Tsing Hua 
+University, Hsinchu 300, Taiwan.
+(3)Institute of Bioinformatics and Systems Biology, National Chiao Tung 
+University, Hsinchu 300, Taiwan.
+(4)Department of Veterinary Medicine, National Chung Hsing University, Taichung 
+402, Taiwan.
+(5)Institute of Preventive Medicine, National Defense Medical Center, New Taipei 
+City 114, Taiwan.
+(6)National Yang-Ming University, Taipei 112, Taiwan.
+(7)Graduate Institute of Medical Sciences, National Defense Medical Center, New 
+Taipei City 114, Taiwan.
+(8)Department of Laboratory Medicine, National Taiwan University Hospital, 
+Taipei 100, Taiwan.
+(9)National Taiwan University College of Medicine, Taipei 100, Taiwan.
+(10)Institute of Biological Chemistry, Academia Sinica, Taipei 115, Taiwan.
+(11)Institute of Biochemical Sciences, National Taiwan University, Taipei 106, 
+Taiwan.
+(12)Department of Biological Science and Technology, National Chiao Tung 
+University, Hsinchu 300, Taiwan.
+(13)Center for Intelligent Drug Systems and Smart Bio-devices, National Chiao 
+Tung University, Hsinchu 300, Taiwan.
+
+The infectious SARS-CoV-2 causes COVID-19, which is now a global pandemic. 
+Aiming for effective treatments, we focused on the key drug target, the viral 
+3C-like (3CL) protease. We modeled a big dataset with 42 SARS-CoV-2 3CL 
+protease-ligand complex structures from ∼98.7% similar SARS-CoV 3CL protease 
+with abundant complex structures. The diverse flexible active site conformations 
+identified in the dataset were clustered into six protease pharmacophore 
+clusters (PPCs). For the PPCs with distinct flexible protease active sites and 
+diverse interaction environments, we identified pharmacophore anchor hotspots. A 
+total of 11 "PPC consensus anchors" (a distinct set observed in each PPC) were 
+observed, of which three "PPC core anchors" EHV2, HV1, and V3 are strongly 
+conserved across PPCs. The six PPC cavities were then applied in virtual 
+screening of 2122 FDA drugs for repurposing, using core anchor-derived "PPC 
+scoring S" to yield seven drug candidates. Experimental testing by SARS-CoV-2 
+3CL protease inhibition assay and antiviral cytopathic effect assays discovered 
+active hits, Boceprevir and Telaprevir (HCV drugs) and Nelfinavir (HIV drug). 
+Specifically, Boceprevir showed strong protease inhibition with micromolar IC50 
+of 1.42 μM and an antiviral activity with EC50 of 49.89 μM, whereas Telaprevir 
+showed moderate protease inhibition only with an IC50 of 11.47 μM. Nelfinavir 
+solely showed antiviral activity with a micromolar EC50 value of 3.28 μM. 
+Analysis of binding mechanisms of protease inhibitors revealed the role of PPC 
+core anchors. Our PPCs revealed the flexible protease active site conformations, 
+which successfully enabled drug repurposing.
+
+DOI: 10.1021/acsnano.0c07383
+PMID: 33373194 [Indexed for MEDLINE]
+
+
+13. ChemRxiv [Preprint]. 2020 Sep 16. doi: 10.26434/chemrxiv.12915779.
+
+REDIAL-2020: A suite of machine learning models to estimate Anti-SARS-CoV-2 
+activities.
+
+Govinda KC(1)(2), Bocci G(3), Verma S(2)(4), Hassan M(5), Holmes J(3), Yang 
+JJ(3), Sirimulla S(1)(2)(5), Oprea TI(3)(6)(7)(8).
+
+Author information:
+(1)Computational Science Program, The University of Texas at El Paso, Texas 
+79968, USA.
+(2)Department of Pharmaceutical Sciences, School of Pharmacy, The University of 
+Texas at El Paso, Texas 79902, USA.
+(3)Translational Informatics Division, Department of Internal Medicine; 
+University of New Mexico Health Sciences Center, Albuquerque, NM, USA.
+(4)Department of Pharmacy, Birla Institute of Technology and Science, Pilani, 
+Pilani Campus, Rajasthan, 333031, India.
+(5)Department of Computer Science, The University of Texas at El Paso, Texas 
+79968, USA.
+(6)Autophagy Inflammation and Metabolism Center of Biomedical Research 
+Excellence, University of New Mexico Health Sciences Center, Albuquerque, NM, 
+USA.
+(7)Department of Rheumatology and Inflammation Research, Institute of Medicine, 
+Sahlgrenska Academy at University of Gothenburg, Gothenburg, Sweden.
+(8)Novo Nordisk Foundation Center for Protein Research, Faculty of Health and 
+Medical Sciences, University of Copenhagen, Copenhagen, Denmark.
+
+Strategies for drug discovery and repositioning are an urgent need with respect 
+to COVID-19. We developed "REDIAL-2020", a suite of machine learning models for 
+estimating small molecule activity from molecular structure, for a range of 
+SARS-CoV-2 related assays. Each classifier is based on three distinct types of 
+descriptors (fingerprint, physicochemical, and pharmacophore) for parallel model 
+development. These models were trained using high throughput screening data from 
+the NCATS COVID19 portal (https://opendata.ncats.nih.gov/covid19/index.html), 
+with multiple categorical machine learning algorithms. The "best models" are 
+combined in an ensemble consensus predictor that outperforms single models where 
+external validation is available. This suite of machine learning models is 
+available through the DrugCentral web portal (http://drugcentral.org/Redial). 
+Acceptable input formats are: drug name, PubChem CID, or SMILES; the output is 
+an estimate of anti-SARS-CoV-2 activities. The web application reports estimated 
+activity across three areas (viral entry, viral replication, and live virus 
+infectivity) spanning six independent models, followed by a similarity search 
+that displays the most similar molecules to the query among experimentally 
+determined data. The ML models have 60% to 74% external predictivity, based on 
+three separate datasets. Complementing the NCATS COVID19 portal, REDIAL-2020 can 
+serve as a rapid online tool for identifying active molecules for COVID-19 
+treatment. The source code and specific models are available through Github 
+(https://github.com/sirimullalab/redial-2020), or via Docker Hub 
+(https://hub.docker.com/r/sirimullalab/redial-2020) for users preferring a 
+containerized version.
+
+DOI: 10.26434/chemrxiv.12915779
+PMCID: PMC7668752
+PMID: 33200119
+
+Conflict of interest statement: Conflicts of Interest T.I.O. has received 
+honoraria or consulted for Abbott, AstraZeneca, Chiron, Genentech, Infinity 
+Pharmaceuticals, Merz Pharmaceuticals, Merck Darmstadt, Mitsubishi Tanabe, 
+Novartis, Ono Pharmaceuticals, Pfizer, Roche, Sanofi and Wyeth. He is on the 
+Scientific Advisory Board of ChemDiv Inc. and InSilico Medicine.
+
+
+14. Molecules. 2020 Aug 26;25(17):3886. doi: 10.3390/molecules25173886.
+
+Prediction of Premature Termination Codon Suppressing Compounds for Treatment of 
+Duchenne Muscular Dystrophy Using Machine Learning.
+
+Wang K(1), Romm EL(2), Kouznetsova VL(3), Tsigelny IF(2)(3)(4).
+
+Author information:
+(1)MAP program, University of California San Diego (UCSD), La Jolla, CA 92093, 
+USA.
+(2)Curematch Inc., 6440 Lusk Blvd, Suite D206, San Diego, CA 92121, USA.
+(3)San Diego Supercomputer Center, University of California San Diego (UCSD), La 
+Jolla, CA 92093, USA.
+(4)Dept. of Neurosciences, University of California San Diego (UCSD), La Jolla, 
+CA 92093, USA.
+
+A significant percentage of Duchenne muscular dystrophy (DMD) cases are caused 
+by premature termination codon (PTC) mutations in the dystrophin gene, leading 
+to the production of a truncated, non-functional dystrophin polypeptide. 
+PTC-suppressing compounds (PTCSC) have been developed in order to restore 
+protein translation by allowing the incorporation of an amino acid in place of a 
+stop codon. However, limitations exist in terms of efficacy and toxicity. To 
+identify new compounds that have PTC-suppressing ability, we selected and 
+clustered existing PTCSC, allowing for the construction of a common 
+pharmacophore model. Machine learning (ML) and deep learning (DL) models were 
+developed for prediction of new PTCSC based on known compounds. We conducted a 
+search of the NCI compounds database using the pharmacophore-based model and a 
+search of the DrugBank database using pharmacophore-based, ML and DL models. 
+Sixteen drug compounds were selected as a consensus of pharmacophore-based, ML, 
+and DL searches. Our results suggest notable correspondence of the 
+pharmacophore-based, ML, and DL models in prediction of new PTC-suppressing 
+compounds.
+
+DOI: 10.3390/molecules25173886
+PMCID: PMC7503396
+PMID: 32858918 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no conflict of interest.
+
+
+15. J Comput Aided Mol Des. 2020 Aug;34(8):831-839. doi:
+10.1007/s10822-020-00308-y.  Epub 2020 Mar 27.
+
+Large-scale evaluation of cytochrome P450 2C9 mediated drug interaction 
+potential with machine learning-based consensus modeling.
+
+Rácz A(1), Keserű GM(2).
+
+Author information:
+(1)Plasma Chemistry Research Group, Research Centre for Natural Sciences, Magyar 
+tudósok krt. 2, Budapest, 1117, Hungary.
+(2)Medicinal Chemistry Research Group, Research Centre for Natural Sciences, 
+Magyar tudósok krt. 2., Budapest, 1117, Hungary. keseru.gyorgy@ttk.hu.
+
+Cytochrome P450 (CYP) enzymes play an important role in the metabolism of 
+xenobiotics. Since they are connected to drug interactions, screening for 
+potential inhibitors is of utmost importance in drug discovery settings. Our 
+study provides an extensive classification model for P450-drug interactions with 
+one of the most prominent members, the 2C9 isoenzyme. Our model involved the 
+largest set of 45,000 molecules ever used for developing prediction models. The 
+models are based on three different types of descriptors, (a) typical one, two 
+and three dimensional molecular descriptors, (b) chemical and pharmacophore 
+fingerprints and (c) interaction fingerprints with docking scores. Two machine 
+learning algorithms, the boosted tree and the multilayer feedforward of 
+resilient backpropagation network were used and compared based on their 
+performances. The models were validated both internally and using external 
+validation sets. The results showed that the consensus voting technique with 
+custom probability thresholds could provide promising results even in 
+large-scale cases without any restrictions on the applicability domain. Our best 
+model was capable to predict the 2C9 inhibitory activity with the area under the 
+receiver operating characteristic curve (AUC) of 0.85 and 0.84 for the internal 
+and the external test sets, respectively. The chemical space covered with the 
+largest available dataset has reached its limit encompassing publicly available 
+bioactivity data for the 2C9 isoenzyme.
+
+DOI: 10.1007/s10822-020-00308-y
+PMCID: PMC7320947
+PMID: 32221780 [Indexed for MEDLINE]
+
+Conflict of interest statement: There are no conflicts of interest.
+
+
+16. Molecules. 2020 Jan 17;25(2):385. doi: 10.3390/molecules25020385.
+
+Probabilistic Approach for Virtual Screening Based on Multiple Pharmacophores.
+
+Madzhidov TI(1), Rakhimbekova A(1), Kutlushuna A(1)(2), Polishchuk P(2).
+
+Author information:
+(1)A.M. Butlerov Institute of Chemistry, Kazan Federal University, 420008 Kazan, 
+Russia.
+(2)Institute of Molecular and Translational Medicine, Faculty of Medicine and 
+Dentistry, Palacky University and University Hospital in Olomouc, 77900 Olomouc, 
+Czech Republic.
+
+Pharmacophore modeling is usually considered as a special type of virtual 
+screening without probabilistic nature. Correspondence of at least one 
+conformation of a molecule to pharmacophore is considered as evidence of its 
+bioactivity. We show that pharmacophores can be treated as one-class machine 
+learning models, and the probability the reflecting model's confidence can be 
+assigned to a pharmacophore on the basis of their precision of active compounds 
+identification on a calibration set. Two schemes (Max and Mean) of probability 
+calculation for consensus prediction based on individual pharmacophore models 
+were proposed. Both approaches to some extent correspond to commonly used 
+consensus approaches like the common hit approach or the one based on a logical 
+OR operation uniting hit lists of individual models. Unlike some known 
+approaches, the proposed ones can rank compounds retrieved by multiple models. 
+These approaches were benchmarked on multiple ChEMBL datasets used for 
+ligand-based pharmacophore modeling and externally validated on corresponding 
+DUD-E datasets. The influence of complexity of pharmacophores and their 
+performance on a calibration set on results of virtual screening was analyzed. 
+It was shown that Max and Mean approaches have superior early enrichment to the 
+commonly used approaches. Thus, a well-performing, easy-to-implement, and 
+probabilistic alternative to existing approaches for pharmacophore-based virtual 
+screening was proposed.
+
+DOI: 10.3390/molecules25020385
+PMCID: PMC7024325
+PMID: 31963467 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no conflict of interest.
+
+
+17. J Chem Inf Model. 2019 Jun 24;59(6):2805-2817. doi: 10.1021/acs.jcim.9b00279.
+ Epub 2019 May 23.
+
+BRUSELAS: HPC Generic and Customizable Software Architecture for 3D Ligand-Based 
+Virtual Screening of Large Molecular Databases.
+
+Banegas-Luna AJ(1), Cerón-Carrasco JP(1), Puertas-Martín S(2), Pérez-Sánchez 
+H(1).
+
+Author information:
+(1)Bioinformatics and High Performance Computing Research Group (BIO-HPC), 
+Computer Engineering Department , Universidad Católica San Antonio de Murcia 
+(UCAM) , Campus de los Jerónimos s/n , 30107 Murcia , Spain.
+(2)Supercomputing - Algorithms Research Group (SAL), Department of Informatics , 
+University of Almería, Agrifood Campus of International Excellence , ceiA3 , 
+Almería , 04120 , Spain.
+
+BRUSELAS (balanced rapid and unrestricted server for extensive ligand-aimed 
+screening) is a novel, highly efficient web software architecture for 3D shape 
+and pharmacophore searches in off the cuff libraries. A wide panel of shape and 
+pharmacophore similarity algorithms are combined to avoid unbiased results while 
+yielding consensus scoring functions. To evaluate its reliability, BRUSELAS was 
+tested against other similar servers (e.g., USR-VS, SwissSimilarity, ChemMapper) 
+to search for potential antidiabetic drugs. A web tool is developed for users to 
+customize their tasks and is accessible free of any charge or login at 
+http://bio-hpc.eu/software/Bruselas . Source code is available on request.
+
+DOI: 10.1021/acs.jcim.9b00279
+PMID: 31074975 [Indexed for MEDLINE]
+
+
+18. Methods Enzymol. 2018;602:77-95. doi: 10.1016/bs.mie.2018.01.004. Epub 2018
+Mar  2.
+
+Insights Into Receptor-Based Anesthetic Pharmacophores and Anesthetic-Protein 
+Interactions.
+
+Fahrenbach VS(1), Bertaccini EJ(2).
+
+Author information:
+(1)Stanford University School of Medicine, Stanford, CA, United States; Palo 
+Alto VA Health Care System, Palo Alto, CA, United States.
+(2)Stanford University School of Medicine, Stanford, CA, United States; Palo 
+Alto VA Health Care System, Palo Alto, CA, United States. Electronic address: 
+edwardb@stanford.edu.
+
+General anesthetics are thought to allosterically bind and potentiate the 
+inhibitory currents of the GABAA receptor through drug-specific binding sites. 
+The physiologically relevant isoform of the GABAA receptor is a transmembrane 
+ligand-gated ion channel consisting of five subunits (γ-α-β-α-β linkage) 
+symmetrically arranged around a central chloride-conducting pore. Although the 
+exact molecular structure of this heteropentameric GABAA receptor remains 
+unknown, molecular modeling has allowed significant advancements in 
+understanding anesthetic binding and action. Using the open-channel 
+conformations of the homologous glycine and glutamate-gated chloride receptors 
+as templates, a homology model of the GABAA receptor was constructed using the 
+Discovery Studio computational chemistry software suite. Consensus structural 
+alignment of the homology templates allowed for the construction of a 
+three-dimensional heteropentameric GABAA receptor model with (γ2-β3-α1-β3-α1) 
+subunit linkage. An anesthetic binding site was identified within the 
+transmembrane α/β intersubunit space by the convergence of three residues shown 
+to be essential for anesthetic activity in previous studies with mutant mice 
+(β3-N265, β3-M286, α1-L232). Propofol derivatives docked into this binding site 
+showed log-linear correlation with experimentally derived GABAA receptor 
+potentiation (EC50) values, suggesting this binding site may be important for 
+receptor activation. The receptor-based pharmacophore was analyzed with surface 
+maps displaying the predominant anesthetic-protein interactions, revealing an 
+amphiphilic binding cavity incorporating the three residues involved in 
+anesthetic modulation. Quantum mechanics calculations of the bonding patterns 
+found in complementary high-resolution receptor systems further elucidated the 
+complex nature of anesthetic-protein interactions.
+
+© 2018 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/bs.mie.2018.01.004
+PMID: 29588042 [Indexed for MEDLINE]
+
+
+19. Viruses. 2015 Dec 15;7(12):6642-60. doi: 10.3390/v7122963.
+
+Potential Broad Spectrum Inhibitors of the Coronavirus 3CLpro: A Virtual 
+Screening and Structure-Based Drug Design Study.
+
+Berry M(1)(2), Fielding BC(3), Gamieldien J(4).
+
+Author information:
+(1)South African Medical Research Council Bioinformatics Capacity Development 
+Unit, South African National Bioinformatics Institute, University of the Western 
+Cape, Bellville 7535, South Africa. michael@sanbi.ac.za.
+(2)Molecular Biology and Virology Laboratory, Department of Medical BioSciences, 
+Faculty of Natural Sciences, University of the Western Cape, Western Cape, 
+Bellville 7535, South Africa. michael@sanbi.ac.za.
+(3)Molecular Biology and Virology Laboratory, Department of Medical BioSciences, 
+Faculty of Natural Sciences, University of the Western Cape, Western Cape, 
+Bellville 7535, South Africa. bfielding@uwc.ac.za.
+(4)South African Medical Research Council Bioinformatics Capacity Development 
+Unit, South African National Bioinformatics Institute, University of the Western 
+Cape, Bellville 7535, South Africa. junaid@sanbi.ac.za.
+
+Human coronaviruses represent a significant disease burden; however, there is 
+currently no antiviral strategy to combat infection. The outbreak of severe 
+acute respiratory syndrome (SARS) in 2003 and Middle East respiratory syndrome 
+(MERS) less than 10 years later demonstrates the potential of coronaviruses to 
+cross species boundaries and further highlights the importance of identifying 
+novel lead compounds with broad spectrum activity. The coronavirus 3CL(pro) 
+provides a highly validated drug target and as there is a high degree of 
+sequence homology and conservation in main chain architecture the design of 
+broad spectrum inhibitors is viable. The ZINC drugs-now library was screened in 
+a consensus high-throughput pharmacophore modeling and molecular docking 
+approach by Vina, Glide, GOLD and MM-GBSA. Molecular dynamics further confirmed 
+results obtained from structure-based techniques. A highly defined hit-list of 
+19 compounds was identified by the structure-based drug design methodologies. As 
+these compounds were extensively validated by a consensus approach and by 
+molecular dynamics, the likelihood that at least one of these compounds is 
+bioactive is excellent. Additionally, the compounds segregate into 15 
+significantly dissimilar (p < 0.05) clusters based on shape and features, which 
+represent valuable scaffolds that can be used as a basis for future 
+anti-coronaviral inhibitor discovery experiments. Importantly though, the 
+enriched subset of 19 compounds identified from the larger library has to be 
+validated experimentally.
+
+DOI: 10.3390/v7122963
+PMCID: PMC4690886
+PMID: 26694449 [Indexed for MEDLINE]
+
+
+20. Comb Chem High Throughput Screen. 2015;18(4):387-98. doi: 
+10.2174/1386207318666150305151420.
+
+Systematic Comparison of the Performance of Different 2D and 3D Ligand-Based 
+Virtual Screening Methodologies to Discover Anticonvulsant Drugs.
+
+Di Ianni ME, Gantner ME, Ruiz ME, Castro EA, Bruno-Blanch LE, Talevi A(1).
+
+Author information:
+(1)Medicinal Chemistry, Department of Biological Sciences, Faculty of Exact 
+Sciences, National University of La Plata, Buenos Aires, Argentina. 
+atalevi@biol.unlp.edu.ar.
+
+Virtual screening encompasses a wide range of computational approaches aimed at 
+the high-throughput, cost-efficient exploration of chemical libraries or 
+databases to discover new bioactive compounds or novel medical indications of 
+known drugs. Here, we have performed a systematic comparison of the performance 
+of a large number of 2D and 3D ligand-based approaches (2D and 3D similarity, 
+QSAR models, pharmacophoric hypothesis) in a simulated virtual campaign on a 
+chemical library containing 50 known anticonvulsant drugs and 950 decoys with no 
+previous reports of anticonvulsant effect. To perform such comparison, we 
+resorted to Receiver Operating Characteristic curves. We also tested the 
+relative performance of consensus methodologies. Our results indicate that the 
+selective combination of the individual approaches (through voting and ranking 
+combination schemes) significantly outperforms the individual algorithms and/or 
+models. Among the best-performing individual approaches, 2D similarity search 
+based on circular fingerprints and 3D similarity approaches should be 
+highlighted. Combining the results from different query molecules also led to 
+enhanced enrichment.
+
+DOI: 10.2174/1386207318666150305151420
+PMID: 25747440 [Indexed for MEDLINE]
+
+
+21. J Chem Inf Model. 2015 Feb 23;55(2):398-406. doi: 10.1021/ci500681r. Epub
+2015  Jan 16.
+
+DOCKTITE-a highly versatile step-by-step workflow for covalent docking and 
+virtual screening in the molecular operating environment.
+
+Scholz C(1), Knorr S, Hamacher K, Schmidt B.
+
+Author information:
+(1)Clemens Schöpf-Institute of Organic Chemistry and Biochemistry, Technische 
+Universität Darmstadt , Alarich-Weiss-Strasse 4, 64287 Darmstadt, Germany.
+
+The formation of a covalent bond with the target is essential for a number of 
+successful drugs, yet tools for covalent docking without significant 
+restrictions regarding warhead or receptor classes are rare and limited in use. 
+In this work we present DOCKTITE, a highly versatile workflow for covalent 
+docking in the Molecular Operating Environment (MOE) combining automated warhead 
+screening, nucleophilic side chain attachment, pharmacophore-based docking, and 
+a novel consensus scoring approach. The comprehensive validation study includes 
+pose predictions of 35 protein/ligand complexes which resulted in a mean RMSD of 
+1.74 Å and a prediction rate of 71.4% with an RMSD below 2 Å, a virtual 
+screening with an area under the curve (AUC) for the receiver operating 
+characteristics (ROC) of 0.81, and a significant correlation between predicted 
+and experimental binding affinities (ρ = 0.806, R(2) = 0.649, p < 0.005).
+
+DOI: 10.1021/ci500681r
+PMID: 25541749 [Indexed for MEDLINE]
+
+
+22. J Chem Inf Model. 2014 Oct 27;54(10):2732-43. doi: 10.1021/ci500291a. Epub
+2014  Sep 17.
+
+Structure-based virtual screening of the nociceptin receptor: hybrid docking and 
+shape-based approaches for improved hit identification.
+
+Daga PR(1), Polgar WE, Zaveri NT.
+
+Author information:
+(1)Astraea Therapeutics, LLC. , 320 Logue Avenue, Mountain View, California 
+94043, United States.
+
+The antagonist-bound crystal structure of the nociceptin receptor (NOP), from 
+the opioid receptor family, was recently reported along with those of the other 
+opioid receptors bound to opioid antagonists. We recently reported the first 
+homology model of the 'active-state' of the NOP receptor, which when docked with 
+'agonist' ligands showed differences in the TM helices and residues, consistent 
+with GPCR activation after agonist binding. In this study, we explored the use 
+of the active-state NOP homology model for structure-based virtual screening to 
+discover NOP ligands containing new chemical scaffolds. Several NOP agonist and 
+antagonist ligands previously reported are based on a common piperidine 
+scaffold. Given the structure-activity relationships for known NOP ligands, we 
+developed a hybrid method that combines a structure-based and ligand-based 
+approach, utilizing the active-state NOP receptor as well as the pharmacophoric 
+features of known NOP ligands, to identify novel NOP binding scaffolds by 
+virtual screening. Multiple conformations of the NOP active site including the 
+flexible second extracellular loop (EL2) loop were generated by simulated 
+annealing and ranked using enrichment factor (EF) analysis and a ligand-decoy 
+dataset containing known NOP agonist ligands. The enrichment factors were 
+further improved by combining shape-based screening of this ligand-decoy dataset 
+and calculation of consensus scores. This combined structure-based and 
+ligand-based EF analysis yielded higher enrichment factors than the individual 
+methods, suggesting the effectiveness of the hybrid approach. Virtual screening 
+of the CNS Permeable subset of the ZINC database was carried out using the 
+above-mentioned hybrid approach in a tiered fashion utilizing a ligand 
+pharmacophore-based filtering step, followed by structure-based virtual 
+screening using the refined NOP active-state models from the enrichment 
+analysis. Determination of the NOP receptor binding affinity of a selected set 
+of top-scoring hits resulted in identification of several compounds with 
+measurable binding affinity at the NOP receptor, one of which had a new 
+chemotype for NOP receptor binding. The hybrid ligand-based and structure-based 
+methodology demonstrates an effective approach for virtual screening that 
+leverages existing SAR and receptor structure information for identifying novel 
+hits for NOP receptor binding. The refined active-state NOP homology models 
+obtained from the enrichment studies can be further used for structure-based 
+optimization of these new chemotypes to obtain potent and selective NOP receptor 
+ligands for therapeutic development.
+
+DOI: 10.1021/ci500291a
+PMCID: PMC4210177
+PMID: 25148595 [Indexed for MEDLINE]
+
+
+23. Methods. 2015 Jan;71:14-20. doi: 10.1016/j.ymeth.2014.06.009. Epub 2014 Jun
+30.
+
+3D virtual screening of large combinatorial spaces.
+
+Muegge I(1), Zhang Q(2).
+
+Author information:
+(1)Boehringer Ingelheim Pharmaceuticals, Department of Medicinal Chemistry, 900 
+Ridgebury Road, Ridgefield, CT 06877-0368, USA. Electronic address: 
+ingo.mugge@boehringer-ingelheim.com.
+(2)Boehringer Ingelheim Pharmaceuticals, Department of Medicinal Chemistry, 900 
+Ridgebury Road, Ridgefield, CT 06877-0368, USA.
+
+A new method for 3D in silico screening of large virtual combinatorial chemistry 
+spaces is described. The software PharmShape screens millions of individual 
+compounds applying a multi-conformational pharmacophore and shape based 
+approach. Its extension, PharmShapeCC, is capable of screening trillions of 
+compounds from tens of thousands of combinatorial libraries. Key elements of 
+PharmShape and PharmShapeCC are customizable pharmacophore features, a composite 
+inclusion sphere, library core intermediate clustering, and the determination of 
+combinatorial library consensus orientations that allow for orthogonal 
+enumeration of libraries. The performance of the software is illustrated by the 
+prospective identification of a novel CXCR5 antagonist and examples of finding 
+novel chemotypes from synthesizing and evaluating combinatorial hit libraries 
+identified from PharmShapeCC screens for CCR1, LTA4 hydrolase, and MMP-13.
+
+Copyright © 2014 Elsevier Inc. All rights reserved.
+
+DOI: 10.1016/j.ymeth.2014.06.009
+PMID: 24993648 [Indexed for MEDLINE]
+
+
+24. Bioorg Med Chem Lett. 2013 Oct 1;23(19):5376-81. doi: 
+10.1016/j.bmcl.2013.07.052. Epub 2013 Jul 31.
+
+β2-Adrenoceptor agonists in the regulation of mitochondrial biogenesis.
+
+Peterson YK(1), Cameron RB, Wills LP, Trager RE, Lindsey CC, Beeson CC, 
+Schnellmann RG.
+
+Author information:
+(1)Department of Drug Discovery and Biomedical Sciences, Medical University of 
+South Carolina, Charleston, SC 29425, United States.
+
+The stimulation of mitochondrial biogenesis (MB) via cell surface G-protein 
+coupled receptors is a promising strategy for cell repair and regeneration. Here 
+we report the specificity and chemical rationale of a panel of β2-adrenoceptor 
+agonists with regards to MB. Using primary cultures of renal cells, a diverse 
+panel of β2-adrenoceptor agonists elicited three distinct phenotypes: full MB, 
+partial MB, and non-MB. Full MB compounds had efficacy in the low nanomolar 
+range and represent two chemical scaffolds containing three distinct chemical 
+clusters. Interestingly, the MB phenotype did not correlate with reported 
+receptor affinity or chemical similarity. Chemical clusters were then subjected 
+to pharmacophore modeling creating two models with unique and distinct features, 
+consisting of five conserved amongst full MB compounds were identified. The two 
+discrete pharmacophore models were coalesced into a consensus pharmacophore with 
+four unique features elucidating the spatial and chemical characteristics 
+required to stimulate MB.
+
+Copyright © 2013 The Authors. Published by Elsevier Ltd.. All rights reserved.
+
+DOI: 10.1016/j.bmcl.2013.07.052
+PMCID: PMC3987705
+PMID: 23954364 [Indexed for MEDLINE]
+
+Conflict of interest statement: The authors declare no competing financial 
+interests.
+
+
+25. Molecules. 2012 Nov 22;17(12):13740-58. doi: 10.3390/molecules171213740.
+
+Generation of the first structure-based pharmacophore model containing a 
+selective "zinc binding group" feature to identify potential glyoxalase-1 
+inhibitors.
+
+Al-Balas Q(1), Hassan M, Al-Oudat B, Alzoubi H, Mhaidat N, Almaaytah A.
+
+Author information:
+(1)Department of Medicinal Chemistry and Pharmacognosy, Faculty of Pharmacy, 
+Jordan University of Science and Technology, P.O. Box 3030, Irbid 22110, Jordan. 
+qabalas@just.edu.jo
+
+Within this study, a unique 3D structure-based pharmacophore model of the enzyme 
+glyoxalase-1 (Glo-1) has been revealed. Glo-1 is considered a zinc metalloenzyme 
+in which the inhibitor binding with zinc atom at the active site is crucial. To 
+our knowledge, this is the first pharmacophore model that has a selective 
+feature for a "zinc binding group" which has been customized within the 
+structure-based pharmacophore model of Glo-1 to extract ligands that possess 
+functional groups able to bind zinc atom solely from database screening. In 
+addition, an extensive 2D similarity search using three diverse similarity 
+techniques (Tanimoto, Dice, Cosine) has been performed over the commercially 
+available "Zinc Clean Drug-Like Database" that contains around 10 million 
+compounds to help find suitable inhibitors for this enzyme based on known 
+inhibitors from the literature. The resultant hits were mapped over the 
+structure based pharmacophore and the successful hits were further docked using 
+three docking programs with different pose fitting and scoring techniques (GOLD, 
+LibDock, CDOCKER). Nine candidates were suggested to be novel Glo-1 inhibitors 
+containing the "zinc binding group" with the highest consensus scoring from 
+docking.
+
+DOI: 10.3390/molecules171213740
+PMCID: PMC6268171
+PMID: 23174893 [Indexed for MEDLINE]
+
+
+26. Comb Chem High Throughput Screen. 2012 Dec;15(10):849-76. doi: 
+10.2174/138620712803901090.
+
+Ligand-based pharmacophore detection, screening of potential gliptins and 
+docking studies to get effective antidiabetic agents.
+
+Agrawal R(1), Jain P, Dikshit SN.
+
+Author information:
+(1)Department of Chemistry, Government Shrimant Madhavrao Scindia, Model Science 
+College, Jhansi Road, Gwalior, Madhya Pradesh 474001, India. 
+riteshagrawalip@gmail.com
+
+Three-dimensional pharmacophore hypothesis was established based on a set of 
+known DPP-IV inhibitor using PharmaGist software program understanding the 
+essential structural features for DPP-IV inhibitor. The various marketed or 
+under developmental status, potential gliptins have been opted to build a 
+pharmacophore model, e.g. Sitagliptin (MK- 0431), Saxagliptin, Melogliptin, 
+Linagliptin (BI-1356), Dutogliptin, Carmegliptin, Alogliptin and Vildagliptin 
+(LAF237). PharmaGist web based program is employed for pharmacophore 
+development. Four points pharmacophore with the hydrogen bond acceptor (A), 
+hydrophobic group (H), Spatial Features and aromatic rings (R) have been 
+considered to develop pharmacophoric features by PharmaGist program. The best 
+pharmacophore model bearing the Score 16.971, has been opted to screen on 
+ZincPharmer database to derive the novel potential anti-diabetic ligands. The 
+best pharmacophore bear various Pharmacophore features, including General 
+Features 3, Spatial Features 1, Aromatic 1 and Acceptors 2. The PharmaGist 
+employed algorithm to identify the best pharmacophores by computing multiple 
+flexible alignments between the input ligands. The multiple alignments are 
+generated by combining alignments pair-wise between one of the gliptin input 
+ligands, which acts as pivot and the other gliptin as ligand. The resulting 
+multiple alignments reveal spatial arrangements of consensus features shared by 
+different subsets of input ligands. The best pharmacophore model has been 
+derived using both pair-wise and multiple alignment methods, which have been 
+weighted in Pharmacophore Generation process. The highest-scoring pharmacophore 
+model has been selected as potential pharmacophore model. In conclusion, 3D 
+structure search has been performed on the "ZincPharmer Database" to identify 
+potential compounds that have been matched with the proposed pharmacophoric 
+features. The 3D ZincPharmer Database has been matched with various thousands of 
+Ligands hits. Those matches were screened through the RMSD and max hits per 
+molecule. The physicochemical properties of various "ZincPharmer Database" 
+screened ligands have been calculated by PaDELDescriptor software. The all 
+"ZincPharmer Database" screened ligands have been filtered based on the 
+Lipinski's rule-of-five criteria (i.e. Molecular Weight < 500, H-bond acceptor ≤ 
+10, H-bond donor ≤ 5, Log P ≤ 5) and were subjected to molecular docking studies 
+to get the potential antidiabetic ligands. We have found various substituted as 
+potential antidiabetic ligands, which can be used for further development of 
+antidiabetic agents. In the present research work, we have covered rational of 
+DPP-IV inhibitor based on Ligand-Based Pharmacophore detection, which is 
+validated via the Docking interaction studies as well as Maximal Common 
+Substructure (MCS).
+
+DOI: 10.2174/138620712803901090
+PMID: 23140189 [Indexed for MEDLINE]
+
+
+27. Mol Inform. 2012 Apr;31(3-4):246-58. doi: 10.1002/minf.201100127. Epub 2012
+Mar  14.
+
+Consensus Computational Ligand-Based Design for the Identification of Novel 
+Modulators of Human Estrogen Receptor Alpha.
+
+McKay PB(1), Fayne D(2), Horn HW(3), James T(1), Peters MB(1), Carta G(1), 
+Caboni L(1), Nevin DK(1), Price T(1), Bradley G(4), Williams DC(1), Rice JE(3), 
+Lloyd DG(1).
+
+Author information:
+(1)Molecular Design Group, School of Biochemistry and Immunology, Trinity 
+Biomedical Sciences Institute, Trinity College Dublin, Dublin 2, Ireland tel: 
++353-1-8963527, fax: +353-1-6772400.
+(2)Molecular Design Group, School of Biochemistry and Immunology, Trinity 
+Biomedical Sciences Institute, Trinity College Dublin, Dublin 2, Ireland tel: 
++353-1-8963527, fax: +353-1-6772400. fayned@tcd.ie.
+(3)IBM Almaden Research Center, San Jose, California, USA.
+(4)Trinity Centre for High Performance Computing, Trinity College Dublin, Dublin 
+2, Ireland.
+
+We describe the first targeted validation of fFLASH, a molecular similarity 
+program from IBM that has been previously proposed as suitable for the virtual 
+screening (VS) of compound libraries based on explicit 3D flexible 
+superimpositions, as part of its deployment within a novel consensus 
+ligand-based virtual screening cascade. A virtual screening protocol using 
+fFLASH for the human estrogen receptor alpha (ERα) was advanced and benchmarked 
+against screens completed using established commercial screening softwares - 
+Catalyst and ROCS. The optimised protocol was applied to a ∼6000 member physical 
+screening collection and virtual 'hits' sourced and biologically assayed. The 
+approach identified a novel, potent and highly selective partial antagonist of 
+the ERα. This study firstly validates the clique detection algorithm utilised by 
+fFLASH and secondly, emphasises the benefits of the consensus approach of 
+employing more than one program in a VS protocol.
+
+Copyright © 2012 WILEY-VCH Verlag GmbH & Co. KGaA, Weinheim.
+
+DOI: 10.1002/minf.201100127
+PMID: 27477095
+
+
+28. J Chem Inf Model. 2011 Nov 28;51(11):2948-60. doi: 10.1021/ci200271d. Epub
+2011  Oct 13.
+
+A critical assessment of combined ligand- and structure-based approaches to HERG 
+channel blocker modeling.
+
+Du-Cuny L(1), Chen L, Zhang S.
+
+Author information:
+(1)Integrated Molecular Discovery Laboratory, Department of Experimental 
+Therapeutics, The University of Texas, M.D. Anderson Cancer Center, 1901 East 
+Rd., Houston, Texas, USA.
+
+Blockade of human ether-à-go-go related gene (hERG) channel prolongs the 
+duration of the cardiac action potential and is a common reason for drug failure 
+in preclinical safety trials. Therefore, it is of great importance to develop 
+robust in silico tools to predict potential hERG blockers in the early stages of 
+drug discovery and development. Herein we described comprehensive approaches to 
+assess the discrimination of hERG-active and -inactive compounds by combining 
+quantitative structure-activity relationship (QSAR) modeling, pharmacophore 
+analysis, and molecular docking. Our consensus models demonstrated 
+high-predictive capacity and improved enrichment and could correctly classify 
+91.8% of 147 hERG blockers from 351 inactives. To further enhance our modeling 
+effort, hERG homology models were constructed, and molecular docking studies 
+were conducted, resulting in high correlations (R² = 0.81) between predicted and 
+experimental pIC₅₀s. We expect our unique models can be applied to efficient 
+screening for hERG blockades, and our extensive understanding of the 
+hERG-inhibitor interactions will facilitate the rational design of drugs devoid 
+of hERG channel activity and hence with reduced cardiac toxicities.
+
+DOI: 10.1021/ci200271d
+PMCID: PMC3894065
+PMID: 21902220 [Indexed for MEDLINE]
+
+
+29. PLoS One. 2011;6(5):e18253. doi: 10.1371/journal.pone.0018253. Epub 2011 May
+25.
+
+Bioassays to monitor Taspase1 function for the identification of pharmacogenetic 
+inhibitors.
+
+Knauer SK(1), Fetz V, Rabenstein J, Friedl S, Hofmann B, Sabiani S, Schröder E, 
+Kunst L, Proschak E, Thines E, Kindler T, Schneider G, Marschalek R, Stauber RH, 
+Bier C.
+
+Author information:
+(1)Institute for Molecular Biology, Centre for Medical Biotechnology (ZMB), 
+University Duisburg-Essen, Essen, Germany.
+
+BACKGROUND: Threonine Aspartase 1 (Taspase1) mediates cleavage of the mixed 
+lineage leukemia (MLL) protein and leukemia provoking MLL-fusions. In contrast 
+to other proteases, the understanding of Taspase1's (patho)biological relevance 
+and function is limited, since neither small molecule inhibitors nor cell based 
+functional assays for Taspase1 are currently available.
+METHODOLOGY/FINDINGS: Efficient cell-based assays to probe Taspase1 function in 
+vivo are presented here. These are composed of glutathione S-transferase, 
+autofluorescent protein variants, Taspase1 cleavage sites and rational 
+combinations of nuclear import and export signals. The biosensors localize 
+predominantly to the cytoplasm, whereas expression of biologically active 
+Taspase1 but not of inactive Taspase1 mutants or of the protease Caspase3 
+triggers their proteolytic cleavage and nuclear accumulation. Compared to in 
+vitro assays using recombinant components the in vivo assay was highly 
+efficient. Employing an optimized nuclear translocation algorithm, the 
+triple-color assay could be adapted to a high-throughput microscopy platform 
+(Z'factor = 0.63). Automated high-content data analysis was used to screen a 
+focused compound library, selected by an in silico pharmacophor screening 
+approach, as well as a collection of fungal extracts. Screening identified two 
+compounds, 
+N-[2-[(4-amino-6-oxo-3H-pyrimidin-2-yl)sulfanyl]ethyl]benzenesulfonamide and 
+2-benzyltriazole-4,5-dicarboxylic acid, which partially inhibited Taspase1 
+cleavage in living cells. Additionally, the assay was exploited to probe 
+endogenous Taspase1 in solid tumor cell models and to identify an improved 
+consensus sequence for efficient Taspase1 cleavage. This allowed the in silico 
+identification of novel putative Taspase1 targets. Those include the FERM 
+Domain-Containing Protein 4B, the Tyrosine-Protein Phosphatase Zeta, and DNA 
+Polymerase Zeta. Cleavage site recognition and proteolytic processing of these 
+substrates were verified in the context of the biosensor.
+CONCLUSIONS: The assay not only allows to genetically probe Taspase1 structure 
+function in vivo, but is also applicable for high-content screening to identify 
+Taspase1 inhibitors. Such tools will provide novel insights into Taspase1's 
+function and its potential therapeutic relevance.
+
+DOI: 10.1371/journal.pone.0018253
+PMCID: PMC3102056
+PMID: 21647428 [Indexed for MEDLINE]
+
+Conflict of interest statement: Competing Interests: The authors have declared 
+that no competing interests exist.
+
+
+30. Bioorg Med Chem. 2011 Jun 1;19(11):3320-40. doi: 10.1016/j.bmc.2011.04.045.
+Epub  2011 Apr 28.
+
+Elucidation of common pharmacophores from analysis of targeted metabolites 
+transported by the multispecific drug transporter-Organic anion transporter1 
+(Oat1).
+
+Kouznetsova VL(1), Tsigelny IF, Nagle MA, Nigam SK.
+
+Author information:
+(1)Department of Medicine, Division of Nephrology and Hypertension, University 
+of California, San Diego, La Jolla, CA 92093, USA.
+
+Organic anion transporter 1 (Oat1), first identified as NKT, is a multispecific 
+transporter responsible for the handling of drugs and toxins in the kidney and 
+choroid plexus, but its normal physiological role appears to be in small 
+molecule metabolite regulation. Metabolites transported by Oat1 and which are 
+altered in the blood and urine of the murine Oat1 knockout, may serve as 
+templates for further drug design. This may lead to better tissue targeting of 
+drugs or design of Oat1 inhibitors that prolong the half-life of current drugs. 
+Due to the multispecificity of the transporter, 19 of known targeted metabolites 
+have different chemical structures and properties that make constructing a 
+common pharmacophore model difficult. Here we propose an approach that clustered 
+the metabolites into four distinct groups which allowed for the construction of 
+a consensus pharmacophore for each cluster. The screening of commercial 
+molecular databases determined the top candidates whose interaction with Oat1 
+was confirmed in an experimental model of organic anion transport. Thus, these 
+candidate selections represent potential molecules for further drug design.
+
+Copyright © 2011 Elsevier Ltd. All rights reserved.
+
+DOI: 10.1016/j.bmc.2011.04.045
+PMCID: PMC3310230
+PMID: 21571536 [Indexed for MEDLINE]
+
+
+31. Bioorg Med Chem. 2007 Oct 1;15(19):6450-62. doi: 10.1016/j.bmc.2007.06.051.
+Epub  2007 Jun 30.
+
+Novel TOPP descriptors in 3D-QSAR analysis of apoptosis inducing 
+4-aryl-4H-chromenes: comparison versus other 2D- and 3D-descriptors.
+
+Sciabola S(1), Carosati E, Cucurull-Sanchez L, Baroni M, Mannhold R.
+
+Author information:
+(1)Laboratory for Chemometrics and Cheminformatics, Chemistry Department, 
+University of Perugia, Via Elce di Sotto, 10, I-06123 Perugia, Italy. 
+simone@chemiome.chm.unipg.it
+
+Novel 3D-descriptors using Triplets Of Pharmacophoric Points (TOPP) were 
+evaluated in QSAR-studies on 80 apoptosis-inducing 4-aryl-4H-chromenes. A 
+predictive QSAR model was obtained using PLS, confirmed by means of internal and 
+external validations. Performance of the TOPP approach was compared with that of 
+other 2D- and 3D-descriptors; statistical analysis indicates that TOPP 
+descriptors perform best. A ranking of TOPP>GRIND>BCI 
+4096=ECFP>FCFP>GRID-GOLPE>>DRAGON>>>MDL 166 was achieved. Finally, in a 
+'consensus' analysis predictions obtained using the single methods were compared 
+with an average approach using six out of eight methods. The use of the average 
+is statistically superior to the single methods. Beyond it, the use of several 
+methods can help to easily investigate the presence/absence of outliers 
+according to the 'consensus' of the predicted values: agreement among all the 
+methods indicates a precise prediction, whereas large differences between 
+predicted values (for the same compounds by different methods) would demand 
+caution when using such predictions.
+
+DOI: 10.1016/j.bmc.2007.06.051
+PMID: 17658263 [Indexed for MEDLINE]
+
+
+32. J Chem Inf Model. 2006 Jan-Feb;46(1):277-88. doi: 10.1021/ci050296y.
+
+The use of consensus scoring in ligand-based virtual screening.
+
+Baber JC(1), Shirley WA, Gao Y, Feher M.
+
+Author information:
+(1)Neurocrine Biosciences, San Diego, California 92130, USA.
+
+A new consensus approach has been developed for ligand-based virtual screening. 
+It involves combining highly disparate properties in order to improve 
+performance in virtual screening. The properties include structural, 2D 
+pharmacophore and property-based fingerprints, scores derived using BCUT 
+descriptors, and 3D pharmacophore approaches. Different approaches for the 
+combination of all or some of these methods have been tested. Logistic 
+regression and sum ranks were found to be the most advantageous in different 
+pharmaceutical applications. The three major reasons consensus scoring appears 
+to enrich data sets better than single scoring functions are (1) using multiple 
+scoring functions is similar to repeated samplings, in which case the mean is 
+closer to the true value than any single value, (2) due to the better clustering 
+of actives, multiple sampling will recover more actives than inactives, and (3) 
+different methods seem to agree more on the ranking of the actives than on the 
+inactives. Furthermore, consensus results are not only better but are also more 
+consistent across receptor systems.
+
+DOI: 10.1021/ci050296y
+PMID: 16426063

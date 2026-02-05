@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "experiment_name": "bayesian_optimization_20260126_204213",
+    "description": "",
+    "start_time": "2026-01-26T20:42:13.043573",
+    "timestamp": "20260126_204213"
+  },
+  "results": [
+    {
+      "run_id": 1,
+      "timestamp": "2026-01-26T20:43:13.172134",
+      "tolerance": 1.6186171947440933,
+      "threshold": 0.26834347898661637,
+      "min_samples": 

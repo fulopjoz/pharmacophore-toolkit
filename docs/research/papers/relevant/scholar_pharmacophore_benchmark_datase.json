@@ -1,0 +1,101 @@
+[
+  {
+    "title": "PharmacoForge: pharmacophore generation with diffusion models",
+    "author": [
+      "EL Flynn",
+      "R Shah",
+      "I Dunn",
+      "R Aggarwal"
+    ],
+    "year": "2025",
+    "abstract": "for the DUD-E target proteins by querying a large chemical  For this benchmark we sought  to identify an enriched subset  for the DUD-E targets and screened the CHEMBL database,"
+  },
+  {
+    "title": "Virtual screening using pharmacophore models retrieved from molecular dynamic simulations",
+    "author": [
+      "P Polishchuk",
+      "A Kutlushina",
+      "D Bashirova"
+    ],
+    "year": "2019",
+    "abstract": "by removing duplicates, ie, pharmacophore models with identical hashes. Individual  representative pharmacophore models were screened on the DUD-E dataset. Finally, compounds"
+  },
+  {
+    "title": "PheSA: An Open-Source Tool for Pharmacophore-Enhanced Shape Alignment",
+    "author": [
+      "J Wahl"
+    ],
+    "year": "2024",
+    "abstract": "We still chose the DUD-E as a benchmark for screening performance, primarily to be able to   a pose prediction benchmark for molecular alignment tools as part of the DUD-E+ data set. ("
+  },
+  {
+    "title": "Structure- and Ligand-Based Virtual Screening on DUD-E+: Performance Dependence on Approximations to the Binding Pocket",
+    "author": [
+      "AE Cleves",
+      "AN Jain"
+    ],
+    "year": "2020",
+    "abstract": "Using the DUD-E + benchmark, we explore the impact of using a  pharmacophore modeling),  and results have been reported both for specific targets and on benchmarking data sets."
+  },
+  {
+    "title": "Validation of a field-based ligand screener using a novel benchmarking data set for assessing 3D-based virtual screening methods",
+    "author": [
+      "I Giangreco",
+      "A Mukhopadhyay"
+    ],
+    "year": "2021",
+    "abstract": "for the standard DUD-E data set, the DUD-E+ data set, as  of a benchmarking set suitable  for validating pharmacophore- can be used to generate pharmacophore models with which to"
+  },
+  {
+    "title": "Integrating traditional and modern approaches for comprehensive pharmacophore map validation in drug discovery",
+    "author": [
+      "MA Amin",
+      "MK Habib",
+      "MRR Refat",
+      "JB Habib"
+    ],
+    "year": "2026",
+    "abstract": "(DUD-E) [29]. This approach systematically evaluates the performance of a pharmacophore  model by screening it against a dataset of  DUD-E serves as a benchmark dataset, offering"
+  },
+  {
+    "title": "Receptor pharmacophore ensemble (REPHARMBLE): a probabilistic pharmacophore modeling approach using multiple protein-ligand complexes",
+    "author": [
+      "SP Kumar"
+    ],
+    "year": "2018",
+    "abstract": ", and generates pharmacophore models with  pharmacophore models to score molecules  is derived. The REPHARMBLE approach was evaluated on ten DUD-E benchmark datasets"
+  },
+  {
+    "title": "DataPype: a fully automated unified software platform for computer-aided drug design",
+    "author": [
+      "MF Khan",
+      "S Kandwal",
+      "D Fayne"
+    ],
+    "year": "2023",
+    "abstract": "that the benchmarking data sets, like DUD-E and DUD-E+,  (docking, shape and  pharmacophore) included in DataPype,  utilized the fabp4 data set from the DUD-E database and"
+  },
+  {
+    "title": "Pharmacophore features for machine learning in pharmaceutical virtual screening",
+    "author": [
+      "X Wang",
+      "W Han",
+      "X Yan",
+      "J Zhang",
+      "M Yang",
+      "P Jiang"
+    ],
+    "year": "2020",
+    "abstract": "DUD-E collection was tested in this work, which was widely applied for validation of  pharmaceutical virtual screening. It consisted of 102 compound datasets  of all datasets in DUD-E"
+  },
+  {
+    "title": "PharmRF: A machine\u2010learning scoring function to identify the best protein\u2010ligand complexes for structure\u2010based pharmacophore screening with high enrichments",
+    "author": [
+      "SP Kumar",
+      "NY Dixit",
+      "CN Patel"
+    ],
+    "year": "2022",
+    "abstract": "derive the pharmacophore hypothesis and perform database  were collected from the DUD-E  database 31 for each target,  the LIT-PCBA dataset (Table 6 and S15), a benchmark dataset"
+  }
+]

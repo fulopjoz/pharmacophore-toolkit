@@ -1,0 +1,105 @@
+[
+  {
+    "title": "Pharmacophore-based virtual screening",
+    "author": [
+      "D Horvath"
+    ],
+    "year": "2010",
+    "abstract": "This ligand overlay may then serve for consensus pharmacophore extraction, its encoding  under the form of molecular fingerprints as classically seen in ligand-based approaches,"
+  },
+  {
+    "title": "Consensus holistic virtual screening for drug discovery: a novel machine learning model approach",
+    "author": [
+      "S Moshawih",
+      "ZH Bu",
+      "HP Goh",
+      "N Kifli",
+      "LH Lee"
+    ],
+    "year": "2024",
+    "abstract": "integrated into these consensus approaches are structural, 2D pharmacophore, and  3D  pharmacophore methods further enhance the screening's breadth and depth [5]. Consensus"
+  },
+  {
+    "title": "Identification of novel covalent JAK3 inhibitors through consensus scoring virtual screening: integration of common feature pharmacophore and covalent docking",
+    "author": [
+      "G Qiu",
+      "L Yu",
+      "L Jia",
+      "Y Cai",
+      "Y Chen",
+      "J Jin",
+      "L Xu",
+      "J Zhu"
+    ],
+    "year": "2025",
+    "abstract": "virtual screening approach that combines common feature pharmacophore modeling, covalent  docking, and consensus  First, common feature pharmacophore models were constructed"
+  },
+  {
+    "title": "Consensus queries in ligand-based virtual screening experiments",
+    "author": [
+      "F Berenger",
+      "O Vu",
+      "J Meiler"
+    ],
+    "year": "2017",
+    "abstract": "screening immense virtual chemical libraries. We finally discuss which combination of fingerprint,  consensus size and consensus  where a bit is set in the consensus query if it is set in a"
+  },
+  {
+    "title": "The use of consensus scoring in ligand-based virtual screening",
+    "author": [
+      "JC Baber",
+      "WA Shirley",
+      "Y Gao"
+    ],
+    "year": "2006",
+    "abstract": "inclusion of 4-point pharmacophores containing primarily hydrophobic points leads to  memorization of the training data set, hence only those pharmacophores were retained that had at"
+  },
+  {
+    "title": "Pharmacophore-based virtual screening: a review of recent applications",
+    "author": [
+      "KH Kim",
+      "ND Kim",
+      "BL Seong"
+    ],
+    "year": "2010",
+    "abstract": "of pharmacophore-based virtual screening methods with a  applications of  pharmacophore-based virtual screening. They  last decade, and a consensus is emerging from the"
+  },
+  {
+    "title": "Probabilistic approach for virtual screening based on multiple pharmacophores",
+    "author": [
+      "TI Madzhidov",
+      "A Rakhimbekova",
+      "A Kutlushuna"
+    ],
+    "year": "2020",
+    "abstract": "This is a widely used consensus screening approach we will refer to hereinafter as OR-  pharmacophore models, was suggested for virtual screening based on pharmacophores"
+  },
+  {
+    "title": "Pharmacophore modeling and pharmacophore-based virtual screening",
+    "author": [
+      "M Akram",
+      "T Kaserer",
+      "D Schuster"
+    ],
+    "year": "2015",
+    "abstract": "In the next step, the consensus score is calculated for a  components below the minimum  consensus score are eliminated field of pharmacophore-based modeling and virtual screening."
+  },
+  {
+    "title": "Scaffold hopping through virtual screening using 2D and 3D similarity descriptors: ranking, voting, and consensus scoring",
+    "author": [
+      "Q Zhang",
+      "I Muegge"
+    ],
+    "year": "2006",
+    "abstract": "pharmacophore fingerprints to identify novel bioactive chemical classes through ligand-based  virtual screening  voting and consensus scoring to improve virtual screening performance"
+  },
+  {
+    "title": "Comprehensive survey of consensus docking for high-throughput virtual screening",
+    "author": [
+      "C Blanes-Mira",
+      "P Fern\u00e1ndez-Aguado"
+    ],
+    "year": "2022",
+    "abstract": "(QSAR) models, pharmacophore, and chemical similarity to  [11] with molecular docking  and virtual screening (VS) procedures  paid to molecular docking and consensus scoring. The"
+  }
+]

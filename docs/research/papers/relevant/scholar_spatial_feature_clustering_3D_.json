@@ -1,0 +1,114 @@
+[
+  {
+    "title": "FOCAL3D: A 3-dimensional clustering package for single-molecule localization microscopy",
+    "author": [
+      "DF Nino",
+      "D Djayakarsana"
+    ],
+    "year": "2020",
+    "abstract": "spatial clustering in large 3D SMLM data sets. Unlike DBSCAN, which is perhaps the  most commonly employed density-based clustering  , retaining only the features of interest."
+  },
+  {
+    "title": "3DSGIMD: An accurate and interpretable molecular property prediction method using 3D spatial graph focusing network and structure-based feature fusion",
+    "author": [
+      "Y Tian",
+      "C Wang",
+      "R Lu",
+      "HHY Tong",
+      "X Gong",
+      "J Qiu"
+    ],
+    "year": "2024",
+    "abstract": "the molecular properties by integrating and learning the spatial structure and substructure  information of molecules  In summary, 3DSGIMD is a competitive molecular property prediction"
+  },
+  {
+    "title": "Spatial Clustering of Molecular Localizations with Graph Neural Networks",
+    "author": [
+      "J Pineda",
+      "S Mas\u00f3-Orriols",
+      "J Bertran",
+      "M Goks\u00f6r"
+    ],
+    "year": "2024",
+    "abstract": "MIRO effectively captures these spatial features, enabling accurate separation and   Scenario 5: 100 clusters of 15 molecules per cluster with 50% of molecules being clustered."
+  },
+  {
+    "title": "Deep clustering of small molecules at large-scale via variational autoencoder embedding and K-means",
+    "author": [
+      "H Hadipour",
+      "C Liu",
+      "R Davis",
+      "ST Cardona",
+      "P Hu"
+    ],
+    "year": "2022",
+    "abstract": "different molecular features. By applying the identified embeddings, we show their usefulness  for clustering a large molecule  of the input molecule-specific features to a latent space in a"
+  },
+  {
+    "title": "Odorant clustering based on molecular parameter-feature extraction and imaging analysis of olfactory bulb odor maps",
+    "author": [
+      "L Shang",
+      "C Liu",
+      "Y Tomiura",
+      "K Hayashi"
+    ],
+    "year": "2018",
+    "abstract": "clustering showed that all parameters could be segregated into seven clusters, and each  cluster  Using the information from the OMs and MPs, we mapped odorants in 2D space by"
+  },
+  {
+    "title": "Bridging chemical and biological space:\u201ctarget fishing\u201d using 2D and 3D molecular descriptors",
+    "author": [
+      "JH Nettles",
+      "JL Jenkins",
+      "A Bender",
+      "Z Deng"
+    ],
+    "year": "2006",
+    "abstract": "Ligand atoms are partitioned into four k-mean clusters based upon their spatial coordinates.   overlapped feature points derived from exploring the chemistry space of molecules that"
+  },
+  {
+    "title": "Molecular-substructure Deep Autoencoders Cluster Biomolecules into Novel Band-Shaped Substructure-Distinguished Bioactivity Clusters in 3D Latent Space",
+    "author": [
+      "Y TAN",
+      "H Ying",
+      "X Wu",
+      "C Qin",
+      "L Zhang",
+      "Z Du",
+      "J Liu"
+    ],
+    "year": "2025",
+    "abstract": "Due to the high dimensionality, sparsity and variance of data features, these clustering  methods rely on feature representation and dimensionality reduction techniques 14,15 . Principal"
+  },
+  {
+    "title": "Recent development of computational cluster analysis methods for single-molecule localization microscopy images",
+    "author": [
+      "Y Hyun",
+      "D Kim"
+    ],
+    "year": "2023",
+    "abstract": "cluster analysis from SMLM images. In this review, we discuss the development of computational  cluster  directions for machine learning-based cluster analysis methods for SMLM data."
+  },
+  {
+    "title": "Comparison of combinatorial clustering methods on pharmacological data sets represented by machine learning-selected real molecular descriptors",
+    "author": [
+      "OM Rivera-Borroto",
+      "Y Marrero-Ponce"
+    ],
+    "year": "2011",
+    "abstract": "of the automatic feature selection for cluster analysis has  molecule coding (coordinate-based  space), each molecule is  position in a multidimensional space whose dimension is"
+  },
+  {
+    "title": "Geometry-enhanced molecular representation learning for property prediction",
+    "author": [
+      "X Fang",
+      "L Liu",
+      "J Lei",
+      "D He",
+      "S Zhang",
+      "J Zhou"
+    ],
+    "year": "2022",
+    "abstract": "u as the initial features of atom u, x uv as the initial features of  local spatial structures and  global spatial structures for each  can better separate the clusters than GeoGNN (without 3D),"
+  }
+]

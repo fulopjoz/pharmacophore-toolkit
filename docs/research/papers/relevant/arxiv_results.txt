@@ -1,0 +1,142 @@
+Title: Cluster environments around quasars at 0.5 < z < 0.8
+Authors: M. Wold, M. Lacy, P. B. Lilje, S. Serjeant
+Published: 1999-10-14 13:43:32+00:00
+PDF: https://arxiv.org/pdf/astro-ph/9910261v1
+Abstract: We have observed the galaxy environments around two complete samples of radio-loud (steep-spectrum) and radio-quiet quasars (RLQ and RQQ) at 0.5 < z < 0.8 that are matched in B-luminosity, and find that the environments of both quasar populations are pratically indistinguishable. A few objects are found in relatively rich clusters, but on average, they seem to prefer galaxy groups or cluster of approximatly Abell class 0.
+  By combining the RLQ sample with samples from the literature, we detect a weak, but significant, positive correlation between environmental richness and quasar radio luminosity. This may give us clues about what determines a quasar's radio luminosity.
+--------------------------------------------------------------------------------
+
+Title: Clustering of Motion Trajectories by a Distance Measure Based on Semantic Features
+Authors: Christoph Zelch, Jan Peters, Oskar von Stryk
+Published: 2024-04-26 09:16:02+00:00
+PDF: https://arxiv.org/pdf/2404.17269v1
+Abstract: Clustering of motion trajectories is highly relevant for human-robot interactions as it allows the anticipation of human motions, fast reaction to those, as well as the recognition of explicit gestures. Further, it allows automated analysis of recorded motion data. Many clustering algorithms for trajectories build upon distance metrics that are based on pointwise Euclidean distances. However, our work indicates that focusing on salient characteristics is often sufficient. We present a novel distance measure for motion plans consisting of state and control trajectories that is based on a compressed representation built from their main features. This approach allows a flexible choice of feature classes relevant to the respective task. The distance measure is used in agglomerative hierarchical clustering. We compare our method with the widely used dynamic time warping algorithm on test sets of motion plans for the Furuta pendulum and the Manutec robot arm and on real-world data from a human motion dataset. The proposed method demonstrates slight advantages in clustering and strong advantages in runtime, especially for long trajectories.
+--------------------------------------------------------------------------------
+
+Title: Dying Clusters Is All You Need -- Deep Clustering With an Unknown Number of Clusters
+Authors: Collin Leiber, Niklas Strauß, Matthias Schubert, Thomas Seidl
+Published: 2024-10-12 11:04:10+00:00
+PDF: https://arxiv.org/pdf/2410.09491v1
+Abstract: Finding meaningful groups, i.e., clusters, in high-dimensional data such as images or texts without labeled data at hand is an important challenge in data mining. In recent years, deep clustering methods have achieved remarkable results in these tasks. However, most of these methods require the user to specify the number of clusters in advance. This is a major limitation since the number of clusters is typically unknown if labeled data is unavailable. Thus, an area of research has emerged that addresses this problem. Most of these approaches estimate the number of clusters separated from the clustering process. This results in a strong dependency of the clustering result on the quality of the initial embedding. Other approaches are tailored to specific clustering processes, making them hard to adapt to other scenarios. In this paper, we propose UNSEEN, a general framework that, starting from a given upper bound, is able to estimate the number of clusters. To the best of our knowledge, it is the first method that can be easily combined with various deep clustering algorithms. We demonstrate the applicability of our approach by combining UNSEEN with the popular deep clustering algorithms DCN, DEC, and DKM and verify its effectiveness through an extensive experimental evaluation on several image and tabular datasets. Moreover, we perform numerous ablations to analyze our approach and show the importance of its components. The code is available at: https://github.com/collinleiber/UNSEEN
+--------------------------------------------------------------------------------
+
+Title: Diversity-aware clustering: Computational Complexity and Approximation Algorithms
+Authors: Suhas Thejaswi, Ameet Gadekar, Bruno Ordozgoiti, Aristides Gionis
+Published: 2024-01-10 19:01:05+00:00
+PDF: https://arxiv.org/pdf/2401.05502v3
+Abstract: In this work, we study diversity-aware clustering problems where the data points are associated with multiple attributes resulting in intersecting groups. A clustering solution needs to ensure that the number of chosen cluster centers from each group should be within the range defined by a lower and upper bound threshold for each group, while simultaneously minimizing the clustering objective, which can be either $k$-median, $k$-means or $k$-supplier. We study the computational complexity of the proposed problems, offering insights into their NP-hardness, polynomial-time inapproximability, and fixed-parameter intractability. We present parameterized approximation algorithms with approximation ratios $1+ \frac{2}{e} + ε\approx 1.736$, $1+\frac{8}{e} + ε\approx 3.943$, and $5$ for diversity-aware $k$-median, diversity-aware $k$-means and diversity-aware $k$-supplier, respectively. Assuming Gap-ETH, the approximation ratios are tight for the diversity-aware $k$-median and diversity-aware $k$-means problems. Our results imply the same approximation factors for their respective fair variants with disjoint groups -- fair $k$-median, fair $k$-means, and fair $k$-supplier -- with lower bound requirements.
+--------------------------------------------------------------------------------
+
+Title: Reductive Clustering: An Efficient Linear-time Graph-based Divisive Cluster Analysis Approach
+Authors: Ching Tarn, Yinan Zhang, Ye Feng
+Published: 2018-06-21 13:44:17+00:00
+PDF: https://arxiv.org/pdf/1806.08245v3
+Abstract: We propose an efficient linear-time graph-based divisive cluster analysis approach called Reductive Clustering. The approach tries to reveal the hierarchical structural information through reducing the graph into a more concise one repeatedly. With the reductions, the original graph can be divided into subgraphs recursively, and a lite informative dendrogram is constructed based on the divisions. The reduction consists of three steps: selection, connection, and partition. First a subset of vertices of the graph are selected as representatives to build a concise graph. The representatives are re-connected to maintain a consistent structure with the previous graph. If possible, the concise graph is divided into subgraphs, and each subgraph is further reduced recursively until the termination condition is met. We discuss the approach, along with several selection and connection methods, in detail both theoretically and experimentally in this paper. Our implementations run in linear time and achieve outstanding performance on various types of datasets. Experimental results show that they outperform state-of-the-art clustering algorithms with significantly less computing resource requirements.
+--------------------------------------------------------------------------------
+
+Title: StruClus: Structural Clustering of Large-Scale Graph Databases
+Authors: Till Schäfer, Petra Mutzel
+Published: 2016-09-28 16:43:12+00:00
+PDF: https://arxiv.org/pdf/1609.09000v1
+Abstract: We present a structural clustering algorithm for large-scale datasets of small labeled graphs, utilizing a frequent subgraph sampling strategy. A set of representatives provides an intuitive description of each cluster, supports the clustering process, and helps to interpret the clustering results. The projection-based nature of the clustering approach allows us to bypass dimensionality and feature extraction problems that arise in the context of graph datasets reduced to pairwise distances or feature vectors. While achieving high quality and (human) interpretable clusterings, the runtime of the algorithm only grows linearly with the number of graphs. Furthermore, the approach is easy to parallelize and therefore suitable for very large datasets. Our extensive experimental evaluation on synthetic and real world datasets demonstrates the superiority of our approach over existing structural and subspace clustering algorithms, both, from a runtime and quality point of view.
+--------------------------------------------------------------------------------
+
+Title: Wavelet-Based Feature Extraction and Unsupervised Clustering for Parity Detection: A Feature Engineering Perspective
+Authors: Ertugrul Mutlu
+Published: 2025-10-29 11:41:36+00:00
+PDF: https://arxiv.org/pdf/2511.00071v1
+Abstract: This paper explores a deliberately over-engineered approach to the classical problem of parity detection -- determining whether a number is odd or even -- by combining wavelet-based feature extraction with unsupervised clustering. Instead of relying on modular arithmetic, integers are transformed into wavelet-domain representations, from which multi-scale statistical features are extracted and clustered using the k-means algorithm. The resulting feature space reveals meaningful structural differences between odd and even numbers, achieving a classification accuracy of approximately 69.67% without any label supervision. These results suggest that classical signal-processing techniques, originally designed for continuous data, can uncover latent structure even in purely discrete symbolic domains. Beyond parity detection, the study provides an illustrative perspective on how feature engineering and clustering may be repurposed for unconventional machine learning problems, potentially bridging symbolic reasoning and feature-based learning.
+--------------------------------------------------------------------------------
+
+Title: A novel k-means clustering approach using two distance measures for Gaussian data
+Authors: Naitik Gada
+Published: 2025-11-21 22:36:14+00:00
+PDF: https://arxiv.org/pdf/2511.17823v1
+Abstract: Clustering algorithms have long been the topic of research, representing the more popular side of unsupervised learning. Since clustering analysis is one of the best ways to find some clarity and structure within raw data, this paper explores a novel approach to \textit{k}-means clustering. Here we present a \textit{k}-means clustering algorithm that takes both the within cluster distance (WCD) and the inter cluster distance (ICD) as the distance metric to cluster the data into \emph{k} clusters pre-determined by the Calinski-Harabasz criterion in order to provide a more robust output for the clustering analysis. The idea with this approach is that by including both the measurement metrics, the convergence of the data into their clusters becomes solidified and more robust. We run the algorithm with some synthetically produced data and also some benchmark data sets obtained from the UCI repository. The results show that the convergence of the data into their respective clusters is more accurate by using both WCD and ICD measurement metrics. The algorithm is also better at clustering the outliers into their true clusters as opposed to the traditional \textit{k} means method. We also address some interesting possible research topics that reveal themselves as we answer the questions we initially set out to address.
+--------------------------------------------------------------------------------
+
+Title: A Comparative study Between Fuzzy Clustering Algorithm and Hard Clustering Algorithm
+Authors: Dibya Jyoti Bora, Dr. Anil Kumar Gupta
+Published: 2014-04-24 09:02:38+00:00
+PDF: https://arxiv.org/pdf/1404.6059v1
+Abstract: Data clustering is an important area of data mining. This is an unsupervised study where data of similar types are put into one cluster while data of another types are put into different cluster. Fuzzy C means is a very important clustering technique based on fuzzy logic. Also we have some hard clustering techniques available like K-means among the popular ones. In this paper a comparative study is done between Fuzzy clustering algorithm and hard clustering algorithm
+--------------------------------------------------------------------------------
+
+Title: A Comprehensive Approach to Mode Clustering
+Authors: Yen-Chi Chen, Christopher R. Genovese, Larry Wasserman
+Published: 2014-06-06 19:34:54+00:00
+PDF: https://arxiv.org/pdf/1406.1780v4
+Abstract: Mode clustering is a nonparametric method for clustering that defines clusters using the basins of attraction of a density estimator's modes. We provide several enhancements to mode clustering: (i) a soft variant of cluster assignment, (ii) a measure of connectivity between clusters, (iii) a technique for choosing the bandwidth, (iv) a method for denoising small clusters, and (v) an approach to visualizing the clusters. Combining all these enhancements gives us a complete procedure for clustering in multivariate problems. We also compare mode clustering to other clustering methods in several examples
+--------------------------------------------------------------------------------
+
+Title: A U-band survey of brown dwarfs in the Taurus Molecular Cloud with the XMM-Newton Optical/UV Monitor
+Authors: Nicolas Grosso, Marc Audard, Jérôme Bouvier, Kevin R. Briggs, Manuel Güdel, the The XMM-Newton Extended Surveyof the Taurus Molecular Cloud, Collaboration
+Published: 2006-09-01 13:24:57+00:00
+PDF: https://arxiv.org/pdf/astro-ph/0609027v1
+Abstract: We aim to characterize the U-band variability of young brown dwarfs in the Taurus Molecular Cloud and discuss its origin. We used the XMM-Newton Extended Survey of the Taurus Molecular Cloud, where a sample of 11 young bona fide brown dwarfs (spectral type later than M6) were observed simultaneously in X-rays with XMM-Newton and in the U-band with the XMM-Newton Optical/UV Monitor (OM). We obtained upper limits to the U-band emission of 10 brown dwarfs (U>19.6-20.6 mag), whereas 2MASSJ04141188+2811535 was detected in the U-band. Remarkably, the magnitude of this brown dwarf increased regularly from U~19.5 mag at the beginning of the observation, peaked 6h later at U~18.4 mag, and then decreased to U~18.65 mag in the next 2h. The first OM U-band measurement is consistent with the quiescent level observed about one year later thanks to ground follow-up observations. This brown dwarf was not detected in X-rays by XMM-Newton during the OM observation. We discuss the possible sources of U-band variability for this young brown dwarf, namely a magnetic flare, non-steady accretion onto the substellar surface, and rotational modulation of a hot spot. We conclude that this event is related to accretion from a circumsubstellar disk, where the mass accretion rate was about a factor of 3 higher than during the quiescent level.
+--------------------------------------------------------------------------------
+
+Title: Variational Fair Clustering
+Authors: Imtiaz Masud Ziko, Eric Granger, Jing Yuan, Ismail Ben Ayed
+Published: 2019-06-19 16:29:56+00:00
+PDF: https://arxiv.org/pdf/1906.08207v5
+Abstract: We propose a general variational framework of fair clustering, which integrates an original Kullback-Leibler (KL) fairness term with a large class of clustering objectives, including prototype or graph based. Fundamentally different from the existing combinatorial and spectral solutions, our variational multi-term approach enables to control the trade-off levels between the fairness and clustering objectives. We derive a general tight upper bound based on a concave-convex decomposition of our fairness term, its Lipschitz-gradient property and the Pinsker's inequality. Our tight upper bound can be jointly optimized with various clustering objectives, while yielding a scalable solution, with convergence guarantee. Interestingly, at each iteration, it performs an independent update for each assignment variable. Therefore, it can be easily distributed for large-scale datasets. This scalability is important as it enables to explore different trade-off levels between the fairness and clustering objectives. Unlike spectral relaxation, our formulation does not require computing its eigenvalue decomposition. We report comprehensive evaluations and comparisons with state-of-the-art methods over various fair-clustering benchmarks, which show that our variational formulation can yield highly competitive solutions in terms of fairness and clustering objectives.
+--------------------------------------------------------------------------------
+
+Title: Hierarchical Qualitative Clustering: clustering mixed datasets with critical qualitative information
+Authors: Diogo Seca, João Mendes-Moreira, Tiago Mendes-Neves, Ricardo Sousa
+Published: 2020-06-30 11:48:51+00:00
+PDF: https://arxiv.org/pdf/2006.16701v3
+Abstract: Clustering can be used to extract insights from data or to verify some of the assumptions held by the domain experts, namely data segmentation. In the literature, few methods can be applied in clustering qualitative values using the context associated with other variables present in the data, without losing interpretability. Moreover, the metrics for calculating dissimilarity between qualitative values often scale poorly for high dimensional mixed datasets.
+  In this study, we propose a novel method for clustering qualitative values, based on Hierarchical Clustering (HQC), and using Maximum Mean Discrepancy. HQC maintains the original interpretability of the qualitative information present in the dataset. We apply HQC to two datasets. Using a mixed dataset provided by Spotify, we showcase how our method can be used for clustering music artists based on the quantitative features of thousands of songs. In addition, using financial features of companies, we cluster company industries, and discuss the implications in investment portfolios diversification.
+--------------------------------------------------------------------------------
+
+Title: The Evolution of Galaxy Clustering in Hierarchical Models
+Authors: Shaun Cole, Andrew Benson, Carlton Baugh, Cedric Lacey, Carlos Frenk
+Published: 1999-10-13 13:44:40+00:00
+PDF: https://arxiv.org/pdf/astro-ph/9910233v1
+Abstract: The main ingredients of recent semi-analytic models of galaxy formation are summarised. We present predictions for the galaxy clustering properties of a well specified LCDM model whose parameters are constrained by observed local galaxy properties. We present preliminary predictions for evolution of clustering that can be probed with deep pencil beam surveys.
+--------------------------------------------------------------------------------
+
+Title: Git: Clustering Based on Graph of Intensity Topology
+Authors: Zhangyang Gao, Haitao Lin, Cheng Tan, Lirong Wu, Stan. Z Li
+Published: 2021-10-04 09:29:43+00:00
+PDF: https://arxiv.org/pdf/2110.01274v1
+Abstract: \textbf{A}ccuracy, \textbf{R}obustness to noises and scales, \textbf{I}nterpretability, \textbf{S}peed, and \textbf{E}asy to use (ARISE) are crucial requirements of a good clustering algorithm. However, achieving these goals simultaneously is challenging, and most advanced approaches only focus on parts of them. Towards an overall consideration of these aspects, we propose a novel clustering algorithm, namely GIT (Clustering Based on \textbf{G}raph of \textbf{I}ntensity \textbf{T}opology). GIT considers both local and global data structures: firstly forming local clusters based on intensity peaks of samples, and then estimating the global topological graph (topo-graph) between these local clusters. We use the Wasserstein Distance between the predicted and prior class proportions to automatically cut noisy edges in the topo-graph and merge connected local clusters as final clusters. Then, we compare GIT with seven competing algorithms on five synthetic datasets and nine real-world datasets. With fast local cluster detection, robust topo-graph construction and accurate edge-cutting, GIT shows attractive ARISE performance and significantly exceeds other non-convex clustering methods. For example, GIT outperforms its counterparts about $10\%$ (F1-score) on MNIST and FashionMNIST. Code is available at \color{red}{https://github.com/gaozhangyang/GIT}.
+--------------------------------------------------------------------------------
+
+Title: Deep Distribution-preserving Incomplete Clustering with Optimal Transport
+Authors: Mingjie Luo, Siwei Wang, Xinwang Liu, Wenxuan Tu, Yi Zhang, Xifeng Guo, Sihang Zhou, En Zhu
+Published: 2021-03-21 15:43:17+00:00
+PDF: https://arxiv.org/pdf/2103.11424v1
+Abstract: Clustering is a fundamental task in the computer vision and machine learning community. Although various methods have been proposed, the performance of existing approaches drops dramatically when handling incomplete high-dimensional data (which is common in real world applications). To solve the problem, we propose a novel deep incomplete clustering method, named Deep Distribution-preserving Incomplete Clustering with Optimal Transport (DDIC-OT). To avoid insufficient sample utilization in existing methods limited by few fully-observed samples, we propose to measure distribution distance with the optimal transport for reconstruction evaluation instead of traditional pixel-wise loss function. Moreover, the clustering loss of the latent feature is introduced to regularize the embedding with more discrimination capability. As a consequence, the network becomes more robust against missing features and the unified framework which combines clustering and sample imputation enables the two procedures to negotiate to better serve for each other. Extensive experiments demonstrate that the proposed network achieves superior and stable clustering performance improvement against existing state-of-the-art incomplete clustering methods over different missing ratios.
+--------------------------------------------------------------------------------
+
+Title: Prediction, Generation of WWTPs microbiome community structures and Clustering of WWTPs various feature attributes using DE-BP model, SiTime-GAN model and DPNG-EPMC ensemble clustering algorithm with modulation of microbial ecosystem health
+Authors: Mingzhi Dai, Weiwei Cai, Xiang Feng, Huiqun Yu, Weibin Guo, Miao Guo
+Published: 2025-09-01 15:00:50+00:00
+PDF: https://arxiv.org/pdf/2509.01526v1
+Abstract: Microbiomes not only underpin Earth's biogeochemical cycles but also play crucial roles in both engineered and natural ecosystems, such as the soil, wastewater treatment, and the human gut. However, microbiome engineering faces significant obstacles to surmount to deliver the desired improvements in microbiome control. Here, we use the backpropagation neural network (BPNN), optimized through differential evolution (DE-BP), to predict the microbial composition of activated sludge (AS) systems collected from wastewater treatment plants (WWTPs) located worldwide. Furthermore, we introduce a novel clustering algorithm termed Directional Position Nonlinear Emotional Preference Migration Behavior Clustering (DPNG-EPMC). This method is applied to conduct a clustering analysis of WWTPs across various feature attributes. Finally, we employ the Similar Time Generative Adversarial Networks (SiTime-GAN), to synthesize novel microbial compositions and feature attributes data. As a result, we demonstrate that the DE-BP model can provide superior predictions of the microbial composition. Additionally, we show that the DPNG-EPMC can be applied to the analysis of WWTPs under various feature attributes. Finally, we demonstrate that the SiTime-GAN model can generate valuable incremental synthetic data. Our results, obtained through predicting the microbial community and conducting analysis of WWTPs under various feature attributes, develop an understanding of the factors influencing AS communities.
+--------------------------------------------------------------------------------
+
+Title: Efficient Uncertainty Minimization for Fuzzy Spectral Clustering
+Authors: Brian White, David Shalloway
+Published: 2007-03-27 08:28:56+00:00
+PDF: https://arxiv.org/pdf/physics/0703238v5
+Abstract: Spectral clustering uses the global information embedded in eigenvectors of an inter-item similarity matrix to correctly identify clusters of irregular shape, an ability lacking in commonly used approaches such as k-means and agglomerative clustering. However, traditional spectral clustering partitions items into hard clusters, and the ability to instead generate fuzzy item assignments would be advantageous for the growing class of domains in which cluster overlap and uncertainty are important. Korenblum and Shalloway [Phys. Rev. E 67, 056704 (2003)] extended spectral clustering to fuzzy clustering by introducing the principle of uncertainty minimization. However, this posed a challenging non-convex global optimization problem that they solved by a brute-force technique unlikely to scale to data sets having more than O(10^2) items. Here we develop a new method for solving the minimization problem, which can handle data sets at least two orders of magnitude larger. In doing so, we elucidate the underlying structure of uncertainty minimization using multiple geometric representations. This enables us to show how fuzzy spectral clustering using uncertainty minimization is related to and generalizes clustering motivated by perturbative analysis of almost-block-diagonal matrices. Uncertainty minimization can be applied to a wide variety of existing hard spectral clustering approaches, thus transforming them to fuzzy methods.
+--------------------------------------------------------------------------------
+
+Title: Strong Consistency of Factorial K-means Clustering
+Authors: Yoshikazu Terada
+Published: 2013-01-04 05:55:48+00:00
+PDF: https://arxiv.org/pdf/1301.0676v5
+Abstract: Factorial k-means (FKM) clustering is a method for clustering objects in a low-dimensional subspace. The advantage of this method is that the partition of objects and the low-dimensional subspace reflecting the cluster structure are obtained, simultaneously. Conditions that ensure the almost sure convergence of the estimator of FKM clustering as the sample size increases unboundedly are derived. The result is proved for a more general model including FKM clustering.
+--------------------------------------------------------------------------------
+
+Title: Unsupervised Deep Clustering of MNIST with Triplet-Enhanced Convolutional Autoencoders
+Authors: Md. Faizul Islam Ansari
+Published: 2025-06-11 18:26:13+00:00
+PDF: https://arxiv.org/pdf/2506.10094v1
+Abstract: This research implements an advanced unsupervised clustering system for MNIST handwritten digits through two-phase deep autoencoder architecture. A deep neural autoencoder requires a training process during phase one to develop minimal yet interpretive representations of images by minimizing reconstruction errors. During the second phase we unify the reconstruction error with a KMeans clustering loss for learned latent embeddings through a joint distance-based objective. Our model contains three elements which include batch normalization combined with dropout and weight decay for achieving generalized and stable results. The framework achieves superior clustering performance during extensive tests which used intrinsic measurements including Silhouette Score and Davies-Bouldin Index coupled with extrinsic metrics NMI and ARI when processing image features. The research uses t-SNE visualization to present learned embeddings that show distinct clusters for digits. Our approach reaches an optimal combination between data reconstruction accuracy and cluster separation purity when adding the benefit of understandable results and scalable implementations. The approach creates a dependable base that helps deploy unsupervised representation learning in different large-scale image clustering applications.
+--------------------------------------------------------------------------------
+

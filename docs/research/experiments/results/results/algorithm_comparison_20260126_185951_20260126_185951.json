@@ -1,0 +1,262 @@
+{
+  "metadata": {
+    "experiment_name": "algorithm_comparison_20260126_185951",
+    "description": "",
+    "start_time": "2026-01-26T18:59:51.784402",
+    "timestamp": "20260126_185951"
+  },
+  "results": [
+    {
+      "run_id": 1,
+      "timestamp": "2026-01-26T19:00:06.905681",
+      "algorithm": "hierarchical",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 1,
+      "metadata": {
+        "replicate": 1,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 2,
+      "timestamp": "2026-01-26T19:00:22.402502",
+      "algorithm": "hierarchical",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 2,
+      "metadata": {
+        "replicate": 2,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 3,
+      "timestamp": "2026-01-26T19:00:38.467137",
+      "algorithm": "hierarchical",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 3,
+      "metadata": {
+        "replicate": 3,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 4,
+      "timestamp": "2026-01-26T19:00:53.749432",
+      "algorithm": "kmeans",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 1,
+      "metadata": {
+        "replicate": 1,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 5,
+      "timestamp": "2026-01-26T19:01:09.569034",
+      "algorithm": "kmeans",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 2,
+      "metadata": {
+        "replicate": 2,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 6,
+      "timestamp": "2026-01-26T19:01:25.463970",
+      "algorithm": "kmeans",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 3,
+      "metadata": {
+        "replicate": 3,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 7,
+      "timestamp": "2026-01-26T19:01:40.642246",
+      "algorithm": "dbscan",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 1,
+      "metadata": {
+        "replicate": 1,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 8,
+      "timestamp": "2026-01-26T19:01:56.188829",
+      "algorithm": "dbscan",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 2,
+      "metadata": {
+        "replicate": 2,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 9,
+      "timestamp": "2026-01-26T19:02:11.743953",
+      "algorithm": "dbscan",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 3,
+      "metadata": {
+        "replicate": 3,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 10,
+      "timestamp": "2026-01-26T19:02:27.072424",
+      "algorithm": "grid",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 1,
+      "metadata": {
+        "replicate": 1,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 11,
+      "timestamp": "2026-01-26T19:02:42.337217",
+      "algorithm": "grid",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 2,
+      "metadata": {
+        "replicate": 2,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    },
+    {
+      "run_id": 12,
+      "timestamp": "2026-01-26T19:02:57.723105",
+      "algorithm": "grid",
+      "tolerance": 1.5,
+      "threshold": 0.3,
+      "linkage": "complete",
+      "n_features": 0,
+      "consensus_time": 0,
+      "screening_time": 0,
+      "total_time": 0,
+      "roc_auc": 0.5,
+      "ef_1": 0.0,
+      "bedroc": 0.0,
+      "error": "PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'",
+      "replicate": 3,
+      "metadata": {
+        "replicate": 3,
+        "phase": "Phase3_AlgorithmComparison"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+run_id,timestamp,algorithm,tolerance,threshold,linkage,n_features,consensus_time,screening_time,total_time,roc_auc,ef_1,bedroc,error,replicate
+1,2026-01-26T19:00:06.905681,hierarchical,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',1
+2,2026-01-26T19:00:22.402502,hierarchical,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',2
+3,2026-01-26T19:00:38.467137,hierarchical,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',3
+4,2026-01-26T19:00:53.749432,kmeans,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',1
+5,2026-01-26T19:01:09.569034,kmeans,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',2
+6,2026-01-26T19:01:25.463970,kmeans,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',3
+7,2026-01-26T19:01:40.642246,dbscan,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',1
+8,2026-01-26T19:01:56.188829,dbscan,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',2
+9,2026-01-26T19:02:11.743953,dbscan,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',3
+10,2026-01-26T19:02:27.072424,grid,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',1
+11,2026-01-26T19:02:42.337217,grid,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',2
+12,2026-01-26T19:02:57.723105,grid,1.5,0.3,complete,0,0,0,0,0.5,0.0,0.0,PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates',3

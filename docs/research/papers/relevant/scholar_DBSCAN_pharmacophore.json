@@ -1,0 +1,101 @@
+[
+  {
+    "title": "Mapping of Protein Binding Sites using clustering algorithms-Development of a pharmacophore based drug discovery tool",
+    "author": [
+      "J Braun",
+      "D Fayne"
+    ],
+    "year": "2022",
+    "abstract": "-means clustering algorithm in order to derive pharmacophore models of the binding site. The   -derived pharmacophores with X-ray ligand structure-derived pharmacophores to confirm"
+  },
+  {
+    "title": "Deciphering a pharmacophore network: a case study using BCR-ABL data",
+    "author": [
+      "D Geslin",
+      "A Lepailleur",
+      "JL Manguin",
+      "NV Vo"
+    ],
+    "year": "2022",
+    "abstract": "was defined as a pharmacophore represented by a  The DBSCAN analysis results in  clustering that relies strongly on the concept of a neighborhood. In DBSCAN, two pharmacophores"
+  },
+  {
+    "title": "Developing dynamic structure-based pharmacophore and QSAR models for the discovery of novel resistance-free RET tyrosine kinase inhibitors through extensive \u2026",
+    "author": [
+      "S Durdagi",
+      "E Sayyah",
+      "L Oktay",
+      "H Tunc"
+    ],
+    "year": "2024",
+    "abstract": "of applications with noise-(DBSCAN) analyses. The NRI and DBSCAN methods are used  to analyze relationships between pharmacophore features based on MD simulation trajectory"
+  },
+  {
+    "title": "Espace des pharmacophores et ph\u00e9notype biologique (EPHAPB)",
+    "author": [
+      "D Geslin"
+    ],
+    "year": "2023",
+    "abstract": "Un pharmacophore est l\u2019ensemble des caract\u00e9ristiques n\u00e9cessaires pour garantir des   l\u2019espace des pharmacophores, une visualisation de l\u2019ensemble de nos pharmacophores est"
+  },
+  {
+    "title": "Clustering protein binding pockets and identifying potential drug interactions: a novel ligand-based featurization method",
+    "author": [
+      "GA Stevenson",
+      "D Kirshner",
+      "BJ Bennion"
+    ],
+    "year": "2023",
+    "abstract": "Pharmacophore modeling includes a spectrum of  , has a significant impact on the DBSCAN  output; we experimented with  Between large and small distance thresholds, DBSCAN marks"
+  },
+  {
+    "title": "Drug-Likeness Prediction and Fragment Extraction Using Transformer-Based Graph Neural Network on Traditional Chinese Medicine Molecules",
+    "author": [
+      "M Colangelo"
+    ],
+    "year": "2024",
+    "abstract": "The use of Traditional Chinese Medicine spans thousands of years, yet its integration into  modern pharmaceutical research has been limited. A major challenge is the lack of systematic"
+  },
+  {
+    "title": "Apo2ph4: A Versatile Workflow for the Generation of Receptor-based Pharmacophore Models for Virtual Screening",
+    "author": [
+      "J Heider",
+      "J Kilian",
+      "A Garifulina",
+      "S Hering"
+    ],
+    "year": "2022",
+    "abstract": "While we plan to publish these pharmacophores in a separate work, one pharmacophore  generated for the inhibitory pregnanolone sulfate binding site (74) of the \u03b11\u03b22\u03b32 GABA A R,"
+  },
+  {
+    "title": "Mapping the 3D structures of small molecule binding sites",
+    "author": [
+      "J Meyers",
+      "N Brown",
+      "J Blagg"
+    ],
+    "year": "2016",
+    "abstract": "A pharmacophore model defines pseudocenters for five key  data, visualization of  DBSCAN clustering has proven  Here we present a circular plot to map DBSCAN clustering of"
+  },
+  {
+    "title": "Discovery of novel PDGFR inhibitors targeting non-small cell lung cancer using a multistep machine learning assisted hybrid virtual screening approach",
+    "author": [
+      "SK Reddy",
+      "SVG Reddy",
+      "SH Basha"
+    ],
+    "year": "2025",
+    "abstract": "Hierarchical Clustering and DBSCAN, making it ideal for high-throughput virtual screening.   In hybrid screening we have used Morgan fingerprint and 2D pharmacophore fingerprint are"
+  },
+  {
+    "title": "Structure-Conditioned Generative Models for De Novo Ligand Generation: A Pharmacophore Assessment",
+    "author": [
+      "ST Smith",
+      "L Gendelev",
+      "KV Chuang",
+      "SF Harris"
+    ],
+    "year": "2023",
+    "abstract": "We demonstrate that the spatial distributions of key pharmacophore features tend to be  for  DBSCAN-based clustering, we extracted 3,000 coordinates for each pharmacophore feature"
+  }
+]

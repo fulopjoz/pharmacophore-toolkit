@@ -53,10 +53,28 @@ archive/
 */.cache/
 experiments/.cache/
 
-# Research papers (PDFs too large for git)
-docs/research/papers/
+# Research papers PDFs (too large for git, keep .md files)
+docs/research/papers/**/*.pdf
 *.pdf
 
 # OS
 .DS_Store
 Thumbs.db
+
+# AI/IDE Configuration (NEVER commit)
+.claude/
+.serena/
+skillz/
+**/CLAUDE.md
+*.extracted.md
+
+# Research workspace (local only - top level)
+/research/
+
+# Experiment results (derived, archive separately)
+experiments/results/
+
+# Images in docs (too large)
+docs/*.png
+docs/*.jpeg
+docs/*.jpg

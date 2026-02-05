@@ -1,0 +1,353 @@
+📊 Experiment Logger initialized: bayesian_optimization_20260126_204213
+   Output: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results
+
+================================================================================
+PHASE 4: BAYESIAN OPTIMIZATION
+================================================================================
+Algorithm: DBSCAN consensus
+Total evaluations: 30
+Initial random points: 5
+Target: ROC-AUC > 0.80
+================================================================================
+
+
+Starting Bayesian optimization...
+
+[Iteration 1/30]
+
+Evaluating: tolerance=1.6186, threshold=0.2683, min_samples=3
+[20:42:15] UFFTYPER: Unrecognized charge state for atom: 13
+[20:42:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0551s
+[20:42:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 1: tolerance=1.6186171947440933 threshold=0.26834347898661637 min_samples=3 → ROC-AUC=0.7473
+
+[Iteration 2/30]
+
+Evaluating: tolerance=1.5387, threshold=0.2946, min_samples=1
+[20:43:15] UFFTYPER: Unrecognized charge state for atom: 13
+[20:43:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0405s
+[20:43:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 2: tolerance=1.5387400631785948 threshold=0.2945832752853591 min_samples=1 → ROC-AUC=0.7473
+
+[Iteration 3/30]
+
+Evaluating: tolerance=1.4837, threshold=0.2834, min_samples=1
+[20:44:15] UFFTYPER: Unrecognized charge state for atom: 13
+[20:44:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0408s
+[20:44:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7267, EF@1%: 1.55
+  Run 3: tolerance=1.483699556786347 threshold=0.2833708611139022 min_samples=1 → ROC-AUC=0.7267
+
+[Iteration 4/30]
+
+Evaluating: tolerance=1.5604, threshold=0.2556, min_samples=3
+[20:45:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:45:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0399s
+[20:45:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 4: tolerance=1.5603553891795412 threshold=0.25564115790271 min_samples=3 → ROC-AUC=0.7473
+
+[Iteration 5/30]
+
+Evaluating: tolerance=1.6754, threshold=0.2501, min_samples=4
+[20:46:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:46:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0402s
+[20:46:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 5: tolerance=1.6754210836063002 threshold=0.2500778765841014 min_samples=4 → ROC-AUC=0.7457
+
+[Iteration 6/30]
+
+Evaluating: tolerance=1.3001, threshold=0.3041, min_samples=4
+[20:47:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:47:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0411s
+[20:47:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 6: tolerance=1.3000746112682653 threshold=0.3040812282482435 min_samples=4 → ROC-AUC=0.7289
+
+[Iteration 7/30]
+
+Evaluating: tolerance=1.3879, threshold=0.2661, min_samples=2
+[20:48:15] UFFTYPER: Unrecognized charge state for atom: 13
+[20:48:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0410s
+[20:48:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 7: tolerance=1.387925499509812 threshold=0.26610984836365253 min_samples=2 → ROC-AUC=0.7289
+
+[Iteration 8/30]
+
+Evaluating: tolerance=1.7000, threshold=0.3461, min_samples=1
+[20:49:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:49:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0399s
+[20:49:37] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 8: tolerance=1.7 threshold=0.3460915819183239 min_samples=1 → ROC-AUC=0.7457
+
+[Iteration 9/30]
+
+Evaluating: tolerance=1.5875, threshold=0.3443, min_samples=2
+[20:50:13] UFFTYPER: Unrecognized charge state for atom: 13
+[20:50:17] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0401s
+[20:50:37] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 9: tolerance=1.5875320221718625 threshold=0.3442586309077406 min_samples=2 → ROC-AUC=0.7473
+
+[Iteration 10/30]
+
+Evaluating: tolerance=1.3444, threshold=0.3354, min_samples=1
+[20:51:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:51:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0406s
+[20:51:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 10: tolerance=1.34436426303143 threshold=0.335434706408806 min_samples=1 → ROC-AUC=0.7289
+
+[Iteration 11/30]
+
+Evaluating: tolerance=1.6449, threshold=0.3400, min_samples=1
+[20:52:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:52:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0402s
+[20:52:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 11: tolerance=1.6449230032222606 threshold=0.3399705398094737 min_samples=1 → ROC-AUC=0.7473
+
+[Iteration 12/30]
+
+Evaluating: tolerance=1.4329, threshold=0.3250, min_samples=4
+[20:53:16] UFFTYPER: Unrecognized charge state for atom: 13
+[20:53:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0417s
+[20:53:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7267, EF@1%: 1.55
+  Run 12: tolerance=1.4328686599747393 threshold=0.3249730908743526 min_samples=4 → ROC-AUC=0.7267
+
+[Iteration 13/30]
+
+Evaluating: tolerance=1.5198, threshold=0.3417, min_samples=4
+[20:54:17] UFFTYPER: Unrecognized charge state for atom: 13
+[20:54:21] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0415s
+[20:54:41] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7267, EF@1%: 1.55
+  Run 13: tolerance=1.5198425880096504 threshold=0.34172108931229245 min_samples=4 → ROC-AUC=0.7267
+
+[Iteration 14/30]
+
+Evaluating: tolerance=1.5786, threshold=0.2500, min_samples=1
+[20:55:17] UFFTYPER: Unrecognized charge state for atom: 13
+[20:55:21] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0399s
+[20:55:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 14: tolerance=1.5786183643344682 threshold=0.25 min_samples=1 → ROC-AUC=0.7473
+
+[Iteration 15/30]
+
+Evaluating: tolerance=1.6997, threshold=0.2606, min_samples=4
+[20:56:16] UFFTYPER: Unrecognized charge state for atom: 13
+[20:56:20] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0405s
+[20:56:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 15: tolerance=1.699725489985901 threshold=0.26058168441143 min_samples=4 → ROC-AUC=0.7457
+
+[Iteration 16/30]
+
+Evaluating: tolerance=1.6595, threshold=0.2695, min_samples=4
+[20:57:16] UFFTYPER: Unrecognized charge state for atom: 13
+[20:57:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0412s
+[20:57:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 16: tolerance=1.6594873906762713 threshold=0.2695259194028073 min_samples=4 → ROC-AUC=0.7457
+
+[Iteration 17/30]
+
+Evaluating: tolerance=1.5898, threshold=0.2583, min_samples=4
+[20:58:15] UFFTYPER: Unrecognized charge state for atom: 13
+[20:58:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0403s
+[20:58:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 17: tolerance=1.5897760801014424 threshold=0.25826037396339374 min_samples=4 → ROC-AUC=0.7473
+
+[Iteration 18/30]
+
+Evaluating: tolerance=1.6729, threshold=0.2629, min_samples=1
+[20:59:14] UFFTYPER: Unrecognized charge state for atom: 13
+[20:59:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0414s
+[20:59:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 18: tolerance=1.6728630334695747 threshold=0.2629345142413712 min_samples=1 → ROC-AUC=0.7457
+
+[Iteration 19/30]
+
+Evaluating: tolerance=1.4587, threshold=0.2854, min_samples=1
+[21:00:15] UFFTYPER: Unrecognized charge state for atom: 13
+[21:00:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0398s
+[21:00:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7267, EF@1%: 1.55
+  Run 19: tolerance=1.4587399684182842 threshold=0.2854177694450319 min_samples=1 → ROC-AUC=0.7267
+
+[Iteration 20/30]
+
+Evaluating: tolerance=1.3003, threshold=0.3336, min_samples=1
+[21:01:15] UFFTYPER: Unrecognized charge state for atom: 13
+[21:01:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0416s
+[21:01:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 20: tolerance=1.3003266621056304 threshold=0.33364123456131095 min_samples=1 → ROC-AUC=0.7289
+
+[Iteration 21/30]
+
+Evaluating: tolerance=1.6135, threshold=0.3020, min_samples=1
+[21:02:16] UFFTYPER: Unrecognized charge state for atom: 13
+[21:02:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0399s
+[21:02:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 21: tolerance=1.6135023911979172 threshold=0.30202471366790945 min_samples=1 → ROC-AUC=0.7473
+
+[Iteration 22/30]
+
+Evaluating: tolerance=1.3569, threshold=0.3430, min_samples=4
+[21:03:16] UFFTYPER: Unrecognized charge state for atom: 13
+[21:03:20] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0422s
+[21:03:41] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 22: tolerance=1.356873703989829 threshold=0.3430444951841794 min_samples=4 → ROC-AUC=0.7289
+
+[Iteration 23/30]
+
+Evaluating: tolerance=1.5485, threshold=0.2573, min_samples=4
+[21:04:18] UFFTYPER: Unrecognized charge state for atom: 13
+[21:04:21] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0407s
+[21:04:41] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 23: tolerance=1.5485053378930878 threshold=0.25728029942394115 min_samples=4 → ROC-AUC=0.7473
+
+[Iteration 24/30]
+
+Evaluating: tolerance=1.5702, threshold=0.3071, min_samples=3
+[21:05:17] UFFTYPER: Unrecognized charge state for atom: 13
+[21:05:21] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0402s
+[21:05:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 24: tolerance=1.5702297893440738 threshold=0.30713763046933695 min_samples=3 → ROC-AUC=0.7473
+
+[Iteration 25/30]
+
+Evaluating: tolerance=1.6215, threshold=0.3500, min_samples=1
+[21:06:16] UFFTYPER: Unrecognized charge state for atom: 13
+[21:06:20] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0411s
+[21:06:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 25: tolerance=1.6214614641877712 threshold=0.3499993740333005 min_samples=1 → ROC-AUC=0.7473
+
+[Iteration 26/30]
+
+Evaluating: tolerance=1.3317, threshold=0.2501, min_samples=3
+[21:07:17] UFFTYPER: Unrecognized charge state for atom: 13
+[21:07:21] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0415s
+[21:07:40] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7289, EF@1%: 1.55
+  Run 26: tolerance=1.3317414606856388 threshold=0.25013488999807154 min_samples=3 → ROC-AUC=0.7289
+
+[Iteration 27/30]
+
+Evaluating: tolerance=1.4100, threshold=0.2991, min_samples=1
+[21:08:16] UFFTYPER: Unrecognized charge state for atom: 13
+[21:08:20] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 12, Time: 0.0396s
+[21:08:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7267, EF@1%: 1.55
+  Run 27: tolerance=1.4099975809591816 threshold=0.2990973260534068 min_samples=1 → ROC-AUC=0.7267
+
+[Iteration 28/30]
+
+Evaluating: tolerance=1.6887, threshold=0.3487, min_samples=1
+[21:09:15] UFFTYPER: Unrecognized charge state for atom: 13
+[21:09:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0404s
+[21:09:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7457, EF@1%: 1.55
+  Run 28: tolerance=1.6886693987439183 threshold=0.3486903362469902 min_samples=1 → ROC-AUC=0.7457
+
+[Iteration 29/30]
+
+Evaluating: tolerance=1.6345, threshold=0.2637, min_samples=4
+[21:10:15] UFFTYPER: Unrecognized charge state for atom: 13
+[21:10:19] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0404s
+[21:10:39] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 29: tolerance=1.634471093522732 threshold=0.26365840073901187 min_samples=4 → ROC-AUC=0.7473
+
+[Iteration 30/30]
+
+Evaluating: tolerance=1.6013, threshold=0.3450, min_samples=2
+[21:11:15] UFFTYPER: Unrecognized charge state for atom: 13
+[21:11:18] UFFTYPER: Unrecognized charge state for atom: 33
+  Features: 13, Time: 0.0393s
+[21:11:38] UFFTYPER: Unrecognized charge state for atom: 13
+  ROC-AUC: 0.7473, EF@1%: 1.55
+  Run 30: tolerance=1.60131690270785 threshold=0.34495696691747474 min_samples=2 → ROC-AUC=0.7473
+💾 Results saved: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/bayesian_optimization_20260126_204213_20260126_204213.csv
+Traceback (most recent call last):
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_bayesian_optimization.py", line 563, in <module>
+    result, df_results, df_confirm, stats = main()
+                                            ~~~~^^
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_bayesian_optimization.py", line 541, in main
+    result, df_results = run_bayesian_optimization(
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        n_calls=30,
+        ^^^^^^^^^^^
+        n_initial_points=5,
+        ^^^^^^^^^^^^^^^^^^^
+        random_state=42
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_bayesian_optimization.py", line 329, in run_bayesian_optimization
+    logger.save_json()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/experiment_logger.py", line 139, in save_json
+    json.dump(data, f, indent=2)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/__init__.py", line 179, in dump
+    for chunk in iterable:
+                 ^^^^^^^^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 433, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 407, in _iterencode_dict
+    yield from chunks
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 407, in _iterencode_dict
+    yield from chunks
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 440, in _iterencode
+    o = _default(o)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type int64 is not JSON serializable

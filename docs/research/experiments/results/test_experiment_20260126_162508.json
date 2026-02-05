@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "experiment_name": "test_experiment",
+    "description": "Test of experiment logger",
+    "start_time": "2026-01-26T16:25:08.045799",
+    "timestamp": "20260126_162508",
+    "end_time": "2026-01-26T16:25:08.045850",
+    "total_runs": 5
+  },
+  "results": [
+    {
+      "run_id": 1,
+      "timestamp": "2026-01-26T16:25:08.045820",
+      "tolerance": 1.0,
+      "threshold": 0.5,
+      "roc_auc": 0.7,
+      "ef_1": 3.0
+    },
+    {
+      "run_id": 2,
+      "timestamp": "2026-01-26T16:25:08.045833",
+      "tolerance": 1.2,
+      "threshold": 0.5,
+      "roc_auc": 0.72,
+      "ef_1": 3.5
+    },
+    {
+      "run_id": 3,
+      "timestamp": "2026-01-26T16:25:08.045839",
+      "tolerance": 1.4,
+      "threshold": 0.5,
+      "roc_auc": 0.74,
+      "ef_1": 4.0
+    },
+    {
+      "run_id": 4,
+      "timestamp": "2026-01-26T16:25:08.045842",
+      "tolerance": 1.6,
+      "threshold": 0.5,
+      "roc_auc": 0.76,
+      "ef_1": 4.5
+    },
+    {
+      "run_id": 5,
+      "timestamp": "2026-01-26T16:25:08.045846",
+      "tolerance": 1.8,
+      "threshold": 0.5,
+      "roc_auc": 0.7799999999999999,
+      "ef_1": 5.0
+    }
+  ]
+}

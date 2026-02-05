@@ -1,0 +1,220 @@
+[17:44:46] UFFTYPER: Unrecognized charge state for atom: 13
+[17:44:50] UFFTYPER: Unrecognized charge state for atom: 33
+[17:45:11] UFFTYPER: Unrecognized charge state for atom: 13
+[17:45:49] UFFTYPER: Unrecognized charge state for atom: 13
+[17:45:53] UFFTYPER: Unrecognized charge state for atom: 33
+[17:46:15] UFFTYPER: Unrecognized charge state for atom: 13
+[17:46:52] UFFTYPER: Unrecognized charge state for atom: 13
+[17:46:56] UFFTYPER: Unrecognized charge state for atom: 33
+[17:47:18] UFFTYPER: Unrecognized charge state for atom: 13
+[17:47:56] UFFTYPER: Unrecognized charge state for atom: 13
+[17:48:00] UFFTYPER: Unrecognized charge state for atom: 33
+[17:48:22] UFFTYPER: Unrecognized charge state for atom: 13
+[17:49:01] UFFTYPER: Unrecognized charge state for atom: 13
+[17:49:05] UFFTYPER: Unrecognized charge state for atom: 33
+[17:49:26] UFFTYPER: Unrecognized charge state for atom: 13
+[17:50:03] UFFTYPER: Unrecognized charge state for atom: 13
+[17:50:07] UFFTYPER: Unrecognized charge state for atom: 33
+[17:50:29] UFFTYPER: Unrecognized charge state for atom: 13
+[17:51:08] UFFTYPER: Unrecognized charge state for atom: 13
+[17:51:12] UFFTYPER: Unrecognized charge state for atom: 33
+[17:51:33] UFFTYPER: Unrecognized charge state for atom: 13
+[17:52:11] UFFTYPER: Unrecognized charge state for atom: 13
+[17:52:15] UFFTYPER: Unrecognized charge state for atom: 33
+[17:52:37] UFFTYPER: Unrecognized charge state for atom: 13
+[17:53:15] UFFTYPER: Unrecognized charge state for atom: 13
+[17:53:19] UFFTYPER: Unrecognized charge state for atom: 33
+[17:53:40] UFFTYPER: Unrecognized charge state for atom: 13
+[17:54:19] UFFTYPER: Unrecognized charge state for atom: 13
+[17:54:23] UFFTYPER: Unrecognized charge state for atom: 33
+[17:54:44] UFFTYPER: Unrecognized charge state for atom: 13
+[17:55:23] UFFTYPER: Unrecognized charge state for atom: 13
+[17:55:27] UFFTYPER: Unrecognized charge state for atom: 33
+[17:55:49] UFFTYPER: Unrecognized charge state for atom: 13
+[17:56:30] UFFTYPER: Unrecognized charge state for atom: 13
+[17:56:34] UFFTYPER: Unrecognized charge state for atom: 33
+[17:56:56] UFFTYPER: Unrecognized charge state for atom: 13
+[17:57:37] UFFTYPER: Unrecognized charge state for atom: 13
+[17:57:40] UFFTYPER: Unrecognized charge state for atom: 33
+[17:58:02] UFFTYPER: Unrecognized charge state for atom: 13
+[17:58:40] UFFTYPER: Unrecognized charge state for atom: 13
+[17:58:44] UFFTYPER: Unrecognized charge state for atom: 33
+[17:59:07] UFFTYPER: Unrecognized charge state for atom: 13
+
+================================================================================
+PHASE 2: RESPONSE SURFACE METHODOLOGY
+Central Composite Design (CCD) for Parameter Optimization
+================================================================================
+
+Step 1: Creating CCD design matrix...
+✓ Created 14 design points
+
+Design Matrix Preview:
+  experiment_id  tolerance  threshold   linkage
+0       CCD_001       0.80       0.45  complete
+1       CCD_002       0.80       0.60  complete
+2       CCD_003       1.15       0.45  complete
+3       CCD_004       1.50       0.45  complete
+4       CCD_005       1.15       0.45  complete
+5       CCD_006       1.50       0.60  complete
+6       CCD_007       1.15       0.45  complete
+7       CCD_008       1.15       0.45  complete
+8       CCD_009       1.15       0.60  complete
+9       CCD_010       1.15       0.45  complete
+
+================================================================================
+Step 2: Running CCD experiments...
+================================================================================
+📊 Experiment Logger initialized: ccd_tolerance_threshold_20260126_174443
+   Output: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results
+
+================================================================================
+PHASE 2: Central Composite Design (CCD) Experiments
+================================================================================
+Total runs: 14
+Dataset: CCR2 (5 refs, 74 actives, 499 decoys)
+Fixed parameter: linkage='complete'
+================================================================================
+
+
+[1/14] CCD_001
+  Tolerance: 0.800 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 1: tolerance=0.8 threshold=0.45 linkage=complete → ROC-AUC=0.5862
+  ✓ ROC-AUC: 0.5862
+  ✓ EF@1%: 0.00
+  ✓ Features: 1
+
+[2/14] CCD_002
+  Tolerance: 0.800 Å
+  Threshold: 0.600
+  Linkage: complete
+  Run 2: tolerance=0.8 threshold=0.6 linkage=complete → ROC-AUC=0.5862
+  ✓ ROC-AUC: 0.5862
+  ✓ EF@1%: 0.00
+  ✓ Features: 1
+
+[3/14] CCD_003
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 3: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[4/14] CCD_004
+  Tolerance: 1.500 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 4: tolerance=1.5 threshold=0.45 linkage=complete → ROC-AUC=0.5340
+  ✓ ROC-AUC: 0.5340
+  ✓ EF@1%: 0.00
+  ✓ Features: 5
+
+[5/14] CCD_005
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 5: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[6/14] CCD_006
+  Tolerance: 1.500 Å
+  Threshold: 0.600
+  Linkage: complete
+  Run 6: tolerance=1.5 threshold=0.6 linkage=complete → ROC-AUC=0.5340
+  ✓ ROC-AUC: 0.5340
+  ✓ EF@1%: 0.00
+  ✓ Features: 5
+
+[7/14] CCD_007
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 7: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[8/14] CCD_008
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 8: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[9/14] CCD_009
+  Tolerance: 1.150 Å
+  Threshold: 0.600
+  Linkage: complete
+  Run 9: tolerance=1.15 threshold=0.6 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[10/14] CCD_010
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 10: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[11/14] CCD_011
+  Tolerance: 1.500 Å
+  Threshold: 0.300
+  Linkage: complete
+  Run 11: tolerance=1.5 threshold=0.30000000000000004 linkage=complete → ROC-AUC=0.7234
+  ✓ ROC-AUC: 0.7234
+  ✓ EF@1%: 3.10
+  ✓ Features: 13
+
+[12/14] CCD_012
+  Tolerance: 1.150 Å
+  Threshold: 0.300
+  Linkage: complete
+  Run 12: tolerance=1.15 threshold=0.3 linkage=complete → ROC-AUC=0.5095
+  ✓ ROC-AUC: 0.5095
+  ✓ EF@1%: 0.00
+  ✓ Features: 13
+
+[13/14] CCD_013
+  Tolerance: 1.150 Å
+  Threshold: 0.450
+  Linkage: complete
+  Run 13: tolerance=1.15 threshold=0.45 linkage=complete → ROC-AUC=0.5730
+  ✓ ROC-AUC: 0.5730
+  ✓ EF@1%: 0.00
+  ✓ Features: 3
+
+[14/14] CCD_014
+  Tolerance: 0.800 Å
+  Threshold: 0.300
+  Linkage: complete
+  Run 14: tolerance=0.8 threshold=0.30000000000000004 linkage=complete → ROC-AUC=0.4453
+  ✓ ROC-AUC: 0.4453
+  ✓ EF@1%: 0.00
+  ✓ Features: 8
+💾 Results saved: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/ccd_tolerance_threshold_20260126_174443_20260126_174443.csv
+💾 Results saved: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/ccd_tolerance_threshold_20260126_174443_20260126_174443.json
+📝 Summary report: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/ccd_tolerance_threshold_20260126_174443_20260126_174443_summary.md
+
+================================================================================
+✓ CCD experiments complete!
+Traceback (most recent call last):
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_ccd.py", line 672, in <module>
+    df_results, model_results, optimal_params, df_confirm = main()
+                                                            ~~~~^^
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_ccd.py", line 624, in main
+    df_results = run_ccd_experiments(design_matrix)
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_ccd.py", line 244, in run_ccd_experiments
+    print(f"✓ Results saved to: {logger.results_csv}")
+                                 ^^^^^^^^^^^^^^^^^^
+AttributeError: 'ExperimentLogger' object has no attribute 'results_csv'. Did you mean: 'results_dir'?

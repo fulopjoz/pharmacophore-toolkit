@@ -1,0 +1,219 @@
+📊 Experiment Logger initialized: algorithm_comparison_20260126_185951
+   Output: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results
+
+================================================================================
+PHASE 3: ALGORITHM COMPARISON
+================================================================================
+Algorithms: hierarchical, kmeans, dbscan, grid
+Replicates: 3
+Parameters: tolerance=1.5Å, threshold=0.3, linkage=complete
+================================================================================
+
+
+================================================================================
+Testing Algorithm: Hierarchical Clustering
+Complexity: O(N² log N)
+================================================================================
+
+[Replicate 1/3]
+
+================================================================================
+Algorithm: HIERARCHICAL
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 1: algorithm=hierarchical tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 2/3]
+
+================================================================================
+Algorithm: HIERARCHICAL
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 2: algorithm=hierarchical tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 3/3]
+
+================================================================================
+Algorithm: HIERARCHICAL
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 3: algorithm=hierarchical tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+================================================================================
+Testing Algorithm: K-Means Clustering
+Complexity: O(N × K × iter)
+================================================================================
+
+[Replicate 1/3]
+
+================================================================================
+Algorithm: KMEANS
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 4: algorithm=kmeans tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 2/3]
+
+================================================================================
+Algorithm: KMEANS
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 5: algorithm=kmeans tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 3/3]
+
+================================================================================
+Algorithm: KMEANS
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 6: algorithm=kmeans tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+================================================================================
+Testing Algorithm: DBSCAN (Density-Based)
+Complexity: O(N log N)
+================================================================================
+
+[Replicate 1/3]
+
+================================================================================
+Algorithm: DBSCAN
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 7: algorithm=dbscan tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 2/3]
+
+================================================================================
+Algorithm: DBSCAN
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 8: algorithm=dbscan tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 3/3]
+
+================================================================================
+Algorithm: DBSCAN
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 9: algorithm=dbscan tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+================================================================================
+Testing Algorithm: Grid-Based Binning
+Complexity: O(N)
+================================================================================
+
+[Replicate 1/3]
+
+================================================================================
+Algorithm: GRID
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 10: algorithm=grid tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 2/3]
+
+================================================================================
+Algorithm: GRID
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 11: algorithm=grid tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+
+[Replicate 3/3]
+
+================================================================================
+Algorithm: GRID
+================================================================================
+  ERROR: PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'
+  Run 12: algorithm=grid tolerance=1.5 threshold=0.3 linkage=complete → ROC-AUC=0.5000
+💾 Results saved: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/algorithm_comparison_20260126_185951_20260126_185951.csv
+💾 Results saved: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/algorithm_comparison_20260126_185951_20260126_185951.json
+📝 Summary report: /home/dodo/Documents/projects/pharmacophore-toolkit/docs/research/experiments/results/results/algorithm_comparison_20260126_185951_20260126_185951_summary.md
+
+================================================================================
+ALGORITHM COMPARISON SUMMARY
+================================================================================
+
+Performance Comparison:
+             roc_auc      ef_1       ... screening_time      total_time     
+                mean  std mean  std  ...           mean  std       mean  std
+algorithm                            ...                                    
+dbscan           0.5  0.0  0.0  0.0  ...            0.0  0.0        0.0  0.0
+grid             0.5  0.0  0.0  0.0  ...            0.0  0.0        0.0  0.0
+hierarchical     0.5  0.0  0.0  0.0  ...            0.0  0.0        0.0  0.0
+kmeans           0.5  0.0  0.0  0.0  ...            0.0  0.0        0.0  0.0
+
+[4 rows x 14 columns]
+
+================================================================================
+RANKINGS
+================================================================================
+
+Traceback (most recent call last):
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 1944, in _agg_py_fallback
+    res_values = self._grouper.agg_series(ser, alt, preserve_dtype=True)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/ops.py", line 873, in agg_series
+    result = self._aggregate_series_pure_python(obj, func)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/ops.py", line 894, in _aggregate_series_pure_python
+    res = func(group)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 2461, in <lambda>
+    alt=lambda x: Series(x, copy=False).mean(numeric_only=numeric_only),
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/series.py", line 6570, in mean
+    return NDFrame.mean(self, axis, skipna, numeric_only, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/generic.py", line 12485, in mean
+    return self._stat_function(
+           ~~~~~~~~~~~~~~~~~~~^
+        "mean", nanops.nanmean, axis, skipna, numeric_only, **kwargs
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/generic.py", line 12442, in _stat_function
+    return self._reduce(
+           ~~~~~~~~~~~~^
+        func, name=name, axis=axis, skipna=skipna, numeric_only=numeric_only
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/series.py", line 6478, in _reduce
+    return op(delegate, skipna=skipna, **kwds)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/nanops.py", line 147, in f
+    result = alt(values, axis=axis, skipna=skipna, **kwds)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/nanops.py", line 404, in new_func
+    result = func(values, axis=axis, skipna=skipna, mask=mask, **kwargs)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/nanops.py", line 720, in nanmean
+    the_sum = _ensure_numeric(the_sum)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/nanops.py", line 1701, in _ensure_numeric
+    raise TypeError(f"Could not convert string '{x}' to numeric")
+TypeError: Could not convert string 'PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'PharmacophoreConsensusWithAlgorithm._cluster_features() got an unexpected keyword argument 'coordinates'' to numeric
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_algorithm_comparison.py", line 404, in <module>
+    results = main()
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_algorithm_comparison.py", line 392, in main
+    df_results = run_algorithm_comparison(
+        algorithms=['hierarchical', 'kmeans', 'dbscan', 'grid'],
+    ...<3 lines>...
+        linkage='complete'
+    )
+  File "/home/dodo/Documents/projects/pharmacophore-toolkit/experiments/run_algorithm_comparison.py", line 327, in run_algorithm_comparison
+    algorithm_means = df_results.groupby('algorithm').mean()
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 2459, in mean
+    result = self._cython_agg_general(
+        "mean",
+        alt=lambda x: Series(x, copy=False).mean(numeric_only=numeric_only),
+        numeric_only=numeric_only,
+    )
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 2005, in _cython_agg_general
+    new_mgr = data.grouped_reduce(array_func)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/internals/managers.py", line 1488, in grouped_reduce
+    applied = sb.apply(func)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/internals/blocks.py", line 395, in apply
+    result = func(self.values, **kwargs)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 2002, in array_func
+    result = self._agg_py_fallback(how, values, ndim=data.ndim, alt=alt)
+  File "/home/dodo/miniconda3/envs/pharmacophore-toolkit/lib/python3.13/site-packages/pandas/core/groupby/groupby.py", line 1948, in _agg_py_fallback
+    raise type(err)(msg) from err
+TypeError: agg function failed [how->mean,dtype->object]

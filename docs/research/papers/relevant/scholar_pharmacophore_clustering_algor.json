@@ -1,0 +1,95 @@
+[
+  {
+    "title": "Mapping of Protein Binding Sites using clustering algorithms-Development of a pharmacophore based drug discovery tool",
+    "author": [
+      "J Braun",
+      "D Fayne"
+    ],
+    "year": "2022",
+    "abstract": "the K-means clustering algorithm in order to derive pharmacophore models of the binding  site A graph theory algorithm was adapted to compare the clustering-derived pharmacophores"
+  },
+  {
+    "title": "Combining spatial and chemical information for clustering pharmacophores",
+    "author": [
+      "L Zhou",
+      "R Griffith",
+      "B Gaeta"
+    ],
+    "year": "2014",
+    "abstract": "We apply our three-dimensional pharmacophore clustering method to two sets of  experimental data, including 31 globulin-binding steroids and 4 groups of selected antibody-antigen"
+  },
+  {
+    "title": "Comparative analysis of pharmacophore screening tools",
+    "author": [
+      "MPA Sanders",
+      "AJM Barbosa",
+      "B Zarzycka"
+    ],
+    "year": "2012",
+    "abstract": "Those compounds are more similar to each other than the compounds matching  pharmacophore 2 and are clustered together in topological structure space (Figure 11c)."
+  },
+  {
+    "title": "Pharao: pharmacophore alignment and optimization",
+    "author": [
+      "J Taminau",
+      "G Thijs",
+      "H De Winter"
+    ],
+    "year": "2008",
+    "abstract": ", a pharmacophore-based  pharmacophore-based clustering. The method is flexible so that  it can also be used to guide the search for new molecules in de novo design algorithms or in"
+  },
+  {
+    "title": "Pharmacophore-based virtual screening",
+    "author": [
+      "D Horvath"
+    ],
+    "year": "2010",
+    "abstract": "field of pharmacophore modeling, covering both methodology and application. Pharmacophore-  The \u201chot spots\u201d are then clustered together and condensed into a most relevant set of"
+  },
+  {
+    "title": "A self\u2010organizing algorithm for molecular alignment and pharmacophore development",
+    "author": [
+      "D Bandyopadhyay",
+      "DK Agrafiotis"
+    ],
+    "year": "2008",
+    "abstract": "pharmacophore can come from an automatically generated hypothesis or be specified manually.  We add distance terms to SPE to bring pharmacophore  We also permit pharmacophore"
+  },
+  {
+    "title": "Pharmacophore modeling in drug discovery: methodology and current status",
+    "author": [
+      "MT Muhammed",
+      "E Ak\u0131-yalc\u0131n"
+    ],
+    "year": "2021",
+    "abstract": "It uses genetic algorithm for the detection of pharmacophores. Unlike the other pharmacophore  determinations, conformational search is carried out instantly in the GASP process and is"
+  },
+  {
+    "title": "PHASE: a novel approach to pharmacophore modeling and 3D database searching",
+    "author": [
+      "SL Dixon",
+      "AM Smondyrev"
+    ],
+    "year": "2006",
+    "abstract": "in the pharmacophore and ligand spaces, and hierarchical, agglomerative clustering was   bi-directional clusters that suggest the most probable pharmacophore/ligand groupings."
+  },
+  {
+    "title": "Novel approach for efficient pharmacophore-based virtual screening: method and applications",
+    "author": [
+      "O Dror",
+      "D Schneidman-Duhovny",
+      "Y Inbar"
+    ],
+    "year": "2009",
+    "abstract": "method for pharmacophore detection and virtual screening. The pharmacophore detection   Therefore, after iterating over all the possible pivots, we cluster weighted pharmacophores"
+  },
+  {
+    "title": "Methods for generating and applying pharmacophore models as virtual screening filters and for bioactivity profiling",
+    "author": [
+      "A Vuorinen",
+      "D Schuster"
+    ],
+    "year": "2015",
+    "abstract": "In this review, we explain the basics of pharmacophore  of small molecules, pharmacophore  model construction, model  This kind of clustering simplifies the final pharmacophore"
+  }
+]
