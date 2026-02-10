@@ -41,13 +41,18 @@ class OptunaPharmacophoreOptimizer:
     - 'gp': Gaussian Process (GPSampler) for efficient optimization
     - 'nsga2': NSGA-II evolutionary algorithm for broad Pareto exploration
 
-    Optimizes 6 parameters simultaneously:
+    For ``scoring_mode='reference'`` (default), optimizes 5 parameters:
+    - opt_param (float): 0.0-1.0 (shape vs color balance)
+    - n_conformers (int): 5-30
+    - max_preiters (int): 5-20 (alignment phase-1 iterations)
+    - max_postiters (int): 10-50 (alignment phase-2 iterations)
+    - aggregation (categorical): max, mean, weighted
+
+    For ``scoring_mode='consensus_mol'`` or ``'hybrid'``, also optimizes:
     - tolerance (float): 0.5-4.0 Å
     - occurrence (float): 0.1-1.0
     - shape_weight (float): 0.3-0.9
-    - opt_param (float): 0.0-1.0
     - linkage (categorical): average, complete, single, ward
-    - n_conformers (int): 5-50
 
     Objectives:
     - Maximize ROC-AUC (overall discrimination)
@@ -69,7 +74,8 @@ class OptunaPharmacophoreOptimizer:
         reference_mols: List[Chem.Mol],
         actives: List[Chem.Mol],
         decoys: List[Chem.Mol],
-        random_state: int = 42
+        random_state: int = 42,
+        scoring_mode: str = 'reference'
     ):
         """Initialize optimizer with molecules.
 
@@ -78,6 +84,10 @@ class OptunaPharmacophoreOptimizer:
             actives: Active compounds (will generate conformers if needed).
             decoys: Decoy compounds (will generate conformers if needed).
             random_state: Random seed for reproducibility.
+            scoring_mode: Scoring approach. For ``'reference'`` (default),
+                only alignment-related params are searched. For
+                ``'consensus_mol'`` or ``'hybrid'``, consensus params
+                (tolerance, occurrence, linkage) are also searched.
 
         Raises:
             ImportError: If Optuna is not installed.
@@ -91,11 +101,18 @@ class OptunaPharmacophoreOptimizer:
             reference_mols, actives, decoys, random_state=random_state
         )
         self.random_state = random_state
+        self.scoring_mode = scoring_mode
         self.study: Optional[optuna.Study] = None
         self.start_time: Optional[float] = None
 
     def _objective(self, trial: optuna.Trial) -> tuple:
         """Optuna objective function.
+
+        For ``scoring_mode='reference'``, only searches parameters that
+        actually affect reference-based scoring (opt_param, n_conformers,
+        max_preiters, max_postiters, aggregation). Consensus parameters
+        (tolerance, occurrence, linkage, shape_weight) are fixed because
+        they don't affect score computation in reference mode.
 
         Args:
             trial: Optuna trial object for suggesting parameters.
@@ -103,13 +120,27 @@ class OptunaPharmacophoreOptimizer:
         Returns:
             Tuple of (roc_auc, bedroc) for multi-objective optimization.
         """
-        # Suggest parameter values
-        tolerance = trial.suggest_float('tolerance', 0.5, 4.0)
-        occurrence = trial.suggest_float('occurrence', 0.1, 1.0)
-        shape_weight = trial.suggest_float('shape_weight', 0.3, 0.9)
+        # Parameters that always matter for 3D alignment
         opt_param = trial.suggest_float('opt_param', 0.0, 1.0)
-        linkage = trial.suggest_categorical('linkage', ['average', 'complete', 'single', 'ward'])
-        n_conformers = trial.suggest_int('n_conformers', 5, 50)
+        n_conformers = trial.suggest_int('n_conformers', 5, 30)
+        max_preiters = trial.suggest_int('max_preiters', 5, 20)
+        max_postiters = trial.suggest_int('max_postiters', 10, 50)
+        aggregation = trial.suggest_categorical('aggregation', ['max', 'mean'])
+
+        # Parameters only relevant for consensus-based scoring modes
+        if self.scoring_mode in ('consensus_mol', 'hybrid'):
+            tolerance = trial.suggest_float('tolerance', 0.5, 4.0)
+            occurrence = trial.suggest_float('occurrence', 0.1, 1.0)
+            shape_weight = trial.suggest_float('shape_weight', 0.3, 0.9)
+            linkage = trial.suggest_categorical(
+                'linkage', ['average', 'complete', 'single', 'ward']
+            )
+        else:
+            # Fixed values for reference mode (don't affect scoring)
+            tolerance = 2.0
+            occurrence = 0.5
+            shape_weight = 0.5
+            linkage = 'average'
 
         # Create configuration
         config = EvaluationConfig(
@@ -118,7 +149,11 @@ class OptunaPharmacophoreOptimizer:
             shape_weight=shape_weight,
             opt_param=opt_param,
             linkage=linkage,
-            n_conformers=n_conformers
+            n_conformers=n_conformers,
+            scoring_mode=self.scoring_mode,
+            aggregation=aggregation,
+            max_preiters=max_preiters,
+            max_postiters=max_postiters
         )
 
         # Evaluate
@@ -194,7 +229,12 @@ class OptunaPharmacophoreOptimizer:
             print(f"Sampler: {sampler_name}")
             print(f"Trials: {n_trials}")
             print(f"Objectives: Maximize ROC-AUC + BEDROC")
-            print(f"Parameters: 6 (tolerance, occurrence, shape_weight, opt_param, linkage, n_conformers)")
+            if self.scoring_mode in ('consensus_mol', 'hybrid'):
+                print(f"Parameters: 9 (opt_param, n_conformers, max_preiters, max_postiters, "
+                      f"aggregation, tolerance, occurrence, shape_weight, linkage)")
+            else:
+                print(f"Parameters: 5 (opt_param, n_conformers, max_preiters, max_postiters, aggregation)")
+            print(f"Scoring mode: {self.scoring_mode}")
             print(f"{'='*60}\n")
 
         # Create study
@@ -277,13 +317,11 @@ class OptunaPharmacophoreOptimizer:
             print(f"Time per trial: {wall_time/n_trials:.2f} seconds")
             print(f"Pareto front size: {len(pareto_front)} solutions")
             print(f"\nBest ROC-AUC: {best_auc:.4f}")
-            print(f"  Parameters: tolerance={best_auc_params['tolerance']:.2f}, "
-                  f"occurrence={best_auc_params['occurrence']:.2f}, "
-                  f"shape_weight={best_auc_params['shape_weight']:.2f}")
+            param_str = ', '.join(f"{k}={v}" for k, v in best_auc_params.items())
+            print(f"  Parameters: {param_str}")
             print(f"\nBest BEDROC: {best_bedroc:.4f}")
-            print(f"  Parameters: tolerance={best_bedroc_params['tolerance']:.2f}, "
-                  f"occurrence={best_bedroc_params['occurrence']:.2f}, "
-                  f"shape_weight={best_bedroc_params['shape_weight']:.2f}")
+            param_str = ', '.join(f"{k}={v}" for k, v in best_bedroc_params.items())
+            print(f"  Parameters: {param_str}")
             print(f"{'='*60}")
 
         return {
@@ -344,11 +382,11 @@ class OptunaPharmacophoreOptimizer:
             return {}
 
         # Extract parameter values and AUC scores
-        param_names = ['tolerance', 'occurrence', 'shape_weight', 'opt_param', 'linkage', 'n_conformers']
+        param_names = list(completed_trials[0].params.keys())
         importance = {}
 
         for param in param_names:
-            if param == 'linkage':
+            if param in ('linkage', 'aggregation'):
                 # Categorical - use group variance
                 groups = {}
                 for trial in completed_trials:

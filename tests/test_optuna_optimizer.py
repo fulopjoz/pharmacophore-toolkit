@@ -107,14 +107,13 @@ class TestOptunaPharmacophoreOptimizer:
         assert 0.0 <= result['best_bedroc'] <= 1.0
         assert len(result['history']) == 10
 
-        # Check parameter structure
+        # Check parameter structure (reference mode: only alignment params)
         params = result['best_auc_params']
-        assert 'tolerance' in params
-        assert 'occurrence' in params
-        assert 'shape_weight' in params
         assert 'opt_param' in params
-        assert 'linkage' in params
         assert 'n_conformers' in params
+        assert 'max_preiters' in params
+        assert 'max_postiters' in params
+        assert 'aggregation' in params
 
     def test_nsga2_sampler_minimal(self, sample_molecules):
         """Test NSGA-II sampler with minimal trials."""
@@ -248,8 +247,8 @@ class TestOptunaPharmacophoreOptimizer:
         assert isinstance(importance, dict)
         assert len(importance) > 0
 
-        # Check parameter names
-        expected_params = {'tolerance', 'occurrence', 'shape_weight', 'opt_param', 'linkage', 'n_conformers'}
+        # Check parameter names (reference mode: only alignment params)
+        expected_params = {'opt_param', 'n_conformers', 'max_preiters', 'max_postiters', 'aggregation'}
         assert set(importance.keys()).issubset(expected_params)
 
         # Check values are valid (0-1 range for normalized importance)
@@ -381,11 +380,10 @@ class TestOptunaPharmacophoreOptimizer:
         auc_params = result['best_auc_params']
         bedroc_params = result['best_bedroc_params']
 
-        # Both should have all 6 parameters
+        # Both should have core alignment parameters (reference mode)
         for params in [auc_params, bedroc_params]:
-            assert 'tolerance' in params
-            assert 'occurrence' in params
-            assert 'shape_weight' in params
             assert 'opt_param' in params
-            assert 'linkage' in params
             assert 'n_conformers' in params
+            assert 'max_preiters' in params
+            assert 'max_postiters' in params
+            assert 'aggregation' in params

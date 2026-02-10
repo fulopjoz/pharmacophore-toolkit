@@ -56,7 +56,10 @@ class TestEvaluationConfig:
         assert config.shape_weight == 0.5
         assert config.opt_param == 0.5
         assert config.linkage == 'average'
-        assert config.n_conformers == 25
+        assert config.n_conformers == 15
+        assert config.max_preiters == 10
+        assert config.max_postiters == 30
+        assert config.early_stop_threshold == 1.8
 
     def test_custom_values(self):
         """Test custom configuration values."""
