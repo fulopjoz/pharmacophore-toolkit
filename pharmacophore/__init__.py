@@ -51,8 +51,18 @@ except ImportError:
 from .evaluation import (
     EvaluationConfig,
     EvaluationResult,
+    ScoreBreakdown,
     UnifiedEvaluator,
 )
+
+# Greedy feature selection
+from .greedy_selector import GreedyFeatureSelector, FeatureSelectionResult
+
+# Learned shape/color weighting
+from .learned_scoring import LearnedScorer
+
+# DrugEx reward wrapper
+from .drugex_reward import PharmacophoreReward
 
 # Multi-objective optimization (optional - requires Optuna)
 try:

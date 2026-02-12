@@ -8,6 +8,7 @@ from rdkit.Chem import AllChem
 from pharmacophore.evaluation import (
     EvaluationConfig,
     EvaluationResult,
+    ScoreBreakdown,
     UnifiedEvaluator
 )
 
@@ -396,3 +397,96 @@ class TestUnifiedEvaluator:
 
         # Second call should be faster (or at least not significantly slower)
         assert time2 <= time1 * 1.5  # Allow 50% margin for variance
+
+
+class TestScoreBreakdown:
+    """Tests for ScoreBreakdown dataclass and score_all_with_breakdown."""
+
+    def test_breakdown_default(self):
+        bd = ScoreBreakdown()
+        assert bd.combo_scores == []
+        assert bd.shape_scores == []
+        assert bd.color_scores == []
+        assert bd.aggregated == 0.0
+
+    def test_breakdown_has_one_entry_per_ref(self, evaluator):
+        config = EvaluationConfig(n_conformers=5)
+        breakdowns = evaluator.score_all_with_breakdown(config)
+
+        n_refs = len(evaluator._prepared_refs)
+        for bd in breakdowns:
+            assert len(bd.combo_scores) == n_refs
+            assert len(bd.shape_scores) == n_refs
+            assert len(bd.color_scores) == n_refs
+
+    def test_combo_equals_shape_plus_color(self, evaluator):
+        config = EvaluationConfig(n_conformers=5)
+        breakdowns = evaluator.score_all_with_breakdown(config)
+
+        for bd in breakdowns:
+            for i in range(len(bd.combo_scores)):
+                expected = bd.shape_scores[i] + bd.color_scores[i]
+                assert abs(bd.combo_scores[i] - expected) < 1e-6, (
+                    f"combo={bd.combo_scores[i]} != shape+color={expected}"
+                )
+
+    def test_aggregated_matches_non_breakdown(self, evaluator):
+        config = EvaluationConfig(n_conformers=5)
+        breakdowns = evaluator.score_all_with_breakdown(config)
+
+        # Score without breakdown for comparison
+        prepared_actives = evaluator._prepare_molecules(
+            evaluator.actives, config.n_conformers
+        )
+        prepared_decoys = evaluator._prepare_molecules(
+            evaluator.decoys, config.n_conformers
+        )
+        all_mols = prepared_actives + prepared_decoys
+
+        for i, mol in enumerate(all_mols):
+            direct = evaluator._score_molecule_reference(
+                mol, config.opt_param, config.aggregation,
+                config.max_preiters, config.max_postiters,
+                config.early_stop_threshold,
+            )
+            assert abs(breakdowns[i].aggregated - direct) < 1e-6
+
+    def test_breakdown_count_matches_total_mols(self, evaluator):
+        config = EvaluationConfig(n_conformers=5)
+        breakdowns = evaluator.score_all_with_breakdown(config)
+        expected = len(evaluator.actives) + len(evaluator.decoys)
+        assert len(breakdowns) == expected
+
+
+class TestZScoreAggregation:
+    """Tests for Z-score normalization aggregation."""
+
+    def test_zscore_config_accepted(self):
+        config = EvaluationConfig(aggregation='zscore')
+        assert config.aggregation == 'zscore'
+
+    def test_zscore_params_shapes(self, evaluator):
+        config = EvaluationConfig(n_conformers=5)
+        evaluator.compute_zscore_params(config)
+
+        assert evaluator._zscore_params is not None
+        means, stds = evaluator._zscore_params
+        n_refs = len(evaluator._prepared_refs)
+        assert len(means) == n_refs
+        assert len(stds) == n_refs
+
+    def test_zscore_fallback_without_params(self, evaluator):
+        """If compute_zscore_params not called, zscore falls back to max."""
+        config = EvaluationConfig(n_conformers=5, aggregation='zscore')
+        # Don't call compute_zscore_params - should fall back gracefully
+        result = evaluator.evaluate(config)
+        assert isinstance(result, EvaluationResult)
+        assert 0.0 <= result.roc_auc <= 1.0
+
+    def test_zscore_evaluate_works(self, evaluator):
+        config = EvaluationConfig(n_conformers=5, aggregation='zscore')
+        evaluator.compute_zscore_params(config)
+        result = evaluator.evaluate(config)
+
+        assert isinstance(result, EvaluationResult)
+        assert 0.0 <= result.roc_auc <= 1.0

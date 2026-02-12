@@ -46,7 +46,7 @@ RRF_CONSTANT = 60
 
 
 _VALID_SCORING_MODES = {'reference', 'pharm2d', 'hybrid', 'consensus_mol'}
-_VALID_AGGREGATIONS = {'max', 'mean', 'weighted'}
+_VALID_AGGREGATIONS = {'max', 'mean', 'weighted', 'zscore'}
 
 
 @dataclass
@@ -147,6 +147,22 @@ class EvaluationResult:
             f"EF@1%={self.ef_1:.1f}, n_feat={self.n_features}, "
             f"time={self.eval_time_sec:.2f}s"
         )
+
+
+@dataclass
+class ScoreBreakdown:
+    """Per-reference score breakdown for a single molecule.
+
+    Attributes:
+        combo_scores: Combined (shape + color) Tanimoto per reference.
+        shape_scores: Shape Tanimoto per reference.
+        color_scores: Color Tanimoto per reference.
+        aggregated: Final aggregated score (max, mean, weighted, or zscore).
+    """
+    combo_scores: List[float] = field(default_factory=list)
+    shape_scores: List[float] = field(default_factory=list)
+    color_scores: List[float] = field(default_factory=list)
+    aggregated: float = 0.0
 
 
 def compute_sdbw(metadata: dict) -> float:
@@ -310,6 +326,9 @@ class UnifiedEvaluator:
         # Reference weights for 'weighted' aggregation (computed lazily)
         self._ref_weights = None
 
+        # Z-score normalization params for 'zscore' aggregation (computed lazily)
+        self._zscore_params = None  # Tuple of (means, stds) per reference
+
         # Prepare reference molecules for reference-based scoring
         self._prepared_refs = self._prepare_references(reference_mols)
 
@@ -459,8 +478,9 @@ class UnifiedEvaluator:
         aggregation: str = 'max',
         max_preiters: int = 10,
         max_postiters: int = 30,
-        early_stop_threshold: float = 1.8
-    ) -> float:
+        early_stop_threshold: float = 1.8,
+        return_breakdown: bool = False
+    ):
         """Score a molecule against the reference ensemble.
 
         Uses pre-computed ShapeInput objects (via PrepareConformer) and
@@ -473,19 +493,26 @@ class UnifiedEvaluator:
         Args:
             mol: Query molecule with conformers.
             opt_param: AlignMol optimization parameter (0.0-1.0).
-            aggregation: ``'max'`` for best reference, ``'mean'`` for average.
+            aggregation: ``'max'`` for best reference, ``'mean'`` for average,
+                ``'weighted'`` for AUC-weighted, ``'zscore'`` for Z-score normalized.
             max_preiters: Phase-1 iterations for AlignShapes.
             max_postiters: Phase-2 iterations for AlignShapes.
             early_stop_threshold: Skip remaining conformers above this score.
+            return_breakdown: If True, return ScoreBreakdown instead of float.
 
         Returns:
-            Aggregated combo Tanimoto score (0.0-2.0).
+            If return_breakdown is False: aggregated combo Tanimoto (float, 0.0-2.0).
+            If return_breakdown is True: ScoreBreakdown with per-ref details.
         """
         if mol is None:
+            if return_breakdown:
+                return ScoreBreakdown()
             return 0.0
 
         n_confs = mol.GetNumConformers()
         if n_confs == 0:
+            if return_breakdown:
+                return ScoreBreakdown()
             return 0.0
 
         # Pre-compute probe shapes once, reuse across all references
@@ -497,10 +524,15 @@ class UnifiedEvaluator:
             except Exception:
                 probe_shapes.append(None)
 
-        ref_scores = []
+        ref_combo_scores = []
+        ref_shape_scores = []
+        ref_color_scores = []
+
         for ref_idx, ref in enumerate(self._prepared_refs):
             ref_shape = self._ref_shapes[ref_idx] if ref_idx < len(self._ref_shapes) else None
             best_combo = 0.0
+            best_shape = 0.0
+            best_color = 0.0
 
             for conf_id in range(n_confs):
                 probe_shape = probe_shapes[conf_id]
@@ -523,7 +555,11 @@ class UnifiedEvaluator:
                             max_preiters=max_preiters,
                             max_postiters=max_postiters
                         )
-                    best_combo = max(best_combo, shape + color)
+                    combo = shape + color
+                    if combo > best_combo:
+                        best_combo = combo
+                        best_shape = shape
+                        best_color = color
                 except Exception:
                     continue
 
@@ -531,15 +567,54 @@ class UnifiedEvaluator:
                 if best_combo >= early_stop_threshold:
                     break
 
-            ref_scores.append(best_combo)
+            ref_combo_scores.append(best_combo)
+            ref_shape_scores.append(best_shape)
+            ref_color_scores.append(best_color)
 
-        if not ref_scores:
+        if not ref_combo_scores:
+            if return_breakdown:
+                return ScoreBreakdown()
             return 0.0
 
+        # Aggregate
+        aggregated = self._aggregate_ref_scores(ref_combo_scores, aggregation)
+
+        if return_breakdown:
+            return ScoreBreakdown(
+                combo_scores=ref_combo_scores,
+                shape_scores=ref_shape_scores,
+                color_scores=ref_color_scores,
+                aggregated=aggregated,
+            )
+        return aggregated
+
+    def _aggregate_ref_scores(
+        self, ref_scores: List[float], aggregation: str
+    ) -> float:
+        """Aggregate per-reference scores using the specified method.
+
+        Args:
+            ref_scores: Per-reference combo scores.
+            aggregation: One of 'max', 'mean', 'weighted', 'zscore'.
+
+        Returns:
+            Aggregated score.
+        """
+        if not ref_scores:
+            return 0.0
         if aggregation == 'weighted' and self._ref_weights is not None:
             return float(np.dot(ref_scores, self._ref_weights[:len(ref_scores)]))
         elif aggregation == 'mean':
             return float(np.mean(ref_scores))
+        elif aggregation == 'zscore' and self._zscore_params is not None:
+            means, stds = self._zscore_params
+            z = []
+            for i, s in enumerate(ref_scores):
+                if i < len(means) and stds[i] > 1e-12:
+                    z.append((s - means[i]) / stds[i])
+                else:
+                    z.append(s)
+            return float(np.mean(z))
         return float(max(ref_scores))
 
     def compute_reference_weights(self, config: 'EvaluationConfig') -> np.ndarray:
@@ -606,6 +681,63 @@ class UnifiedEvaluator:
         self._ref_weights = weights
         logger.info("Reference weights: %s", weights)
         return weights
+
+    def score_all_with_breakdown(
+        self, config: 'EvaluationConfig'
+    ) -> List[ScoreBreakdown]:
+        """Score all molecules and return per-reference breakdowns.
+
+        Prepares molecules with conformers, then scores each against all
+        references, returning shape/color/combo per reference.
+
+        Args:
+            config: Evaluation configuration (uses opt_param, n_conformers,
+                minimize, aggregation, max_preiters, max_postiters,
+                early_stop_threshold).
+
+        Returns:
+            List of ScoreBreakdown (actives first, then decoys).
+        """
+        prepared_actives = self._prepare_molecules(
+            self.actives, config.n_conformers, minimize=config.minimize)
+        prepared_decoys = self._prepare_molecules(
+            self.decoys, config.n_conformers, minimize=config.minimize)
+        all_mols = prepared_actives + prepared_decoys
+
+        breakdowns = []
+        for mol in all_mols:
+            bd = self._score_molecule_reference(
+                mol, config.opt_param, config.aggregation,
+                config.max_preiters, config.max_postiters,
+                config.early_stop_threshold,
+                return_breakdown=True
+            )
+            breakdowns.append(bd)
+        return breakdowns
+
+    def compute_zscore_params(self, config: 'EvaluationConfig') -> None:
+        """Compute per-reference Z-score normalization parameters.
+
+        Scores all molecules to get per-reference score distributions,
+        then stores mean and std per reference for use with
+        ``aggregation='zscore'``.
+
+        Args:
+            config: Configuration for scoring parameters.
+        """
+        breakdowns = self.score_all_with_breakdown(config)
+        n_refs = len(self._prepared_refs)
+
+        # Collect per-ref combo scores across all molecules
+        ref_score_matrix = np.zeros((len(breakdowns), n_refs))
+        for i, bd in enumerate(breakdowns):
+            for j in range(min(len(bd.combo_scores), n_refs)):
+                ref_score_matrix[i, j] = bd.combo_scores[j]
+
+        means = ref_score_matrix.mean(axis=0)
+        stds = ref_score_matrix.std(axis=0)
+        self._zscore_params = (means, stds)
+        logger.info("Z-score params: means=%s, stds=%s", means, stds)
 
     def _score_all_molecules(
         self,
