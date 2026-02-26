@@ -399,6 +399,52 @@ class TestUnifiedEvaluator:
         assert time2 <= time1 * 1.5  # Allow 50% margin for variance
 
 
+class TestConsensusCacheInvalidation:
+    """Tests for parameter-keyed consensus cache (was bug: stale cache)."""
+
+    def test_different_tolerance_gets_different_cache(self, evaluator):
+        """Two evaluate() calls with different tolerance must produce
+        different cached consensus features (not the stale first one)."""
+        config_a = EvaluationConfig(tolerance=1.0, occurrence=0.5, n_conformers=5)
+        config_b = EvaluationConfig(tolerance=3.5, occurrence=0.5, n_conformers=5)
+
+        evaluator.evaluate(config_a)
+        evaluator.evaluate(config_b)
+
+        # Both cache keys should exist
+        cache = evaluator._consensus_cache
+        key_a = (1.0, 0.5, 'average')
+        key_b = (3.5, 0.5, 'average')
+        assert key_a in cache
+        assert key_b in cache
+        # They may or may not differ (depends on data), but both must be populated
+        assert cache[key_a] is not cache[key_b] or key_a == key_b
+
+    def test_different_occurrence_gets_different_cache(self, evaluator):
+        """Different occurrence values must not share cached features."""
+        config_a = EvaluationConfig(tolerance=2.0, occurrence=0.3, n_conformers=5)
+        config_b = EvaluationConfig(tolerance=2.0, occurrence=0.8, n_conformers=5)
+
+        evaluator.evaluate(config_a)
+        evaluator.evaluate(config_b)
+
+        cache = evaluator._consensus_cache
+        assert (2.0, 0.3, 'average') in cache
+        assert (2.0, 0.8, 'average') in cache
+
+    def test_same_params_uses_cache(self, evaluator):
+        """Same params should return the same cached object."""
+        config = EvaluationConfig(tolerance=2.0, occurrence=0.5, n_conformers=5)
+
+        evaluator.evaluate(config)
+        features_first = evaluator._consensus_cache[(2.0, 0.5, 'average')]
+
+        evaluator.evaluate(config)
+        features_second = evaluator._consensus_cache[(2.0, 0.5, 'average')]
+
+        assert features_first is features_second
+
+
 class TestScoreBreakdown:
     """Tests for ScoreBreakdown dataclass and score_all_with_breakdown."""
 

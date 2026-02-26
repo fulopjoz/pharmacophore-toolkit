@@ -142,6 +142,126 @@ def cluster_grid_binning(
     return consensus_centroids
 
 
+def cluster_features_with_labels(
+    coords: np.ndarray,
+    tolerance: float,
+    occurrence_threshold: float,
+    n_molecules: int,
+    method: str = 'hierarchical',
+    linkage: str = 'complete'
+) -> Tuple[np.ndarray, List[np.ndarray]]:
+    """Cluster features and return native labels alongside centroids.
+
+    Unlike ``cluster_features_generic`` (which only returns centroids), this
+    function preserves the per-point cluster labels produced by each algorithm.
+    This avoids post-hoc ``cdist + argmin`` reassignment that erases the
+    differences between clustering methods.
+
+    Args:
+        coords: Array of feature coordinates (N, 3).
+        tolerance: Clustering distance threshold (Angstroms).
+        occurrence_threshold: Minimum fraction of molecules (0.0-1.0).
+        n_molecules: Total number of input molecules.
+        method: Clustering algorithm ('hierarchical', 'kmeans', 'grid').
+        linkage: For hierarchical only ('average', 'complete', 'single', 'ward').
+
+    Returns:
+        Tuple of (labels, centroids) where:
+            - labels: int array of length N, cluster id per point
+              (-1 for points in clusters below occurrence threshold)
+            - centroids: list of centroid arrays for surviving clusters
+    """
+    if len(coords) == 0:
+        return np.array([], dtype=int), []
+
+    if len(coords) == 1:
+        return np.array([0]), [coords[0]]
+
+    min_features = int(np.ceil(occurrence_threshold * n_molecules))
+
+    if method == 'kmeans':
+        extent = np.ptp(coords, axis=0).max()
+        n_clusters_est = max(1, int(extent / (2 * tolerance)))
+        n_clusters = min(n_clusters_est, len(coords))
+
+        kmeans = KMeans(
+            n_clusters=n_clusters, random_state=42,
+            n_init=10, max_iter=300,
+        )
+        try:
+            raw_labels = kmeans.fit_predict(coords)
+        except Exception as e:
+            warnings.warn(f"K-means failed: {e}. Returning all features.")
+            return np.zeros(len(coords), dtype=int), list(coords)
+
+        # Filter by occurrence and remap labels
+        labels = np.full(len(coords), -1, dtype=int)
+        centroids = []
+        new_id = 0
+        for cid in range(n_clusters):
+            mask = raw_labels == cid
+            if mask.sum() >= min_features:
+                labels[mask] = new_id
+                centroids.append(kmeans.cluster_centers_[cid])
+                new_id += 1
+        return labels, centroids
+
+    elif method == 'grid':
+        bin_size = 2 * tolerance
+        coords_shifted = coords - coords.min(axis=0) + bin_size
+        bin_indices = (coords_shifted / bin_size).astype(int)
+
+        # Map each point to its bin key
+        bin_keys = [tuple(row) for row in bin_indices]
+
+        # Group points by bin
+        from collections import OrderedDict
+        bin_groups: Dict[Tuple[int, int, int], List[int]] = OrderedDict()
+        for i, key in enumerate(bin_keys):
+            if key not in bin_groups:
+                bin_groups[key] = []
+            bin_groups[key].append(i)
+
+        labels = np.full(len(coords), -1, dtype=int)
+        centroids = []
+        new_id = 0
+        for indices in bin_groups.values():
+            if len(indices) >= min_features:
+                for idx in indices:
+                    labels[idx] = new_id
+                centroids.append(np.mean(coords[indices], axis=0))
+                new_id += 1
+        return labels, centroids
+
+    elif method == 'hierarchical':
+        from sklearn.cluster import AgglomerativeClustering
+
+        clustering = AgglomerativeClustering(
+            n_clusters=None,
+            distance_threshold=tolerance,
+            linkage=linkage,
+            metric='euclidean',
+        )
+        raw_labels = clustering.fit_predict(coords)
+
+        labels = np.full(len(coords), -1, dtype=int)
+        centroids = []
+        new_id = 0
+        for cid in sorted(set(raw_labels)):
+            mask = raw_labels == cid
+            if mask.sum() >= min_features:
+                labels[mask] = new_id
+                centroids.append(np.mean(coords[mask], axis=0))
+                new_id += 1
+        return labels, centroids
+
+    else:
+        raise ValueError(
+            f"Unknown clustering method: {method}. "
+            f"Choose from: 'hierarchical', 'kmeans', 'grid'"
+        )
+
+
 def cluster_features_generic(
     coords: np.ndarray,
     tolerance: float,

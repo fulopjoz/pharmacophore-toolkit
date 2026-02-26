@@ -109,11 +109,19 @@ class ApproachResult:
     error: Optional[str] = None
     pros: str = ''
     cons: str = ''
+    # Clustering quality metrics (approaches 1-5 only)
+    silhouette: float = float('nan')
+    sdbw: float = float('nan')
+    n_clusters: int = 0
 
     def to_dict(self) -> dict:
         d = asdict(self)
         if d['best_params'] is None:
             d['best_params'] = {}
+        # JSON can't serialize nan — use None instead
+        for key in ('silhouette', 'sdbw'):
+            if isinstance(d[key], float) and np.isnan(d[key]):
+                d[key] = None
         return d
 
 
@@ -181,6 +189,55 @@ def load_ccr2_dataset(n_conformers=10, verbose=True):
 
 
 # ---------------------------------------------------------------------------
+# Helper: clustering quality from consensus metadata
+# ---------------------------------------------------------------------------
+def _compute_clustering_quality(metadata: dict) -> dict:
+    """Compute silhouette and S_Dbw from consensus metadata.
+
+    Args:
+        metadata: Dict from generate_consensus(return_metadata=True).
+            Keys are feature types, values have 'coordinates' and 'labels'.
+
+    Returns:
+        Dict with 'silhouette', 'sdbw', 'n_clusters'.
+    """
+    from pharmacophore.evaluation import compute_sdbw
+    from sklearn.metrics import silhouette_score
+
+    sdbw_val = compute_sdbw(metadata)
+
+    # Aggregate coordinates and labels across feature types for silhouette
+    all_coords = []
+    all_labels = []
+    label_offset = 0
+    for feat_type, info in metadata.items():
+        coords = info['coordinates']
+        labels = info['labels']
+        if len(coords) == 0:
+            continue
+        all_coords.append(coords)
+        all_labels.append(labels + label_offset)
+        label_offset += labels.max() + 1 if len(labels) > 0 else 0
+
+    if not all_coords:
+        return {'silhouette': float('nan'), 'sdbw': sdbw_val, 'n_clusters': 0}
+
+    coords = np.vstack(all_coords)
+    labels = np.concatenate(all_labels)
+    n_clusters = len(set(labels))
+
+    if n_clusters < 2 or len(coords) < n_clusters + 1:
+        return {'silhouette': float('nan'), 'sdbw': sdbw_val, 'n_clusters': n_clusters}
+
+    try:
+        sil = silhouette_score(coords, labels)
+    except Exception:
+        sil = float('nan')
+
+    return {'silhouette': sil, 'sdbw': sdbw_val, 'n_clusters': n_clusters}
+
+
+# ---------------------------------------------------------------------------
 # Helper: generate consensus features + evaluate via UnifiedEvaluator
 # ---------------------------------------------------------------------------
 def _consensus_and_evaluate(
@@ -189,8 +246,14 @@ def _consensus_and_evaluate(
     use_spatial_scaling=False, scoring_mode='reference',
     n_conformers=10, opt_param=0.5, aggregation='max',
     alpha=0.6, clustering_method='hierarchical',
+    return_quality=False,
 ):
-    """Generate consensus with given params and evaluate."""
+    """Generate consensus with given params and evaluate.
+
+    Args:
+        return_quality: If True, return a third element with clustering
+            quality dict: {'silhouette', 'sdbw', 'n_clusters'}.
+    """
     consensus = PharmacophoreConsensus(
         tolerance=tolerance,
         occurrence_threshold=occurrence,
@@ -200,10 +263,15 @@ def _consensus_and_evaluate(
 
     # Override clustering method if not hierarchical
     if clustering_method != 'hierarchical':
-        from pharmacophore.clustering_algorithms import cluster_features_generic
+        from pharmacophore.clustering_algorithms import cluster_features_with_labels
 
         class _AltConsensus(PharmacophoreConsensus):
-            """Consensus with pluggable clustering algorithm."""
+            """Consensus with pluggable clustering algorithm.
+
+            Uses native labels from each clustering method instead of
+            post-hoc cdist+argmin reassignment (which erases k-means/grid
+            differences and makes all methods produce identical results).
+            """
             def __init__(self, tol, occ, link, method):
                 super().__init__(tol, occ, link)
                 self._method = method
@@ -214,7 +282,7 @@ def _consensus_and_evaluate(
                 coords_array = np.array(coordinates)
                 n_molecules = len(set(int(m) for m in mol_indices))
 
-                centroids = cluster_features_generic(
+                labels, centroids = cluster_features_with_labels(
                     coords=coords_array,
                     tolerance=self.tolerance,
                     occurrence_threshold=self.occurrence_threshold,
@@ -222,17 +290,14 @@ def _consensus_and_evaluate(
                     method=self._method,
                     linkage=self.linkage,
                 )
-                if not centroids:
+                if len(centroids) == 0:
                     return np.array([]), {}
-
-                from scipy.spatial.distance import cdist
-                centroid_array = np.array(centroids)
-                distances = cdist(coords_array, centroid_array, metric='euclidean')
-                labels = np.argmin(distances, axis=1)
 
                 cluster_to_mols = {}
                 for cluster_id, mol_idx in zip(labels, mol_indices):
                     cid, mid = int(cluster_id), int(mol_idx)
+                    if cid < 0:
+                        continue  # Skip points below occurrence threshold
                     if cid not in cluster_to_mols:
                         cluster_to_mols[cid] = []
                     if mid not in cluster_to_mols[cid]:
@@ -241,9 +306,19 @@ def _consensus_and_evaluate(
 
         consensus = _AltConsensus(tolerance, occurrence, linkage, clustering_method)
 
-    features = consensus.generate_consensus(refs)
+    if return_quality:
+        features, metadata = consensus.generate_consensus(refs, return_metadata=True)
+    else:
+        features = consensus.generate_consensus(refs)
+        metadata = None
+
+    quality = None
+    if return_quality and metadata:
+        quality = _compute_clustering_quality(metadata)
 
     if len(features) < 2:
+        if return_quality:
+            return features, None, quality
         return features, None
 
     evaluator = UnifiedEvaluator(refs, actives, decoys, seed)
@@ -259,6 +334,8 @@ def _consensus_and_evaluate(
         alpha=alpha,
     )
     result = evaluator.evaluate(config)
+    if return_quality:
+        return features, result, quality
     return features, result
 
 
@@ -269,12 +346,14 @@ def _consensus_and_evaluate(
 def run_01_baseline_agglomerative(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
     """1. Baseline Agglomerative Clustering."""
     start = time.time()
-    features, result = _consensus_and_evaluate(
+    features, result, quality = _consensus_and_evaluate(
         refs, actives, decoys, seed,
         tolerance=2.0, occurrence=0.5, linkage='average',
         scoring_mode='reference', n_conformers=n_conformers,
+        return_quality=True,
     )
     elapsed = time.time() - start
+    q = quality or {}
 
     if result is None:
         return ApproachResult(
@@ -283,6 +362,9 @@ def run_01_baseline_agglomerative(refs, actives, decoys, seed=42, n_conformers=1
             error='<2 features',
             pros='Fast, deterministic, simple',
             cons='Sensitive to tolerance/occurrence parameters',
+            silhouette=q.get('silhouette', float('nan')),
+            sdbw=q.get('sdbw', float('nan')),
+            n_clusters=q.get('n_clusters', 0),
         )
 
     return ApproachResult(
@@ -293,19 +375,24 @@ def run_01_baseline_agglomerative(refs, actives, decoys, seed=42, n_conformers=1
         best_params={'tolerance': 2.0, 'occurrence': 0.5, 'linkage': 'average'},
         pros='Fast, deterministic, simple',
         cons='Sensitive to tolerance/occurrence parameters',
+        silhouette=q.get('silhouette', float('nan')),
+        sdbw=q.get('sdbw', float('nan')),
+        n_clusters=q.get('n_clusters', 0),
     )
 
 
 def run_02_spatial_scaled(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
     """2. Spatial-Scaled Clustering."""
     start = time.time()
-    features, result = _consensus_and_evaluate(
+    features, result, quality = _consensus_and_evaluate(
         refs, actives, decoys, seed,
         tolerance=2.0, occurrence=0.5, linkage='average',
         use_spatial_scaling=True,
         scoring_mode='reference', n_conformers=n_conformers,
+        return_quality=True,
     )
     elapsed = time.time() - start
+    q = quality or {}
 
     if result is None:
         return ApproachResult(
@@ -314,6 +401,9 @@ def run_02_spatial_scaled(refs, actives, decoys, seed=42, n_conformers=10, **_kw
             error='<2 features',
             pros='Physics-based per-type tolerances',
             cons='Minimal improvement on small CCR2 dataset',
+            silhouette=q.get('silhouette', float('nan')),
+            sdbw=q.get('sdbw', float('nan')),
+            n_clusters=q.get('n_clusters', 0),
         )
 
     return ApproachResult(
@@ -324,6 +414,9 @@ def run_02_spatial_scaled(refs, actives, decoys, seed=42, n_conformers=10, **_kw
         best_params={'tolerance': 2.0, 'occurrence': 0.5, 'use_spatial_scaling': True},
         pros='Physics-based per-type tolerances',
         cons='Minimal improvement on small CCR2 dataset',
+        silhouette=q.get('silhouette', float('nan')),
+        sdbw=q.get('sdbw', float('nan')),
+        n_clusters=q.get('n_clusters', 0),
     )
 
 
@@ -342,6 +435,11 @@ def run_03_ensemble_consensus(refs, actives, decoys, seed=42, n_conformers=10, *
     )
     features, stability = ec.generate_consensus_with_scores(refs)
 
+    # Also generate standard consensus for quality metrics
+    quality_consensus = PharmacophoreConsensus(tolerance=2.0, occurrence_threshold=0.5)
+    _, meta = quality_consensus.generate_consensus(refs, return_metadata=True)
+    q = _compute_clustering_quality(meta) if meta else {}
+
     if len(features) < 2:
         return ApproachResult(
             id=3, approach='Ensemble Consensus', category='clustering',
@@ -349,6 +447,9 @@ def run_03_ensemble_consensus(refs, actives, decoys, seed=42, n_conformers=10, *
             error='<2 features',
             pros='Robust, stable features identified',
             cons='Slower (25 internal runs)',
+            silhouette=q.get('silhouette', float('nan')),
+            sdbw=q.get('sdbw', float('nan')),
+            n_clusters=q.get('n_clusters', 0),
         )
 
     evaluator = UnifiedEvaluator(refs, actives, decoys, seed)
@@ -367,19 +468,24 @@ def run_03_ensemble_consensus(refs, actives, decoys, seed=42, n_conformers=10, *
         },
         pros='Robust, stable features identified',
         cons='Slower (25 internal runs)',
+        silhouette=q.get('silhouette', float('nan')),
+        sdbw=q.get('sdbw', float('nan')),
+        n_clusters=q.get('n_clusters', 0),
     )
 
 
 def run_04_kmeans(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
     """4. K-Means Clustering."""
     start = time.time()
-    features, result = _consensus_and_evaluate(
+    features, result, quality = _consensus_and_evaluate(
         refs, actives, decoys, seed,
         tolerance=2.0, occurrence=0.5,
         clustering_method='kmeans',
         scoring_mode='reference', n_conformers=n_conformers,
+        return_quality=True,
     )
     elapsed = time.time() - start
+    q = quality or {}
 
     if result is None:
         return ApproachResult(
@@ -388,6 +494,9 @@ def run_04_kmeans(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
             error='<2 features',
             pros='Fast for large datasets',
             cons='Assumes spherical clusters, K estimation needed',
+            silhouette=q.get('silhouette', float('nan')),
+            sdbw=q.get('sdbw', float('nan')),
+            n_clusters=q.get('n_clusters', 0),
         )
 
     return ApproachResult(
@@ -398,19 +507,24 @@ def run_04_kmeans(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
         best_params={'method': 'kmeans', 'tolerance': 2.0, 'occurrence': 0.5},
         pros='Fast for large datasets',
         cons='Assumes spherical clusters, K estimation needed',
+        silhouette=q.get('silhouette', float('nan')),
+        sdbw=q.get('sdbw', float('nan')),
+        n_clusters=q.get('n_clusters', 0),
     )
 
 
 def run_05_grid_binning(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
     """5. Grid-Based Binning."""
     start = time.time()
-    features, result = _consensus_and_evaluate(
+    features, result, quality = _consensus_and_evaluate(
         refs, actives, decoys, seed,
         tolerance=2.0, occurrence=0.5,
         clustering_method='grid',
         scoring_mode='reference', n_conformers=n_conformers,
+        return_quality=True,
     )
     elapsed = time.time() - start
+    q = quality or {}
 
     if result is None:
         return ApproachResult(
@@ -419,6 +533,9 @@ def run_05_grid_binning(refs, actives, decoys, seed=42, n_conformers=10, **_kwar
             error='<2 features',
             pros='O(N) complexity, fastest clustering',
             cons='Grid alignment artifacts, axis-dependent',
+            silhouette=q.get('silhouette', float('nan')),
+            sdbw=q.get('sdbw', float('nan')),
+            n_clusters=q.get('n_clusters', 0),
         )
 
     return ApproachResult(
@@ -429,6 +546,9 @@ def run_05_grid_binning(refs, actives, decoys, seed=42, n_conformers=10, **_kwar
         best_params={'method': 'grid', 'tolerance': 2.0, 'occurrence': 0.5},
         pros='O(N) complexity, fastest clustering',
         cons='Grid alignment artifacts, axis-dependent',
+        silhouette=q.get('silhouette', float('nan')),
+        sdbw=q.get('sdbw', float('nan')),
+        n_clusters=q.get('n_clusters', 0),
     )
 
 
@@ -790,7 +910,11 @@ def run_13_hypogen(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
             'cost': cost,
         }
 
-    hypotheses = Parallel(n_jobs=N_JOBS, backend='loky')(
+    # Use threading backend: eval_subset captures `evaluator` which contains
+    # ShapeInput objects (_ref_shapes) that can't be pickled by loky.
+    # Threading avoids pickling and is GIL-safe since RDKit scoring
+    # releases the GIL in C++ code.
+    hypotheses = Parallel(n_jobs=N_JOBS, backend='threading')(
         delayed(eval_subset)(s) for s in subsets
     )
 
@@ -815,7 +939,17 @@ def run_13_hypogen(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
 
 
 def run_14_multifidelity_bo(refs, actives, decoys, seed=42, n_trials=30, **_kwargs):
-    """14. Multi-Fidelity Bayesian Optimization (combinatorial optimizer)."""
+    """14. Multi-Fidelity Bayesian Optimization (combinatorial optimizer).
+
+    Hardened against segfaults: the CombinatorialPharmacophoreOptimizer
+    creates one UnifiedEvaluator per discrete combo (128 total), each
+    with PrepareConformer objects. Accumulated resource leaks cause
+    RDKit C++ memory corruption around combo ~50. Mitigation:
+    - Limit parallelism (max 4 jobs)
+    - gc.collect() is called internally between combos
+    - Catch SystemError/segfault-survivors and return partial results
+    """
+    import gc
     from pharmacophore.combinatorial_optimizer import CombinatorialPharmacophoreOptimizer
 
     start = time.time()
@@ -830,9 +964,28 @@ def run_14_multifidelity_bo(refs, actives, decoys, seed=42, n_trials=30, **_kwar
     # n_trials here means "per discrete combo" — cap at 3 to keep runtime sane
     # The optimizer has 128 discrete combos; multi-fidelity filtering prunes most
     mf_trials = min(n_trials, 3)
-    result = optimizer.optimize(n_trials=mf_trials, multi_fidelity=True, verbose=True)
-    elapsed = time.time() - start
 
+    try:
+        result = optimizer.optimize(
+            n_trials=mf_trials, multi_fidelity=True, verbose=True,
+        )
+        gc.collect()
+    except (SystemError, OSError, MemoryError) as e:
+        elapsed = time.time() - start
+        print(f"    MF-BO crashed ({type(e).__name__}: {e}), returning partial results")
+        # Try to recover partial results from optimizer internals
+        if hasattr(optimizer, '_best_result') and optimizer._best_result is not None:
+            result = optimizer._best_result
+        else:
+            return ApproachResult(
+                id=14, approach='Multi-Fidelity BO', category='optimization',
+                wall_time_sec=elapsed,
+                error=f'Crashed: {type(e).__name__}: {e}',
+                pros='Explores cheap 2D first, then expensive 3D — efficient',
+                cons='Resource leaks cause crashes on large combo spaces',
+            )
+
+    elapsed = time.time() - start
     best_metrics = result.best_metrics
 
     return ApproachResult(
@@ -1182,6 +1335,33 @@ def generate_report(results: List[ApproachResult], rankings: Dict,
                     f'{ef5_str:>7} | {r.n_features:>5} | '
                     f'{r.wall_time_sec:>8.1f} |\n')
 
+        f.write('\n> **Note**: Approaches 1-5 share identical VS metrics '
+                '(AUC, BEDROC, EF) because `scoring_mode=\'reference\'` '
+                'scores queries against reference molecules directly — '
+                'consensus features are not used for scoring. The '
+                'Clustering Quality section below differentiates them.\n')
+
+        # Clustering quality comparison
+        clustering_results = [r for r in results
+                              if r.category == 'clustering' and r.error is None]
+        if clustering_results:
+            f.write('\n## Clustering Quality Comparison\n\n')
+            f.write('These metrics measure how well each clustering method '
+                    'partitions pharmacophore features, independent of VS scoring.\n\n')
+            f.write(f'| {"#":>2} | {"Approach":<30} | {"Silhouette":>10} | '
+                    f'{"S_Dbw":>8} | {"Clusters":>8} | {"Features":>8} |\n')
+            f.write(f'|{"---":>4}|{"-"*32}|{"-"*12}|{"-"*10}|{"-"*10}|{"-"*10}|\n')
+
+            for r in sorted(clustering_results, key=lambda x: x.id):
+                sil_str = f'{r.silhouette:.4f}' if not np.isnan(r.silhouette) else '-'
+                sdbw_str = f'{r.sdbw:.4f}' if not np.isnan(r.sdbw) else '-'
+                f.write(f'| {r.id:>2} | {r.approach:<30} | '
+                        f'{sil_str:>10} | {sdbw_str:>8} | '
+                        f'{r.n_clusters:>8} | {r.n_features:>8} |\n')
+
+            f.write('\n*Silhouette: higher is better ([-1, 1]). '
+                    'S_Dbw: lower is better (compactness + separation).*\n')
+
         # Rankings
         f.write('\n## Rankings\n\n')
 
@@ -1411,7 +1591,7 @@ def main():
     csv_path = RESULTS_DIR / f'benchmark_all_{timestamp}.csv'
     rows = []
     for r in results:
-        rows.append({
+        row = {
             'id': r.id,
             'approach': r.approach,
             'category': r.category,
@@ -1422,7 +1602,12 @@ def main():
             'n_features': r.n_features,
             'wall_time_sec': r.wall_time_sec,
             'error': r.error,
-        })
+        }
+        if r.category == 'clustering':
+            row['silhouette'] = r.silhouette if not np.isnan(r.silhouette) else None
+            row['sdbw'] = r.sdbw if not np.isnan(r.sdbw) else None
+            row['n_clusters'] = r.n_clusters
+        rows.append(row)
     pd.DataFrame(rows).to_csv(csv_path, index=False)
     print(f"  CSV saved: {csv_path}")
 

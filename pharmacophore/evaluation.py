@@ -875,18 +875,22 @@ class UnifiedEvaluator:
                     eval_time_sec=time.time() - start_time
                 )
         else:
-            # For reference-based modes, use cached consensus or skip
-            # Generate lazily only for n_features reporting
-            if not hasattr(self, '_cached_consensus_features'):
+            # For reference-based modes, consensus is only for n_features
+            # reporting.  Cache by (tolerance, occurrence, linkage) so
+            # different configs get fresh consensus features.
+            cache_key = (config.tolerance, config.occurrence, config.linkage)
+            if not hasattr(self, '_consensus_cache'):
+                self._consensus_cache = {}
+            if cache_key not in self._consensus_cache:
                 consensus = PharmacophoreConsensus(
                     tolerance=config.tolerance,
                     occurrence_threshold=config.occurrence,
                     linkage=config.linkage
                 )
-                self._cached_consensus_features = consensus.generate_consensus(
+                self._consensus_cache[cache_key] = consensus.generate_consensus(
                     self.reference_mols
                 )
-            features = self._cached_consensus_features
+            features = self._consensus_cache[cache_key]
 
         # Step 2: Prepare molecules with conformers
         # Conformers are cached by (n_conformers, minimize) so repeated
