@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Comprehensive benchmark of ALL 16 pharmacophore approaches on CCR2 dataset.
+"""Comprehensive benchmark of ALL 17 pharmacophore approaches on CCR2 dataset.
 
 Compares clustering, scoring, optimization, and meta approaches:
 
@@ -10,12 +10,13 @@ Clustering Methods (5):
   4. K-Means Clustering         - K-means with estimated cluster count
   5. Grid-Based Binning         - Ultra-fast grid binning (O(N))
 
-Scoring Methods (5):
+Scoring Methods (6):
   6. Pharm2D Fingerprints       - 2D pharmacophore fingerprints
   7. Reference Ensemble (3D)    - rdShapeAlign to reference molecules
   8. Hybrid 2D+3D              - Weighted combination (best AUC)
-  9. Hungarian Matching         - Optimal feature assignment distance
-  10. Optimal Transport         - Wasserstein pharmacophore distance
+  9. Hungarian Matching         - Aligned feature assignment distance
+  10. Optimal Transport         - Aligned Wasserstein pharmacophore distance
+  17. Point Cloud ICP           - Colored ICP alignment scoring
 
 Optimization Methods (4):
   11. Optuna GP (Bayesian)      - Gaussian Process sampler
@@ -524,54 +525,46 @@ def run_08_hybrid_2d3d(refs, actives, decoys, seed=42, n_conformers=10, **_kwarg
 
 
 def run_09_hungarian_matching(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
-    """9. Hungarian Matching as a scoring function.
+    """9. Hungarian Matching (aligned) as a scoring function.
 
-    Scores each query molecule against each reference molecule using
-    Hungarian optimal assignment of pharmacophore features, then takes
-    the max similarity across references (ensemble scoring).
+    Aligns each query molecule to each reference via RDKit shape alignment,
+    then computes Hungarian pharmacophore distance on aligned features.
+    Takes max similarity across references (ensemble scoring).
     """
-    from pharmacophore.hungarian_matching import pharmacophore_distance
-    from pharmacophore.pharmacophore import Pharmacophore
+    from pharmacophore.hungarian_matching import pharmacophore_similarity_aligned
 
     start = time.time()
 
-    p = Pharmacophore()
-
-    # Pre-compute reference features
-    ref_features = []
-    for ref in refs:
-        feats = p.calc_pharm(mol=ref)
-        if feats:
-            ref_features.append(feats)
-    if not ref_features:
-        return ApproachResult(
-            id=9, approach='Hungarian Matching', category='scoring',
-            wall_time_sec=time.time() - start, error='No reference features',
-            pros='Optimal feature assignment, metric-space distance',
-            cons='Slow pairwise comparison, needs good reference features',
-        )
+    # Generate conformers for query molecules
+    all_mols = actives + decoys
+    prepared = []
+    for mol in all_mols:
+        if mol is None:
+            prepared.append(None)
+            continue
+        m = Chem.AddHs(mol)
+        if m.GetNumConformers() == 0:
+            AllChem.EmbedMolecule(m, AllChem.ETKDGv3())
+        prepared.append(m)
 
     def score_mol(mol):
+        if mol is None or mol.GetNumConformers() == 0:
+            return 0.0
         try:
-            mol_feats = p.calc_pharm(mol=mol)
-            if not mol_feats:
-                return 0.0
-            # Score against each reference, take best (max similarity)
             best_sim = 0.0
-            for ref_feats in ref_features:
-                dist = pharmacophore_distance(
-                    ref_feats, mol_feats,
-                    spatial_weight=1.0, type_weight=1.0, max_distance=10.0
+            for ref in refs:
+                sim = pharmacophore_similarity_aligned(
+                    mol, ref, alpha=0.3,
                 )
-                sim = 1.0 / (1.0 + dist)
                 if sim > best_sim:
                     best_sim = sim
             return best_sim
         except Exception:
             return 0.0
 
-    active_scores = [score_mol(m) for m in actives]
-    decoy_scores = [score_mol(m) for m in decoys]
+    scores = [score_mol(m) for m in prepared]
+    active_scores = scores[:len(actives)]
+    decoy_scores = scores[len(actives):]
 
     y_true = [1] * len(active_scores) + [0] * len(decoy_scores)
     y_scores = active_scores + decoy_scores
@@ -580,56 +573,49 @@ def run_09_hungarian_matching(refs, actives, decoys, seed=42, n_conformers=10, *
     elapsed = time.time() - start
 
     return ApproachResult(
-        id=9, approach='Hungarian Matching', category='scoring',
+        id=9, approach='Hungarian Matching (aligned)', category='scoring',
         roc_auc=metrics.get('roc_auc', 0.5),
         bedroc=metrics.get('bedroc', 0.0),
         ef_1=metrics.get('ef_1', 0.0),
         ef_5=metrics.get('ef_5', 0.0),
-        n_features=len(ref_features), wall_time_sec=elapsed,
-        best_params={'spatial_weight': 1.0, 'type_weight': 1.0, 'aggregation': 'max'},
-        pros='Optimal feature assignment, metric-space distance',
-        cons='Slow pairwise comparison, needs good reference features',
+        n_features=len(refs), wall_time_sec=elapsed,
+        best_params={'alpha': 0.3, 'aggregation': 'max'},
+        pros='Aligned feature comparison, optimal assignment, metric-space distance',
+        cons='Slow (AlignMol per query-ref pair), needs 3D conformers',
     )
 
 
 def run_10_optimal_transport(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
-    """10. Optimal Transport / Wasserstein Distance scoring.
+    """10. Optimal Transport (aligned) / Wasserstein Distance scoring.
 
-    Scores each query molecule against each reference molecule using
-    Wasserstein distance on pharmacophore features, then takes the max
-    similarity across references.
+    Aligns each query molecule to each reference via RDKit shape alignment,
+    then computes Wasserstein pharmacophore distance on aligned features.
+    Takes max similarity across references.
     """
-    from pharmacophore.ot_scoring import wasserstein_similarity
-    from pharmacophore.pharmacophore import Pharmacophore
+    from pharmacophore.ot_scoring import wasserstein_similarity_aligned
 
     start = time.time()
 
-    p = Pharmacophore()
-
-    # Pre-compute reference features
-    ref_features = []
-    for ref in refs:
-        feats = p.calc_pharm(mol=ref)
-        if feats:
-            ref_features.append(feats)
-    if not ref_features:
-        return ApproachResult(
-            id=10, approach='Optimal Transport', category='scoring',
-            wall_time_sec=time.time() - start, error='No reference features',
-            pros='Theoretically sound, handles partial matching',
-            cons='Slow without Sinkhorn, needs good reference features',
-        )
+    # Generate conformers for query molecules
+    all_mols = actives + decoys
+    prepared = []
+    for mol in all_mols:
+        if mol is None:
+            prepared.append(None)
+            continue
+        m = Chem.AddHs(mol)
+        if m.GetNumConformers() == 0:
+            AllChem.EmbedMolecule(m, AllChem.ETKDGv3())
+        prepared.append(m)
 
     def score_mol(mol):
+        if mol is None or mol.GetNumConformers() == 0:
+            return 0.0
         try:
-            mol_feats = p.calc_pharm(mol=mol)
-            if not mol_feats:
-                return 0.0
-            # Score against each reference, take best similarity
             best_sim = 0.0
-            for ref_feats in ref_features:
-                sim = wasserstein_similarity(
-                    ref_feats, mol_feats, alpha=0.5, max_distance=10.0
+            for ref in refs:
+                sim = wasserstein_similarity_aligned(
+                    mol, ref, blend_alpha=0.3,
                 )
                 if sim > best_sim:
                     best_sim = sim
@@ -637,8 +623,9 @@ def run_10_optimal_transport(refs, actives, decoys, seed=42, n_conformers=10, **
         except Exception:
             return 0.0
 
-    active_scores = [score_mol(m) for m in actives]
-    decoy_scores = [score_mol(m) for m in decoys]
+    scores = [score_mol(m) for m in prepared]
+    active_scores = scores[:len(actives)]
+    decoy_scores = scores[len(actives):]
 
     y_true = [1] * len(active_scores) + [0] * len(decoy_scores)
     y_scores = active_scores + decoy_scores
@@ -647,15 +634,15 @@ def run_10_optimal_transport(refs, actives, decoys, seed=42, n_conformers=10, **
     elapsed = time.time() - start
 
     return ApproachResult(
-        id=10, approach='Optimal Transport', category='scoring',
+        id=10, approach='Optimal Transport (aligned)', category='scoring',
         roc_auc=metrics.get('roc_auc', 0.5),
         bedroc=metrics.get('bedroc', 0.0),
         ef_1=metrics.get('ef_1', 0.0),
         ef_5=metrics.get('ef_5', 0.0),
-        n_features=len(ref_features), wall_time_sec=elapsed,
-        best_params={'alpha': 0.5, 'max_distance': 10.0, 'aggregation': 'max'},
-        pros='Theoretically sound, handles partial matching',
-        cons='Slow without Sinkhorn, needs good reference features',
+        n_features=len(refs), wall_time_sec=elapsed,
+        best_params={'blend_alpha': 0.3, 'ot_alpha': 0.5, 'aggregation': 'max'},
+        pros='Aligned feature comparison, theoretically sound OT, handles partial matching',
+        cons='Slow (AlignMol per query-ref pair), needs 3D conformers',
     )
 
 
@@ -910,6 +897,69 @@ def run_16_ensemble_rrf(refs, actives, decoys, seed=42, n_conformers=10, **_kwar
         best_params={'rrf_constant': 60, 'scoring': 'reference_3d+ot_fusion'},
         pros='Multi-signal fusion, robust via rank combination',
         cons='Slower (runs both 3D + OT), overkill for simple cases',
+    )
+
+
+def run_17_point_cloud_icp(refs, actives, decoys, seed=42, n_conformers=10, **_kwargs):
+    """17. Point Cloud ICP alignment scoring.
+
+    Aligns each query molecule to each reference via RDKit shape alignment,
+    then runs colored ICP (combining spatial + type distance) on the aligned
+    pharmacophore features. Takes max similarity across references.
+
+    Based on Zhou, Griffith & Gaeta (BMC Bioinformatics 2014).
+    """
+    from pharmacophore.point_cloud_alignment import point_cloud_similarity_aligned
+
+    start = time.time()
+
+    # Generate conformers for query molecules
+    all_mols = actives + decoys
+    prepared = []
+    for mol in all_mols:
+        if mol is None:
+            prepared.append(None)
+            continue
+        m = Chem.AddHs(mol)
+        if m.GetNumConformers() == 0:
+            AllChem.EmbedMolecule(m, AllChem.ETKDGv3())
+        prepared.append(m)
+
+    def score_mol(mol):
+        if mol is None or mol.GetNumConformers() == 0:
+            return 0.0
+        try:
+            best_sim = 0.0
+            for ref in refs:
+                sim = point_cloud_similarity_aligned(
+                    mol, ref, alpha=0.3, lambda_color=0.5, sigma=2.0,
+                )
+                if sim > best_sim:
+                    best_sim = sim
+            return best_sim
+        except Exception:
+            return 0.0
+
+    scores = [score_mol(m) for m in prepared]
+    active_scores = scores[:len(actives)]
+    decoy_scores = scores[len(actives):]
+
+    y_true = [1] * len(active_scores) + [0] * len(decoy_scores)
+    y_scores = active_scores + decoy_scores
+
+    metrics = calculate_all_metrics(y_true, y_scores)
+    elapsed = time.time() - start
+
+    return ApproachResult(
+        id=17, approach='Point Cloud ICP', category='scoring',
+        roc_auc=metrics.get('roc_auc', 0.5),
+        bedroc=metrics.get('bedroc', 0.0),
+        ef_1=metrics.get('ef_1', 0.0),
+        ef_5=metrics.get('ef_5', 0.0),
+        n_features=len(refs), wall_time_sec=elapsed,
+        best_params={'alpha': 0.3, 'lambda_color': 0.5, 'sigma': 2.0},
+        pros='Combines spatial + type alignment, handles partial overlap, literature-validated',
+        cons='Slow (AlignMol + ICP per pair), sensitive to lambda_color',
     )
 
 
@@ -1256,6 +1306,7 @@ def main():
         14: ('Multi-Fidelity BO', run_14_multifidelity_bo),
         15: ('Strategy Selector', run_15_strategy_selector),
         16: ('Ensemble RRF Scoring', run_16_ensemble_rrf),
+        17: ('Point Cloud ICP', run_17_point_cloud_icp),
     }
 
     # Filter approaches
@@ -1264,7 +1315,7 @@ def main():
     elif args.skip_slow:
         selected_ids = [i for i in range(1, 17) if i not in (11, 12, 14)]
     else:
-        selected_ids = list(range(1, 17))
+        selected_ids = list(range(1, 18))
 
     # --- Run all selected approaches ---
     results = []

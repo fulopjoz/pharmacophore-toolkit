@@ -148,3 +148,69 @@ def wasserstein_similarity(
     return 1.0 - wasserstein_pharmacophore_distance(
         features_a, features_b, alpha=alpha, max_distance=max_distance
     )
+
+
+def wasserstein_similarity_aligned(
+    query_mol,
+    ref_mol,
+    blend_alpha: float = 0.3,
+    ot_alpha: float = 0.5,
+    max_distance: float = 10.0,
+    opt_param: float = 0.5,
+    max_preiters: int = 10,
+    max_postiters: int = 30,
+) -> float:
+    """Score query against reference using aligned OT pharmacophore distance.
+
+    Aligns query onto ref via RDKit shape alignment, then computes Wasserstein
+    pharmacophore distance on the aligned features. This ensures both feature
+    sets share the same coordinate frame, fixing the random-AUC bug of the
+    unaligned ``wasserstein_similarity()``.
+
+    Args:
+        query_mol: Query molecule with 3D conformer (a copy is made internally).
+        ref_mol: Reference molecule with 3D conformer.
+        blend_alpha: Blending weight for shape quality vs OT similarity.
+            Final = blend_alpha * shape_quality + (1-blend_alpha) * ot_sim.
+        ot_alpha: Weight for type distance vs spatial distance in OT cost (0-1).
+        max_distance: Spatial distance cap (Angstroms).
+        opt_param: AlignMol balance (0=color, 0.5=balanced, 1=shape).
+        max_preiters: AlignMol pre-optimization iterations.
+        max_postiters: AlignMol post-optimization iterations.
+
+    Returns:
+        Similarity in [0, 1]. Higher = more similar.
+    """
+    from rdkit import Chem
+    from .shape_alignment import align_and_extract_features
+
+    # Work on a copy so we don't mutate the caller's molecule
+    probe = Chem.RWMol(query_mol)
+
+    try:
+        ref_feats, query_feats, shape_tani, color_tani = align_and_extract_features(
+            ref_mol, probe,
+            opt_param=opt_param,
+            max_preiters=max_preiters,
+            max_postiters=max_postiters,
+        )
+    except (ValueError, RuntimeError):
+        return 0.0
+
+    if not ref_feats or not query_feats:
+        return 0.0
+
+    # OT distance on aligned features
+    dist = wasserstein_pharmacophore_distance(
+        ref_feats, query_feats,
+        alpha=ot_alpha,
+        max_distance=max_distance,
+    )
+    ot_sim = 1.0 - dist
+
+    # Shape quality from alignment (range 0-1 each)
+    shape_quality = (shape_tani + color_tani) / 2.0
+
+    # Blend: mostly OT signal, some shape quality
+    final = blend_alpha * shape_quality + (1.0 - blend_alpha) * ot_sim
+    return max(0.0, min(1.0, final))

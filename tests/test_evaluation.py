@@ -490,3 +490,22 @@ class TestZScoreAggregation:
 
         assert isinstance(result, EvaluationResult)
         assert 0.0 <= result.roc_auc <= 1.0
+
+
+class TestRRFEnsembleGate:
+    """Tests for the two-tier OT safety gate in RRF ensemble scoring."""
+
+    def test_rrf_gate_code_exists(self):
+        """Verify the AUC gate code is present in evaluation.py source."""
+        import inspect
+        from pharmacophore import evaluation as eval_mod
+        source = inspect.getsource(eval_mod)
+        assert 'ot_auc < 0.65' in source, "OT AUC gate at 0.65 not found"
+        assert 'correlation < 0.3' in source, "Correlation gate at 0.3 not found"
+
+    def test_ensemble_evaluate_runs(self, evaluator):
+        """Test that evaluate_ensemble completes without error."""
+        config = EvaluationConfig(n_conformers=5)
+        result = evaluator.evaluate_ensemble(config, quick_mode=True)
+        assert isinstance(result, EvaluationResult)
+        assert 0.0 <= result.roc_auc <= 1.0

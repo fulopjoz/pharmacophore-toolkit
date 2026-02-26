@@ -183,3 +183,72 @@ def pharmacophore_distance(
     normalized = (total_cost + penalty) / max_possible_cost
 
     return min(1.0, normalized)
+
+
+def pharmacophore_similarity_aligned(
+    query_mol,
+    ref_mol,
+    alpha: float = 0.3,
+    spatial_weight: float = 1.0,
+    type_weight: float = 1.0,
+    max_distance: float = 10.0,
+    opt_param: float = 0.5,
+    max_preiters: int = 10,
+    max_postiters: int = 30,
+) -> float:
+    """Score query against reference using aligned pharmacophore features.
+
+    Aligns query onto ref via RDKit shape alignment, then computes Hungarian
+    pharmacophore distance on the aligned features. This ensures both feature
+    sets share the same coordinate frame, fixing the random-AUC bug of the
+    unaligned ``pharmacophore_distance()``.
+
+    Args:
+        query_mol: Query molecule with 3D conformer (a copy is made internally).
+        ref_mol: Reference molecule with 3D conformer.
+        alpha: Blending weight for shape quality vs Hungarian similarity.
+            Final = alpha * shape_quality + (1-alpha) * hungarian_sim.
+        spatial_weight: Weight for spatial distance in cost matrix.
+        type_weight: Weight for type mismatch in cost matrix.
+        max_distance: Spatial distance cap (Angstroms).
+        opt_param: AlignMol balance (0=color, 0.5=balanced, 1=shape).
+        max_preiters: AlignMol pre-optimization iterations.
+        max_postiters: AlignMol post-optimization iterations.
+
+    Returns:
+        Similarity in [0, 1]. Higher = more similar.
+    """
+    from rdkit import Chem
+    from .shape_alignment import align_and_extract_features
+
+    # Work on a copy so we don't mutate the caller's molecule
+    probe = Chem.RWMol(query_mol)
+
+    try:
+        ref_feats, query_feats, shape_tani, color_tani = align_and_extract_features(
+            ref_mol, probe,
+            opt_param=opt_param,
+            max_preiters=max_preiters,
+            max_postiters=max_postiters,
+        )
+    except (ValueError, RuntimeError):
+        return 0.0
+
+    if not ref_feats or not query_feats:
+        return 0.0
+
+    # Hungarian distance on aligned features
+    dist = pharmacophore_distance(
+        ref_feats, query_feats,
+        spatial_weight=spatial_weight,
+        type_weight=type_weight,
+        max_distance=max_distance,
+    )
+    hungarian_sim = 1.0 - dist
+
+    # Shape quality from alignment (range 0-1 each)
+    shape_quality = (shape_tani + color_tani) / 2.0
+
+    # Blend: mostly Hungarian signal, some shape quality
+    final = alpha * shape_quality + (1.0 - alpha) * hungarian_sim
+    return max(0.0, min(1.0, final))

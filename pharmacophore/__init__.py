@@ -74,8 +74,14 @@ except ImportError:
 from .hypogen_optimizer import HypoGenOptimizer
 
 # New modules (Phase 2-5 enhancements)
-from .hungarian_matching import match_features, pharmacophore_distance
-from .ot_scoring import wasserstein_pharmacophore_distance, wasserstein_similarity
+from .hungarian_matching import match_features, pharmacophore_distance, pharmacophore_similarity_aligned
+from .ot_scoring import wasserstein_pharmacophore_distance, wasserstein_similarity, wasserstein_similarity_aligned
+from .shape_alignment import align_and_extract_features
+from .point_cloud_alignment import (
+    colored_icp_align,
+    point_cloud_similarity,
+    point_cloud_similarity_aligned,
+)
 from .ensemble_consensus import EnsembleConsensus
 from .evaluation import compute_sdbw
 
