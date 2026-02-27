@@ -148,7 +148,8 @@ def cluster_features_with_labels(
     occurrence_threshold: float,
     n_molecules: int,
     method: str = 'hierarchical',
-    linkage: str = 'complete'
+    linkage: str = 'complete',
+    filter_by_occurrence: bool = True,
 ) -> Tuple[np.ndarray, List[np.ndarray]]:
     """Cluster features and return native labels alongside centroids.
 
@@ -164,12 +165,18 @@ def cluster_features_with_labels(
         n_molecules: Total number of input molecules.
         method: Clustering algorithm ('hierarchical', 'kmeans', 'grid').
         linkage: For hierarchical only ('average', 'complete', 'single', 'ward').
+        filter_by_occurrence: If True (default), mark points in small clusters
+            as -1 and only return centroids for surviving clusters.  If False,
+            return ALL cluster labels (contiguous, >= 0) and all centroids —
+            the caller is responsible for occurrence filtering.
 
     Returns:
         Tuple of (labels, centroids) where:
             - labels: int array of length N, cluster id per point
-              (-1 for points in clusters below occurrence threshold)
+              (-1 for points in clusters below occurrence threshold
+               when ``filter_by_occurrence=True``)
             - centroids: list of centroid arrays for surviving clusters
+              (or all clusters when ``filter_by_occurrence=False``)
     """
     if len(coords) == 0:
         return np.array([], dtype=int), []
@@ -193,6 +200,11 @@ def cluster_features_with_labels(
         except Exception as e:
             warnings.warn(f"K-means failed: {e}. Returning all features.")
             return np.zeros(len(coords), dtype=int), list(coords)
+
+        if not filter_by_occurrence:
+            # Return raw contiguous labels and all centroids
+            centroids = [kmeans.cluster_centers_[cid] for cid in range(n_clusters)]
+            return raw_labels.astype(int), centroids
 
         # Filter by occurrence and remap labels
         labels = np.full(len(coords), -1, dtype=int)
@@ -222,6 +234,16 @@ def cluster_features_with_labels(
                 bin_groups[key] = []
             bin_groups[key].append(i)
 
+        if not filter_by_occurrence:
+            # Return all bins as clusters, contiguous labels
+            labels = np.zeros(len(coords), dtype=int)
+            centroids = []
+            for cid, indices in enumerate(bin_groups.values()):
+                for idx in indices:
+                    labels[idx] = cid
+                centroids.append(np.mean(coords[indices], axis=0))
+            return labels, centroids
+
         labels = np.full(len(coords), -1, dtype=int)
         centroids = []
         new_id = 0
@@ -243,6 +265,13 @@ def cluster_features_with_labels(
             metric='euclidean',
         )
         raw_labels = clustering.fit_predict(coords)
+
+        if not filter_by_occurrence:
+            # Return raw labels and all centroids
+            centroids = []
+            for cid in sorted(set(raw_labels)):
+                centroids.append(np.mean(coords[raw_labels == cid], axis=0))
+            return raw_labels.astype(int), centroids
 
         labels = np.full(len(coords), -1, dtype=int)
         centroids = []

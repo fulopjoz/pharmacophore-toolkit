@@ -282,22 +282,25 @@ def _consensus_and_evaluate(
                 coords_array = np.array(coordinates)
                 n_molecules = len(set(int(m) for m in mol_indices))
 
-                labels, centroids = cluster_features_with_labels(
+                # filter_by_occurrence=False: return ALL cluster labels
+                # (contiguous, >= 0).  The parent class handles occurrence
+                # filtering via _filter_by_occurrence — we must not pre-filter
+                # or the parent's _calculate_cluster_centroids will crash on -1.
+                labels, _centroids = cluster_features_with_labels(
                     coords=coords_array,
                     tolerance=self.tolerance,
                     occurrence_threshold=self.occurrence_threshold,
                     n_molecules=n_molecules,
                     method=self._method,
                     linkage=self.linkage,
+                    filter_by_occurrence=False,
                 )
-                if len(centroids) == 0:
+                if len(_centroids) == 0:
                     return np.array([]), {}
 
                 cluster_to_mols = {}
                 for cluster_id, mol_idx in zip(labels, mol_indices):
                     cid, mid = int(cluster_id), int(mol_idx)
-                    if cid < 0:
-                        continue  # Skip points below occurrence threshold
                     if cid not in cluster_to_mols:
                         cluster_to_mols[cid] = []
                     if mid not in cluster_to_mols[cid]:
