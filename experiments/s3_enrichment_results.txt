@@ -1,0 +1,33 @@
+actives=74 decoys=498 refs=5
+P4 mean — actives: {'donor': np.float64(2.55), 'acceptor': np.float64(4.15), 'anion': np.float64(0.24), 'cation': np.float64(0.12), 'hydrophobe': np.float64(6.92), 'rings': np.float64(2.99)}
+P4 mean — refs   : {'donor': np.float64(0.6), 'acceptor': np.float64(4.2), 'anion': np.float64(0.2), 'cation': np.float64(0.2), 'hydrophobe': np.float64(13.0), 'rings': np.float64(2.8)}
+
+=== learned S3 weights (arm C logistic coef on P4 counts; mean over folds) ===
+   donor       +0.737  (up — active-specific)
+   hydrophobe  +0.682  (up — active-specific)
+   acceptor    +0.637  (up — active-specific)
+   rings       +0.633  (up — active-specific)
+   anion       +0.294  (up — active-specific)
+   cation      -0.933  (DOWN — decoy-like)
+
+=== held-out enrichment (out-of-fold) ===
+arm             AUC     EF1%     EF5%   BEDROC
+A_equal       0.640    1.288    1.599    0.175
+B_s3_ref      0.873    3.865    5.597    0.604
+C_s3_abs      0.835    1.288    3.199    0.460
+
+=== bootstrap 95% CI on metric difference vs A_equal (1000x) ===
+  B_s3_ref − A_equal:
+     dAUC     = +0.232  CI[+0.157, +0.306]  **excludes 0**
+     dEF1%    = +2.612  CI[-1.490, +6.621]  includes 0 (ns)
+     dBEDROC  = +0.400  CI[+0.239, +0.571]  **excludes 0**
+  C_s3_abs − A_equal:
+     dAUC     = +0.195  CI[+0.109, +0.281]  **excludes 0**
+     dEF1%    = +0.000  CI[-3.078, +2.934]  includes 0 (ns)
+     dBEDROC  = +0.257  CI[+0.088, +0.412]  **excludes 0**
+
+=== DECISION GATE (pre-registered: ΔBEDROC>0 & ΔAUC>0 with bootstrap CI excluding 0) ===
+  S3 reweighting (B) vs equal-weight (A): ΔAUC=+0.233, ΔBEDROC=+0.429
+  VERDICT: GO — S3 beats equal-weight on held-out enrichment; proceed to Tier-2 (3D OpenEye ROCS custom .cff)
+  NOTE: reweighting-to-donor-poor-refs is NOT inert (B BEDROC 0.604 > C 0.460); the other discriminating types (hydrophobe/rings/acceptor) carry the signal.
+  CAVEAT: 2D P4 proxy (not 3D ROCS color); EF1% too noisy at n=74 (CI incl. 0) — AUC/BEDROC carry the conclusion; decoys property-matched (relative enrichment).
