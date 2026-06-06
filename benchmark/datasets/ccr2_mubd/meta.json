@@ -1,0 +1,17 @@
+{
+  "name": "MUBD-CCR2 (Xia et al. 2018)",
+  "target": "CCR2 / P41597",
+  "doi": "10.1021/acs.jcim.8b00004",
+  "source": "MUBD-hCRs GitHub repository (jwxia2014/MUBD-hCRs)",
+  "source_url": "https://github.com/jwxia2014/MUBD-hCRs",
+  "source_files": {
+    "actives": "ligand_set/uploaded_CCR2_1uM_new_ligands.sdf",
+    "decoys": "decoy_set/uploaded_CCR2_1uM_final_decoys.sdf"
+  },
+  "activity_cutoff": "1 uM (pChEMBL >= 6.0)",
+  "n_actives": 60,
+  "n_decoys": 2340,
+  "decoy_type": "max-unbiased",
+  "bias_suspect": false,
+  "notes": "Maximal Unbiased Benchmarking Dataset for human CCR2. Decoys selected by sphere-exclusion to be physically similar but topologically dissimilar to actives. SDF files contain 2D coordinates (SciTegic/Pipeline Pilot format). SMILES extracted via RDKit at load time."
+}

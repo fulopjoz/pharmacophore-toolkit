@@ -1,0 +1,11 @@
+{
+  "target": "MUV-733",
+  "target_name": "GR (Glucocorticoid receptor, NR3C1)",
+  "source": "MUV",
+  "doi": "10.1021/ci8002649",
+  "decoy_type": "max-unbiased",
+  "n_act": 28,
+  "n_dec": 14654,
+  "url": "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/muv.csv.gz",
+  "notes": "MUV decoys are spatially-unbiased PubChem confirmatory-assay negatives. Selection minimises nearest-neighbour, MW/cLogP clustering and topological artefacts (Rohrer & Baumann 2009, doi:10.1021/ci8002649). ~30 actives : ~15 000 decoys per assay (1:500 ratio)."
+}

@@ -1,0 +1,11 @@
+{
+  "name": "CCR2 Project Set (DrugEx CCR2 campaign)",
+  "target": "CCR2 / P41597",
+  "doi": null,
+  "source": "DrugEx CCR2 RL campaign (tutorial/advanced/rocs/rocs_rl_ccr)",
+  "n_actives": 74,
+  "n_decoys": 500,
+  "decoy_type": "property-matched",
+  "bias_suspect": true,
+  "notes": "Actives from Papyrus/ChEMBL30 (pChEMBL >= 6, allosteric CCR2 ligands). Decoys are property-matched (MW, LogP, HBD, HBA) — DUD-E-style generation; analogue bias is possible. FLAG: bias_suspect=true. Used internally for ROCS threshold sweeps and RL reward shaping in the CCR2 de-novo design project. n_actives=74 (1 row is a header duplicate from the 75-row file)."
+}

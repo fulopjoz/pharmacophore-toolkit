@@ -1,34 +1,75 @@
-# Benchmark Suite Spec — for finding the CORRECT consensus-pharmacophore optimizer
+# Benchmark Datasets SPEC
 
-**Goal:** a multi-target, decoy-bias-controlled, scaffold-split benchmark so optimizer selection (greedy / Bayesian / NSGA-II / DOE / combinatorial / learned) is based on **generalization**, not on exploiting one biased CCR2 set. Fixes review findings C2 (overfit/no-held-out) and the unaudited decoy bias.
+## Uniform loader interface
 
-## Requirements (each dataset must provide)
-- **Actives ≥ ~30** (ideally 50+) with SMILES + a target id; **inactives/decoys** with SMILES.
-- **A decoy provenance flag**: `experimental-inactive` (gold) | `max-unbiased` | `property-matched` (bias-suspect).
-- A **Bemis-Murcko scaffold split** (train/test) — provided by the shared tooling, not per-dataset.
-- A uniform on-disk format: `actives.csv` / `decoys.csv` (col `smiles`), + `meta.json` (target, source, DOI, decoy_type, n_act, n_dec).
-- A `load.py` returning `(actives_smiles, decoys_smiles, meta)`; **large raw files gitignored**, only a fetcher + a small validated sample committed.
+Each dataset directory (`litpcba/`, `dude/`, `created/`) must provide a `load.py` with:
 
-## The suite (tiers)
-| Tier | Dataset | Decoy type | Why | Agent |
-|------|---------|-----------|-----|-------|
-| A (gold, unbiased) | **LIT-PCBA** (Tran-Nguyen 2020) | experimental inactives | the modern unbiased VS standard; multi-target | A |
-| A | **MUV** (Rohrer-Baumann 2009) | max-unbiased (spatial stats) | removes analog bias by design; 17 targets | B |
-| B (CCR2-specific) | **Xia 2018 chemokine MUBD** (CCR2) + existing project CCR2 set | max-unbiased / current | directly on-target; compare to current set | C |
-| C (bias control) | **DUD-E** (Mysinger 2012), 2–3 targets incl. a GPCR | property-matched (biased) | the DIAGNOSTIC: detect optimizers that exploit bias | A or C |
-| D (created) | **ChEMBL/PubChem pull** — CCR2 (CHEMBL4015/P41597) + 2 other GPCRs, MUV-style max-Tc-filtered decoys | created max-unbiased | self-contained, reproducible, via database-lookup REST | D |
+```python
+def load(target: str, split: str = "all") -> tuple[list[str], list[str], dict]:
+    """
+    Returns:
+        actives_smiles  – list of canonical SMILES strings (actives / confirmed binders)
+        decoys_smiles   – list of canonical SMILES strings (inactives / decoys)
+        meta            – dict matching the meta.json schema below
+    """
+```
 
-## Cross-cutting tooling (agent E)
-- `benchmark/datasets/split.py` — **Bemis-Murcko scaffold split** (train/test, stratified by label), deterministic seed.
-- `benchmark/datasets/audit.py` — **decoy-bias audit**: max Morgan-Tc(radius2,2048) of each decoy to the nearest active; report the distribution + fraction with Tc>0.35 (analog-bias flag); also property-match check (MW/LogP/HBD/HBA).
-- Both with unit tests (TDD).
+## meta.json schema (per target)
 
-## The decisive diagnostic (how the suite finds the "correct" optimizer)
-Run every optimizer on every dataset's **train scaffold split**, evaluate **once on the held-out test split** (BEDROC α=20 + bootstrap CI). The correct optimizer is the one that:
-1. **ranks highest on average across the unbiased targets** (Tier A+B), and
-2. **does NOT show a large drop from DUD-E→MUV/LIT-PCBA on the same/similar target** (Tier C diagnostic — a big drop = bias-exploitation), and
-3. has **stable rank** across targets (low variance), not one big win.
-Report the per-optimizer × per-dataset BEDROC matrix + a Friedman/Nemenyi rank test across targets (Demšar 2006 style).
+```json
+{
+  "target":      "<target_id>",
+  "source":      "<dataset_name>",
+  "doi":         "<doi_string>",
+  "decoy_type":  "experimental-inactive | property-matched | created-muv-unbiased | ...",
+  "n_act":       123,
+  "n_dec":       45678,
+  "url":         "<download_url>"
+}
+```
 
-## Literature anchors (verified by agent F)
-LIT-PCBA (Tran-Nguyen 2020), MUV (Rohrer-Baumann 2009), DUD-E (Mysinger 2012), DEKOIS 2.0 (Bauer 2013), Xia chemokine MUBD (2018), Wallach-Heifets 2018 (benchmarks reward memorization), Demšar 2006 (comparing algorithms across datasets).
+## File layout
+
+```
+benchmark/
+  datasets/
+    SPEC.md                  ← this file
+    .gitignore               ← ignore large raw files (*.sdf.gz, *.mol2.gz, etc.)
+    litpcba/
+      fetch.py               ← downloader (re-runnable, graceful HTTP failures)
+      load.py                ← returns (actives, decoys, meta)
+      README.md
+      meta_<TARGET>.json     ← one per downloaded target
+      raw/                   ← gitignored large files
+        <TARGET>/
+          actives.smi
+          inactives.smi
+    dude/
+      fetch.py
+      load.py
+      README.md
+      meta_<target>.json
+      raw/
+        <target>/
+          actives_final.ism
+          decoys_final.ism
+    created/
+      build.py               ← reproducible builder (REST API + RDKit)
+      load.py                ← returns (actives, decoys, meta)
+      test_load.py           ← TDD-lite tests
+      README.md
+      <TARGET>/
+        actives.csv          ← col: smiles
+        decoys.csv           ← col: smiles
+        meta.json
+```
+
+## SMILES validity
+
+SMILES strings must be parseable by RDKit (`Chem.MolFromSmiles` not returning None).
+
+## Test convention
+
+Each dataset directory has a `test_load.py` that imports `load.py` and asserts:
+- Both returned lists are non-empty
+- All SMILES are RDKit-parseable (check first 50 from each list)

@@ -1,0 +1,12 @@
+{
+  "target": "adrb2",
+  "target_name": "Beta-2 adrenergic receptor",
+  "source": "DUD-E",
+  "doi": "10.1021/jm300687e",
+  "decoy_type": "property-matched",
+  "bias_warning": "DUD-E decoys are synthetic property-matched compounds from ZINC, NOT experimental inactives. Known to exhibit analogue bias and decoy bias. See: doi:10.1371/journal.pone.0220113",
+  "n_act": 231,
+  "n_dec": 15000,
+  "url": "https://dude.docking.org/",
+  "notes": "Actives from ChEMBL (clustered by Bemis-Murcko scaffold). 50 property-matched decoys per active, topology-dissimilar, net-charge matched. SMILES column 1, ZINC_ID column 2."
+}

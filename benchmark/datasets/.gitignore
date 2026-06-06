@@ -1,0 +1,23 @@
+# benchmark dataset raw data (large, fetched on demand)
+*.csv.gz
+dude/raw/
+!dude/raw/.gitkeep
+!dude/samples/
+# Ignore large raw files — download with fetch.py
+# Keep small sample files and directory markers
+# Large archives (if cached locally)
+# Large raw files — not committed
+litpcba/raw/
+!litpcba/raw/.gitkeep
+!litpcba/samples/
+*.mol2.gz
+muv/raw/
+!muv/raw/.gitkeep
+!muv/samples/
+*.pyc
+__pycache__/
+raw/
+*.sdf.gz
+*.tar.gz
+*.tgz
+*.zip

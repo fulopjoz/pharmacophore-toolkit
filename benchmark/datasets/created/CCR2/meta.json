@@ -1,0 +1,17 @@
+{
+  "target": "CCR2",
+  "name": "C-C chemokine receptor type 2",
+  "chembl_id": "CHEMBL4015",
+  "uniprot_id": "P41597",
+  "source": "ChEMBL REST API",
+  "source_url": "https://www.ebi.ac.uk/chembl/api/data/activity",
+  "decoy_type": "created-muv-unbiased",
+  "decoy_note": "MUV-style unbiased decoys: property-matched (MW\u00b150, ALogP\u00b11.5, HBD\u00b11, HBA\u00b11) + max Morgan-Tc(r=2,2048bits) < 0.35 to all actives across all 3 targets.",
+  "pchembl_threshold": 7.0,
+  "n_act": 1086,
+  "n_dec": 2852,
+  "decoy_tc_cutoff": 0.35,
+  "decoys_per_active_target": 50,
+  "decoy_background": "ChEMBL drug-like pool (MW 200-600 Da)",
+  "reference": "Rohrer & Baumann (2009) J Chem Inf Model 49:169-184"
+}

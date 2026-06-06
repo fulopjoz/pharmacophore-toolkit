@@ -1,0 +1,10 @@
+{
+  "target": "ADRB2",
+  "source": "LIT-PCBA",
+  "doi": "10.1021/acs.jcim.0c00155",
+  "decoy_type": "experimental-inactive",
+  "n_act": 17,
+  "n_dec": 312483,
+  "url": "http://drugdesign.unistra.fr/LIT-PCBA/",
+  "notes": "Inactives are experimentally confirmed from PubChem dose-response assays; actives and inactives are within similar molecular property ranges (AVE-unbiased). SMILES column 1, PubChem CID column 2."
+}
