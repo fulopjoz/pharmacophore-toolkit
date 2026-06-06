@@ -37,6 +37,32 @@ _FACTORY = ChemicalFeatures.BuildFeatureFactory(
     os.path.join(RDConfig.RDDataDir, "BaseFeatures.fdef"))
 _MORGAN = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 
+try:
+    from rdkit.Chem.MolStandardize import rdMolStandardize
+    _LARGEST_FRAGMENT = rdMolStandardize.LargestFragmentChooser()
+except Exception:                                            # pragma: no cover
+    _LARGEST_FRAGMENT = None
+
+
+def _clean_smiles(s):
+    """Desalt to the largest organic fragment and re-canonicalise; None if invalid.
+
+    Multi-component salt SMILES (e.g. ``Br.Br.CCC...``) otherwise pollute every
+    downstream representation -- Morgan bits from the counter-ions, conformer
+    generation on disconnected fragments.  Doing it once here keeps all scorers
+    consistent (review item #4, fixed at the featurization layer)."""
+    mol = Chem.MolFromSmiles(str(s))
+    if mol is None or mol.GetNumAtoms() == 0:
+        return None
+    if "." in str(s) and _LARGEST_FRAGMENT is not None:
+        try:
+            mol = _LARGEST_FRAGMENT.choose(mol)
+        except Exception:
+            pass
+    if mol is None or mol.GetNumAtoms() == 0:
+        return None
+    return Chem.MolToSmiles(mol)
+
 
 # --------------------------------------------------------------------------- data
 @dataclass
@@ -70,6 +96,18 @@ class BenchData:
             return out
 
         a, d = _smiles(actives_csv), _smiles(decoys_csv)
+        return cls.from_lists(a, d, ref_sdf)
+
+    @classmethod
+    def from_lists(cls, actives, decoys, ref_sdf) -> "BenchData":
+        """Build from in-memory SMILES lists (the form the dataset loaders return).
+
+        SMILES are desalted to the largest organic fragment and re-canonicalised
+        so multi-component salt forms (e.g. ``Br.Br.CCC...``) do not corrupt the
+        shared featurizations -- this is the single-place fix for the loaders'
+        lack of desalting (review item #4)."""
+        a = [s for s in (_clean_smiles(x) for x in actives) if s]
+        d = [s for s in (_clean_smiles(x) for x in decoys)  if s]
         return cls(smiles=a + d, y=np.r_[np.ones(len(a)), np.zeros(len(d))], ref_sdf=ref_sdf)
 
     # -- lazy featurizations (each computed once, then cached) --
@@ -172,6 +210,53 @@ def evaluate_oof(name: str, data: BenchData, n_splits: int = 5, seed: int = SEED
 
 def evaluate(name: str, data: BenchData, **kw) -> dict:
     return metrics(data.y, evaluate_oof(name, data, **kw))
+
+
+# ------------------------------------------------------- scaffold-split evaluation
+def _scaffold_indices(data: BenchData, test_frac: float, seed: int):
+    """Train/test indices into `data` from the tested Bemis-Murcko scaffold split."""
+    import sys
+    ddir = os.path.join(os.path.dirname(HERE), "datasets")
+    if ddir not in sys.path:
+        sys.path.insert(0, ddir)
+    from split import scaffold_split_indices
+    tr, te = scaffold_split_indices(list(data.smiles), [int(v) for v in data.y], test_frac, seed)
+    return np.asarray(tr), np.asarray(te)
+
+
+def evaluate_scaffold(name: str, data: BenchData, test_frac: float = 0.25,
+                      seed: int = SEED) -> dict:
+    """Fit a scorer on the scaffold-split TRAIN rows, score the held-out TEST once.
+
+    Unlike :func:`evaluate_oof` (random StratifiedKFold), this uses the
+    scaffold-disjoint split so the reported enrichment reflects generalisation to
+    novel chemotypes.  Returns the test metrics plus the raw test labels/scores
+    (for bootstrap CIs and pairwise deltas in the bake-off driver)."""
+    if name not in REGISTRY:
+        discover()
+    scorer = REGISTRY[name]
+    train_idx, test_idx = _scaffold_indices(data, test_frac, seed)
+    scores = np.asarray(scorer(data, train_idx, test_idx), float)
+    y_te = data.y[test_idx]
+    res = metrics(y_te, scores)
+    res.update(n_test_act=int(y_te.sum()), n_test_dec=int((y_te == 0).sum()),
+               y_te=y_te, scores=scores)
+    return res
+
+
+def bootstrap_metric(y, scores, metric: str = "BEDROC", n: int = 1000, seed: int = SEED):
+    """Median + 95% CI of ONE method's metric on ONE held-out test set."""
+    rng = np.random.default_rng(seed)
+    y, scores = np.asarray(y), np.asarray(scores)
+    vals = []
+    for _ in range(n):
+        idx = rng.integers(0, len(y), len(y))
+        if y[idx].sum() < 3 or (y[idx] == 0).sum() < 3:
+            continue
+        vals.append(metrics(y[idx], scores[idx])[metric])
+    if not vals:
+        return float("nan"), float("nan"), float("nan")
+    return float(np.median(vals)), float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
 
 
 def bootstrap_delta(oof_a, oof_b, y, metric: str, n: int = 1000, seed: int = SEED):

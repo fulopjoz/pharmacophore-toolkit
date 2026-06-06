@@ -19,6 +19,11 @@ Example:
     >>> print(f"Pareto front size: {len(result['pareto_front'])}")
 """
 
+# PEP 563: keep annotations as strings so the optional `optuna.Trial` type hint
+# on _objective() is not evaluated at import time when optuna is absent (else the
+# class body raises NameError, which __init__'s `except ImportError` cannot catch).
+from __future__ import annotations
+
 from typing import List, Dict, Any, Optional
 import time
 import numpy as np
