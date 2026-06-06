@@ -31,11 +31,15 @@ def run_comparison(methods=None, data=None):
         met = harness.metrics(data.y, oof[m])
         row = {"method": m, **{k: round(v, 4) for k, v in met.items()}}
         if base is not None and m != BASELINE:
+            bedroc_lo = 0.0
             for metric in ("BEDROC", "AUC"):
                 md, lo, hi = harness.bootstrap_delta(oof[m], base, data.y, metric, n=1000)
                 row[f"d{metric}_vs_s3"] = round(md, 4)
                 row[f"d{metric}_ci"] = f"[{lo:+.3f},{hi:+.3f}]"
-            row["beats_s3"] = bool(row["dBEDROC_vs_s3"] > 0 and "+" == row["dBEDROC_ci"][1])
+                if metric == "BEDROC":
+                    bedroc_lo = lo
+            # beats S3 iff the bootstrap CI of the BEDROC gain strictly excludes 0
+            row["beats_s3"] = bool(bedroc_lo > 0)
         rows.append(row)
     rows.sort(key=lambda r: -r["BEDROC"])
     return rows

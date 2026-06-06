@@ -57,6 +57,8 @@ def _shape_combo(ref: Chem.Mol, probe: Chem.Mol) -> float:
 def shape_combo_rdkit(data: BenchData, train_idx, test_idx) -> np.ndarray:
     """RDKit TanimotoCombo (shape+color) vs 5 CCR2 refs — unsupervised; train_idx ignored."""
     refs = _load_refs(data)
+    if not refs:                                  # all reference entries failed to parse
+        return np.zeros(len(test_idx), dtype=float)
     scores = np.zeros(len(test_idx), dtype=float)
 
     for out_i, mol_i in enumerate(test_idx):

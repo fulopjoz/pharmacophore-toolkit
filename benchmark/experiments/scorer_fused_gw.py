@@ -107,10 +107,17 @@ def _fgw_sim(C1: np.ndarray, feat1: np.ndarray,
         p = np.ones(n1, dtype=np.float64) / n1
         q = np.ones(n2, dtype=np.float64) / n2
         M = ot.dist(feat1, feat2, metric="sqeuclidean")
+        # normalise M to [0,1] to match C's [0,1] scale, so alpha genuinely
+        # balances feature vs structure (else sqeuclidean spans [0,~5] and the
+        # feature term silently dominates the structural Gromov term).
+        mmax = M.max()
+        if mmax > 0:
+            M = M / mmax
         fgw = float(ot.gromov.fused_gromov_wasserstein2(
             M, C1, C2, p, q, loss_fun="square_loss", alpha=alpha,
         ))
-        return float(np.exp(-fgw))
+        # fgw >= 0 normally → sim ∈ (0,1]; clip guards solver oscillation (fgw<0 → sim>1).
+        return float(min(1.0, np.exp(-fgw)))
     except Exception:
         return 0.0
 

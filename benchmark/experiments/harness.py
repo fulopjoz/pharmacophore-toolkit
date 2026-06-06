@@ -109,7 +109,10 @@ class BenchData:
 
     def _p4_sim_to_refs(self) -> np.ndarray:
         X, refs = self.p4_counts(), self.ref_p4()
-        scale = np.maximum(1.0, np.percentile(np.vstack([X, refs]), 95, axis=0))
+        # Scale from the REFERENCES only (the fixed query side) — never from the
+        # actives/decoys being ranked — so no test-fold statistics leak into the
+        # features under held-out CV.
+        scale = np.maximum(1.0, refs.max(axis=0))
         sims = np.zeros((len(X), len(P4)))
         for j in range(len(P4)):
             d = np.abs(X[:, [j]] - refs[:, j][None, :]) / scale[j]
@@ -162,6 +165,8 @@ def evaluate_oof(name: str, data: BenchData, n_splits: int = 5, seed: int = SEED
     skf = StratifiedKFold(n_splits, shuffle=True, random_state=seed)
     for tr, te in skf.split(np.zeros(len(y)), y):
         oof[te] = scorer(data, tr, te)
+    if np.isnan(oof).any():                                 # post-condition: every row scored
+        raise RuntimeError(f"scorer '{name}' left {int(np.isnan(oof).sum())} rows unscored")
     return oof
 
 
@@ -179,4 +184,6 @@ def bootstrap_delta(oof_a, oof_b, y, metric: str, n: int = 1000, seed: int = SEE
         if y[idx].sum() < 3 or (y[idx] == 0).sum() < 3:
             continue
         diffs.append(metrics(y[idx], oof_a[idx])[metric] - metrics(y[idx], oof_b[idx])[metric])
+    if not diffs:                                            # every resample degenerate (tiny data)
+        return float("nan"), float("nan"), float("nan")
     return float(np.median(diffs)), float(np.percentile(diffs, 2.5)), float(np.percentile(diffs, 97.5))
