@@ -206,6 +206,25 @@ class TestScaffoldSplit(unittest.TestCase):
         self.assertEqual(n_te_act, 3, "stratify should give ~25% of actives in test")
         self.assertEqual(n_te_dec, 3, "stratify should give ~25% of decoys in test")
 
+    def test_split_deterministic_across_hashseed(self):
+        """The split must depend only on `seed`, not on PYTHONHASHSEED — set
+        iteration order over scaffold keys must not leak into the partition."""
+        import subprocess
+        code = (
+            "import sys; sys.path.insert(0, %r)\n"
+            "from split import scaffold_split_indices\n"
+            "act=['C'*n+'N' for n in range(2,32)]; dec=['C'*n+'O' for n in range(2,32)]\n"
+            "sm=act+dec; lab=[1]*30+[0]*30\n"
+            "tr,te=scaffold_split_indices(sm,lab,test_frac=0.25,seed=42,stratify=True)\n"
+            "print(','.join(map(str,sorted(te))))\n"
+        ) % _DATASETS_DIR
+        outs = set()
+        for hs in ("0", "1", "2", "7"):
+            env = dict(os.environ, PYTHONHASHSEED=hs)
+            r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+            outs.add(r.stdout.strip())
+        self.assertEqual(len(outs), 1, f"split varies with PYTHONHASHSEED: {outs}")
+
     def test_raises_when_a_class_cannot_be_split(self):
         """A dataset where all actives share ONE scaffold cannot be scaffold-split
         with actives in both train and test -> must fail loudly, not silently

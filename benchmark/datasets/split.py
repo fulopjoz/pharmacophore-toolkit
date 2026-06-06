@@ -110,7 +110,11 @@ def _assign_test_scaffolds(
     total = sum(group_sizes.values())
     train_target = total * (1.0 - test_frac)
 
-    keys = list(group_sizes.keys())
+    # Sort to a canonical order FIRST so the result depends only on `rng` (the
+    # seed) and not on dict/set iteration order, which is hash-randomized per
+    # process (PYTHONHASHSEED).  Without this the same seed yields different
+    # splits across runs — a silent reproducibility bug for the benchmark.
+    keys = sorted(group_sizes.keys())
     rng.shuffle(keys)                                  # reproducible tie-break
     keys.sort(key=lambda k: group_sizes[k], reverse=True)
 
