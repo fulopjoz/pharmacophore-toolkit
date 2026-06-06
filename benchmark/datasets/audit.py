@@ -148,25 +148,35 @@ def decoy_bias_audit(
         sims = DataStructs.BulkTanimotoSimilarity(dfp, active_fps)
         max_tc_values.append(float(max(sims)))
 
-    arr = np.array(max_tc_values) if max_tc_values else np.zeros(1)
-
-    mean_tc   = float(np.mean(arr))
-    median_tc = float(np.median(arr))
-    p95_tc    = float(np.percentile(arr, 95))
-    frac_35   = float(np.mean(arr > ANALOG_BIAS_TC))
-
     # --- verdict ------------------------------------------------------------ #
-    if frac_35 >= 0.30 or median_tc > ANALOG_BIAS_TC:
-        verdict = "biased (analog leakage)"
-    elif frac_35 >= 0.10 or median_tc > MILD_BIAS_TC:
-        verdict = "mild-bias"
+    # If there are no parseable actives (or no decoys) the similarity audit was
+    # never actually performed -- every decoy would have been assigned max_tc=0.
+    # Returning "unbiased" here is a false negative: it passes a dataset we could
+    # not evaluate.  Report "insufficient_data" with NaN stats instead.
+    if (not active_fps) or (not decoys_smiles):
+        nan = float("nan")
+        mean_tc = median_tc = p95_tc = frac_35 = nan
+        verdict = "insufficient_data"
     else:
-        verdict = "unbiased"
+        arr = np.array(max_tc_values)
+        mean_tc   = float(np.mean(arr))
+        median_tc = float(np.median(arr))
+        p95_tc    = float(np.percentile(arr, 95))
+        frac_35   = float(np.mean(arr > ANALOG_BIAS_TC))
+
+        if frac_35 >= 0.30 or median_tc > ANALOG_BIAS_TC:
+            verdict = "biased (analog leakage)"
+        elif frac_35 >= 0.10 or median_tc > MILD_BIAS_TC:
+            verdict = "mild-bias"
+        else:
+            verdict = "unbiased"
 
     # --- property summaries ------------------------------------------------- #
     def _mean_props(smiles_list: List[str]) -> dict:
-        props = [_properties(s) for s in smiles_list]
         keys = ("mw", "logp", "hbd", "hba")
+        props = [_properties(s) for s in smiles_list]
+        if not props:                       # no molecules -> NaN means, no warning
+            return {k: float("nan") for k in keys}
         return {k: float(np.nanmean([p[k] for p in props])) for k in keys}
 
     act_props = _mean_props(actives_smiles)

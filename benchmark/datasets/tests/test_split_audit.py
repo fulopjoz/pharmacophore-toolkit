@@ -17,7 +17,7 @@ _DATASETS_DIR = os.path.dirname(_HERE)
 if _DATASETS_DIR not in sys.path:
     sys.path.insert(0, _DATASETS_DIR)
 
-from split import scaffold_split, random_split
+from split import scaffold_split, scaffold_split_indices, random_split
 from audit import decoy_bias_audit
 
 
@@ -125,6 +125,97 @@ class TestScaffoldSplit(unittest.TestCase):
         for key in ("train_actives", "test_actives", "train_decoys", "test_decoys"):
             self.assertIn(key, result, f"Missing key: {key}")
 
+    # --- regression tests for the 2026-06-06 code review ------------------- #
+
+    def test_acyclic_molecules_are_separate_groups(self):
+        """#2: distinct acyclic molecules must NOT collapse into one '' group.
+
+        The old _generic_scaffold returned '' for every ring-free molecule, so
+        all acyclic compounds moved together as one indivisible block.
+        """
+        from split import _generic_scaffold
+        acyclics = ["CCCCN", "CCOCCO", "CC(C)CC(=O)O", "CCCCCCCC"]
+        keys = {_generic_scaffold(s) for s in acyclics}
+        self.assertEqual(
+            len(keys), len(acyclics),
+            f"Each distinct acyclic molecule must get its own scaffold key; got {keys}")
+
+    def test_cross_list_scaffold_consistency(self):
+        """#7: a generic scaffold shared by actives AND decoys must land on the
+        SAME split side for both lists (no scaffold crosses train/test at all).
+        """
+        actives = ["c1ccccc1", "c1ccc2ccccc2c1"]      # benzene, naphthalene
+        decoys  = ["Cc1ccccc1", "Cc1ccc2ccccc2c1"]    # benzene, naphthalene
+        r = scaffold_split(actives, decoys, test_frac=0.5, seed=1)
+        act_benzene_side = "test" if "c1ccccc1"  in r["test_actives"] else "train"
+        dec_benzene_side = "test" if "Cc1ccccc1" in r["test_decoys"]  else "train"
+        self.assertEqual(
+            act_benzene_side, dec_benzene_side,
+            "A scaffold shared by actives and decoys must be on the same split side")
+
+    def test_dominant_scaffold_does_not_empty_partition(self):
+        """#1: a dominant scaffold must not be able to empty a partition for
+        ANY seed (the old random-order greedy could dump everything into test).
+        """
+        benzene = ["c1ccccc1", "Cc1ccccc1", "CCc1ccccc1",
+                   "CCCc1ccccc1", "CCCCc1ccccc1", "CCCCCc1ccccc1"]
+        others  = ["c1ccc2ccccc2c1", "c1ccncc1", "c1ccoc1", "c1ccsc1"]
+        actives = ["c1ccccc1", "c1ccc2ccccc2c1"]      # shares benzene + naphthalene
+        decoys  = benzene + others                    # benzene dominates (6 of 10)
+        for seed in range(8):
+            r = scaffold_split(actives, decoys, test_frac=0.5, seed=seed)
+            self.assertGreater(len(r["train_decoys"]), 0, f"seed {seed}: train_decoys empty")
+            self.assertGreater(len(r["test_decoys"]),  0, f"seed {seed}: test_decoys empty")
+            self.assertGreater(len(r["train_actives"]), 0, f"seed {seed}: train_actives empty")
+            self.assertGreater(len(r["test_actives"]),  0, f"seed {seed}: test_actives empty")
+
+    def test_split_indices_consistent_with_smiles_api(self):
+        """scaffold_split_indices must induce exactly the same partition as the
+        SMILES-returning scaffold_split (one tested core, two views)."""
+        smiles = list(ACTIVES) + list(DECOYS)
+        labels = [1] * len(ACTIVES) + [0] * len(DECOYS)
+        train_idx, test_idx = scaffold_split_indices(smiles, labels, test_frac=0.5, seed=42)
+        # No index appears in both partitions; together they cover everything.
+        self.assertEqual(set(train_idx) & set(test_idx), set())
+        self.assertEqual(set(train_idx) | set(test_idx), set(range(len(smiles))))
+        # Same molecule partition as the SMILES API.
+        ref = scaffold_split(ACTIVES, DECOYS, test_frac=0.5, seed=42)
+        test_act_by_idx = {smiles[i] for i in test_idx if labels[i] == 1}
+        self.assertEqual(test_act_by_idx, set(ref["test_actives"]))
+
+    def test_split_indices_no_scaffold_crosses_partition(self):
+        """The index split must keep every scaffold on a single side."""
+        smiles = list(ACTIVES) + list(DECOYS)
+        labels = [1] * len(ACTIVES) + [0] * len(DECOYS)
+        train_idx, test_idx = scaffold_split_indices(smiles, labels, test_frac=0.5, seed=7)
+        train_sc = {_get_generic_scaffold(smiles[i]) for i in train_idx}
+        test_sc  = {_get_generic_scaffold(smiles[i]) for i in test_idx}
+        self.assertEqual(train_sc & test_sc, set())
+
+    def test_stratify_balances_each_class(self):
+        """Stratified split must put ~test_frac of BOTH actives and decoys in test
+        (the pooled split can starve one class -- e.g. 3/74 test actives)."""
+        actives = ["C" * n + "N" for n in range(2, 14)]   # 12 distinct acyclic actives
+        decoys  = ["C" * n + "O" for n in range(2, 14)]   # 12 distinct acyclic decoys
+        smiles = actives + decoys
+        labels = [1] * len(actives) + [0] * len(decoys)
+        train_idx, test_idx = scaffold_split_indices(smiles, labels, test_frac=0.25,
+                                                     seed=3, stratify=True)
+        n_te_act = sum(labels[i] == 1 for i in test_idx)
+        n_te_dec = sum(labels[i] == 0 for i in test_idx)
+        self.assertEqual(n_te_act, 3, "stratify should give ~25% of actives in test")
+        self.assertEqual(n_te_dec, 3, "stratify should give ~25% of decoys in test")
+
+    def test_raises_when_a_class_cannot_be_split(self):
+        """A dataset where all actives share ONE scaffold cannot be scaffold-split
+        with actives in both train and test -> must fail loudly, not silently
+        return a degenerate (empty-partition) split.
+        """
+        actives = ["c1ccccc1", "Cc1ccccc1"]                  # both benzene
+        decoys  = ["c1ccc2ccccc2c1", "Cc1ccc2ccccc2c1"]      # both naphthalene
+        with self.assertRaises(ValueError):
+            scaffold_split(actives, decoys, test_frac=0.5, seed=0)
+
 
 class TestRandomSplit(unittest.TestCase):
     """(b) random_split CAN share scaffolds (no scaffold constraint)."""
@@ -199,6 +290,21 @@ class TestDecoyBiasAudit(unittest.TestCase):
         """When decoys == actives, fraction_above_0_35 must be 1.0."""
         result = decoy_bias_audit(ACTIVES, BIASED_DECOYS)
         self.assertAlmostEqual(result["fraction_above_0_35"], 1.0, places=5)
+
+    def test_empty_actives_not_silently_unbiased(self):
+        """#3: with no actives the audit cannot judge bias; it must NOT report
+        'unbiased' (which would pass a dataset it never actually evaluated).
+        """
+        result = decoy_bias_audit([], list(DECOYS))
+        self.assertNotEqual(
+            result["verdict"], "unbiased",
+            "Empty actives must not yield an 'unbiased' verdict")
+        self.assertEqual(result["verdict"], "insufficient_data")
+
+    def test_all_unparseable_actives_not_silently_unbiased(self):
+        """All-unparseable actives behave like empty actives -> insufficient_data."""
+        result = decoy_bias_audit(["not_a_smiles", "@@@@"], list(DECOYS))
+        self.assertEqual(result["verdict"], "insufficient_data")
 
 
 # ---------------------------------------------------------------------------

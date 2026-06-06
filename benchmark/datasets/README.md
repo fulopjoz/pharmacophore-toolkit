@@ -14,9 +14,14 @@ A **multi-target, decoy-bias-controlled, scaffold-split** suite so optimizer sel
 
 `fetch.py`/`build.py` are re-runnable; large raw files are gitignored (`raw/`, `*.csv.gz`, `*.tgz`, `*.zip`) — only fetchers, loaders, small samples, and `meta.json` are committed. **ADRB2 appears in both LIT-PCBA (unbiased) and DUD-E (biased)** → the shared-target bias-control pair.
 
-## Tooling (TDD, 13/13 green)
-- `split.py` — `scaffold_split(actives, decoys, test_frac=0.25)` → group-disjoint **Bemis-Murcko** train/test (no scaffold in both); `random_split` for comparison.
-- `audit.py` — `decoy_bias_audit(actives, decoys)` → max Morgan-Tc-to-active distribution, fraction>0.35, property match, verdict `unbiased|mild-bias|biased`. **Use as a gate before any optimizer sees a dataset.**
+## Tooling (TDD, 19/19 green)
+- `split.py` — `scaffold_split(actives, decoys, test_frac=0.25)` → group-disjoint **Bemis-Murcko** train/test (no scaffold in both). Actives+decoys are **pooled before grouping**, so a scaffold shared by an active and a decoy lands on the *same* side (no cross-list label conflict). Train is filled largest-first (DeepChem `ScaffoldSplitter` polarity): common scaffolds → train, rare → test (generalisation to novel chemotypes). Raises `ValueError` on a degenerate (empty-partition) split rather than returning it silently. `random_split` provided for comparison.
+- `audit.py` — `decoy_bias_audit(actives, decoys)` → max Morgan-Tc-to-active distribution, fraction>0.35, property match, verdict `unbiased|mild-bias|biased|insufficient_data`. **Use as a gate before any optimizer sees a dataset.** With no parseable actives (or no decoys) it returns `insufficient_data` (NaN stats), never a false `unbiased`.
+
+> **Known limitation (documented, not a bug):** whole-group scaffold movement controls the *global* test fraction (~`test_frac`) but the **per-class** fraction can drift when actives and decoys have different scaffold-size distributions (e.g. created/CCR2 → 11% test-actives, ccr2_mubd → 52%). The comparison stays fair because every optimizer is scored on the *same* split; a stratified-split option is a future addition. Verified: 0 shared scaffolds across train/test on both real datasets; splits deterministic.
+
+### Code-review history
+- **2026-06-06 (`/code-review`, xhigh):** fixed 3 split/gate correctness bugs before wiring the optimizer bake-off — greedy overshoot could empty `train` (split.py), all acyclic molecules collapsed into one `""` scaffold group (split.py), and empty/unparseable actives silently returned `unbiased` (audit.py). Plus cross-list scaffold confound (independent per-list split → same scaffold could be train-active + test-decoy). Remaining dataset-quality items (salt SMILES in `created/load.py`, `assay_type` filter + pool sampling in `created/build.py`) are tracked for the harness/featurization layer.
 
 ## How the suite selects the *correct* optimizer (the decisive protocol)
 1. For each dataset: `decoy_bias_audit` (gate) → `scaffold_split` → optimize on **train**, evaluate **once on held-out test** (BEDROC α=20 + bootstrap CI).
