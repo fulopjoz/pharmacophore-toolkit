@@ -1,0 +1,455 @@
+{
+ "stable_core": [
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.48550/arxiv.2001.07715",
+   "title": "TEASER: Fast and Certifiable Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.48550/arxiv.2103.04357",
+   "title": "IRON: Invariant-based Highly Robust Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.48550/arxiv.2104.14763",
+   "title": "ICOS: Efficient and Highly Robust Rotation Search and Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.48550/arxiv.2112.14381",
+   "title": "COTReg: Coupled Optimal Transport based Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.48550/arxiv.1908.08162",
+   "title": "Globally optimal registration of noisy point clouds",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.3390/s18020544",
+   "title": "A Maximum Feasible Subsystem for Globally Optimal 3D Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.3390/s18113729",
+   "title": "Multi-View Laser Point Cloud Global Registration for a Single Object",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.3389/fbioe.2022.923736",
+   "title": "Genetic Algorithm-Based Optimization for Color Point Cloud Registration",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.1109/TPAMI.2015.2513405",
+   "title": "Go-ICP: A Globally Optimal Solution to 3D ICP Point-Set Registration",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.1109/TPAMI.2017.2773482",
+   "title": "Guaranteed Outlier Removal for Point Cloud Registration with Correspondences",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.1101/2024.06.22.600172",
+   "title": "Point set registration for combining fluorescence microscopy methods",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "point cloud registration global optimization certifiable robust",
+   "doi": "10.1101/2023.05.11.540445",
+   "title": "CLEM-Reg: automated point cloud registration for correlative light/volume EM",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.1007/978-3-030-86523-8_49",
+   "title": "Quantized Gromov-Wasserstein",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.3390/axioms3030335",
+   "title": "The Gromov-Wasserstein Distance: A Brief Overview",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2112.11964",
+   "title": "On a linear Gromov-Wasserstein distance",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2110.10932",
+   "title": "Subspace Detours Meet Gromov-Wasserstein",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2301.12880",
+   "title": "Gromov-Wasserstein Transfer Operators",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2302.04610",
+   "title": "Outlier-Robust Gromov-Wasserstein for Graph Data",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2511.16868",
+   "title": "The Joint Gromov Wasserstein Objective for Multiple Object Matching",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.1811.02834",
+   "title": "Fused Gromov-Wasserstein distance for structured objects",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2401.06266",
+   "title": "Supervised Gromov-Wasserstein Optimal Transport",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2509.01550",
+   "title": "OTMol: Robust Molecular Structure Comparison via Optimal Transport",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.1905.10124",
+   "title": "Sliced Gromov-Wasserstein",
+   "source": "scite",
+   "runs_present": 4
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.1101/2023.09.15.558038",
+   "title": "Unsupervised Alignment in Neuroscience: GW Optimal Transport Toolbox",
+   "source": "paperclip",
+   "runs_present": 4
+  },
+  {
+   "topic": "optimal transport Gromov-Wasserstein shape matching molecules",
+   "doi": "10.48550/arxiv.2307.10093",
+   "title": "Revisiting invariances and introducing priors in Gromov-Wasserstein distances",
+   "source": "paperclip",
+   "runs_present": 4
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/ci2002704",
+   "title": "Rapid Shape-Based Ligand Alignment and Virtual Screening (atom/feature-pair + volume overlap)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/ci200060s",
+   "title": "SHAFTS: Hybrid Approach for 3D Molecular Similarity Calculation. 1.",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1002/jcc.23690",
+   "title": "Shape-based virtual screening with volumetric aligned molecular shapes",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/jm031139y",
+   "title": "Fuzzy Pharmacophore Models from Molecular Alignments (CoVeR VS)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/jm800128k",
+   "title": "Discovery of Novel PPAR Ligands (pharmacophore + 3D shape + electrostatic)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/ci400037y",
+   "title": "Highly Specific Pharmacophore Model for CXCR4 Antagonists",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1021/ci900015b",
+   "title": "Unconventional 2D Shape Similarity Affords Comparable Enrichment as 3D",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1101/2023.11.17.567506",
+   "title": "Enhancing LBVS with 3D Shape Similarity via Distance-Aware Transformer",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.3389/fchem.2018.00315",
+   "title": "Advances in Shape Similarity Methods and Application in Drug Discovery",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1007/s10822-016-9959-3",
+   "title": "ROCS-Derived Features for Virtual Screening",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.1007/s10822-019-00236-6",
+   "title": "Electrostatic-field and surface-shape similarity for VS and pose prediction",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.3390/molecules26237201",
+   "title": "Greedy 3-Point Search (G3PS) for Pharmacophore Alignment",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pharmacophore shape color similarity virtual screening alignment",
+   "doi": "10.48550/arxiv.2411.04130",
+   "title": "ShEPhERD: Diffusing shape, electrostatics, pharmacophores",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1021/jm040163o",
+   "title": "A Shape-Based 3-D Scaffold Hopping Method (ROCS application)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1021/jm8001058",
+   "title": "Assessment of Scaffold Hopping Efficiency by Molecular Interaction Fingerprints",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1021/ci700130j",
+   "title": "Comparison of Field-Based Similarity: CatShape, FBSS, ROCS",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1002/jcc.23603",
+   "title": "gWEGA: GPU-accelerated WEGA for molecular superposition/shape comparison",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1021/ci400139j",
+   "title": "SimG: Alignment-Based Similarity of Small Molecules and Binding Sites",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.48550/arxiv.2410.20660",
+   "title": "TurboHopp: Accelerated Molecule Scaffold Hopping with Consistency Models",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "molecular shape Gaussian overlap ROCS scaffold hopping",
+   "doi": "10.1101/2024.05.03.592355",
+   "title": "A molecular representation to identify isofunctional molecules",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1021/ci600342e",
+   "title": "Optimizing Fragment and Scaffold Docking by Molecular Interaction Fingerprints",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1021/acs.jcim.5b00323",
+   "title": "Discriminative Chemical Patterns: Automatic and Interactive Design",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1021/acs.jcim.2c00242",
+   "title": "Differential Multimolecule Fingerprint (active+inactive sets)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.3390/molecules24122269",
+   "title": "Generative Topographic Mapping of the Docking Conformational Space",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.3390/ph17080992",
+   "title": "Do Molecular Fingerprints Identify Diverse Active Drugs? (No) [published]",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1101/2022.09.20.508800",
+   "title": "Do molecular fingerprints identify diverse active drugs? (no) [preprint dup]",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.26434/chemrxiv-2025-2hh8z-v2",
+   "title": "Efficient Decoy Selection to Improve VS Using ML [chemrxiv v2]",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1021/acs.jcim.3c00218",
+   "title": "Beware of Simple Methods for Structure-Based Virtual Screening",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.3389/fphar.2018.00011",
+   "title": "Decoys Selection in Benchmarking Datasets: Overview and Perspectives",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "interaction fingerprint feature weighting discrimination actives decoys",
+   "doi": "10.1098/rsos.211745",
+   "title": "Spatial extension to extended connectivity interaction features (ECIF)",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1021/acs.jcim.5b00338",
+   "title": "Choosing the Optimal Rigid Receptor for Docking (CSAR 2013/2014)",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1021/ci200501p",
+   "title": "Ligand Aligning Method for Docking: Property-Weighted Vectors",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1098/rsos.240546",
+   "title": "Acetylcholinesterase inhibitors: multi-step similarity + ML + MD",
+   "source": "scite",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1039/d4dd00041b",
+   "title": "iSIM: instant similarity",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1021/acs.jcim.5c02952",
+   "title": "Guiding Similarity Search in Chemical Fragment Spaces with Weighted Fingerprints",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1186/1758-2946-5-26",
+   "title": "Open-source platform to benchmark fingerprints for LBVS",
+   "source": "paperclip",
+   "runs_present": 5
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.5936/csbj.201302009",
+   "title": "Methods for Similarity-based Virtual Screening",
+   "source": "paperclip",
+   "runs_present": 4
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1101/2025.06.16.659994",
+   "title": "Count your bits: similarity measures using larger radius count vectors",
+   "source": "paperclip",
+   "runs_present": 4
+  },
+  {
+   "topic": "pose-free alignment-free molecular similarity fast screening",
+   "doi": "10.1021/acs.jcim.8b00820",
+   "title": "LBVS Using Graph Edit Distance as Molecular Similarity Measure",
+   "source": "paperclip",
+   "runs_present": 4
+  }
+ ],
+ "reproducibility": "5 runs x 6 topics analyzed by DOI-frequency. Overall mean pairwise Jaccard across topics = 0.823 (high reproducibility). STABLE core (>=4/5 runs) = 70 DOIs; VARIABLE (2-3/5) = 10; SPORADIC (1/5) = 16. The robust reproducible signal is the 70-DOI stable core; the 26-DOI variable+sporadic tail is run-dependent noise. The scite 'scientific-record' backbone is deterministic (byte-identical scite sub-lists across all 5 runs for T1-T4); essentially ALL variance comes from the paperclip biomedical layer and a small scite tail, concentrated in Run 3 (the high-recall outlier). Most reproducible topics: T4 (J=0.900, 0 sporadics) and T3 (J=0.883, 0 variable-tier). Least reproducible: T6 (J=0.729, short lists + 'screening' polysemy off-topic noise) and T2 (J=0.761, fast-moving arXiv preprint tail).",
+ "cross_source": "Source overlap by shared DOI is exactly ZERO in every topic \u2014 scite and paperclip return disjoint DOI sets (no single DOI is returned by both engines in any topic), so the two sources are purely COMPLEMENTARY, not corroborating, at the identifier level. Division of labor is consistent: scite supplies the broad CS/physics/cheminformatics + journal record (arXiv robotics/OT preprints, classic J. Chem. Inf. Model. / J. Med. Chem. / J. Comput. Chem. shape/IFP papers, all carrying support/mentions tallies); paperclip supplies the biomedical/PMC + preprint-server layer (bioRxiv/medRxiv/chemrxiv, TPAMI, Nature Comms, plus the microscopy and neuroscience alignment literature). Per-topic stable-core source split: T1 = 8 scite-stable + 4 paperclip-stable; T2 = 7 scite + 6 paperclip (incl. Fused-GW, OTMol, Supervised-GW from paperclip); T3 = 8 scite + 8 paperclip; T4 = 7 scite + 3 paperclip; T5 = 7 scite + 3 paperclip; T6 = 3 scite + 6 paperclip (paperclip dominates the fingerprint/benchmark layer here). Net: scite anchored 41/70 stable-core papers, paperclip anchored 29/70. CONVERGENCE happens at the TOPIC/concept level even though DOIs never coincide \u2014 e.g. both sources independently populate the Gromov-Wasserstein and shape-similarity cores from different document pools \u2014 which is the strongest reproducibility signal: two independent retrieval systems agree the same sub-literatures are central. The only near-duplicate cross-source contact is content-level (same decoy-selection paper: scite chemrxiv DOI vs paperclip published DOI), confirming the two engines cover the SAME work via different identifiers rather than truly disjoint science.",
+ "per_topic_jaccard": "Mean pairwise Jaccard (10 run-pairs each): T1 point-cloud-registration=0.791; T2 Gromov-Wasserstein=0.761; T3 pharmacophore/shape-VS=0.883; T4 ROCS/scaffold-hopping=0.900; T5 interaction-fingerprint/decoys=0.872; T6 pose-free/alignment-free=0.729. Cross-topic mean=0.823. Stable/variable/sporadic counts per topic: T1 12/2/7, T2 13/2/4, T3 16/0/2, T4 10/2/0, T5 10/2/1, T6 9/2/2. Run identicality: the scite-sourced sub-lists are 100% identical across all 5 runs in T1-T4 (deterministic); divergence is driven almost entirely by paperclip ordering/recall and was maximal in Run 3 (which inflated T1 to 19 and T2 to 18 entries, adding 7 and 3 sporadics respectively)."
+}
