@@ -13,6 +13,12 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import P4  # noqa: E402
 
+# Gaussian width for the ESP (electrostatic) overlap. Deliberately broader than the
+# color overlap (default 0.5; sigma~1.0 A) because point-charge electrostatics are
+# diffuse: alpha=0.3 ~ sigma~1.3 A, in the spirit of ShaEP's field width (Vainio 2009,
+# 10.1021/ci800315d). Exposed as an env var so it is not a hidden, hand-tuned knob.
+_ESP_ALPHA = float(os.environ.get("BAKEOFF_ESP_ALPHA", "0.3"))
+
 
 def per_type_overlap(ref_pts: dict, qry_pts: dict, alpha: float = 0.5) -> np.ndarray:
     """Gaussian Tanimoto overlap per P4 feature type.
@@ -134,7 +140,7 @@ def align_decompose(query_mol, template_mol, alpha: float = 0.5,
         vec = per_type_overlap(ref_pts, feature_points(probe, qc.GetId()), alpha)
         if with_esp:
             q_cxyz, q_cq = charge_points(probe, qc.GetId())
-            vec = np.append(vec, esp_overlap(ref_cxyz, ref_cq, q_cxyz, q_cq, alpha=0.3))
+            vec = np.append(vec, esp_overlap(ref_cxyz, ref_cq, q_cxyz, q_cq, alpha=_ESP_ALPHA))
         if vec[:len(P4)].sum() > best_sum:
             best, best_sum = vec, vec[:len(P4)].sum()
     return best

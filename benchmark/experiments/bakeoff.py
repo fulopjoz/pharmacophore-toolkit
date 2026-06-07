@@ -45,10 +45,16 @@ from harness import (BenchData, discover, evaluate_scaffold, bootstrap_metric,  
 from audit import decoy_bias_audit  # noqa: E402
 
 # (display name, load.py relpath, how to call its load())
+# (display name, load.py relpath, how to call load(), reference SDF for the ref-based
+# scorers). The ref SDF is per-dataset ON PURPOSE: the reference-based scorers
+# (shape_combo, rdshape_ensemble, pharm2d, learned_scorer, s3_weighted, equal_weight)
+# align to these references, so a CCR2 SDF is INVALID for CCR5/CXCR4. Adding a non-CCR2
+# dataset requires its own reference SDF (or None -> load_bench raises) — PRISM is the
+# only method that is target-agnostic (it derives its query from the train actives).
 DATASET_SPECS = [
-    ("ccr2_project", "ccr2_project/load.py", lambda m: m.load()),
-    ("ccr2_mubd",    "ccr2_mubd/load.py",    lambda m: m.load()),
-    ("created_CCR2", "created/load.py",       lambda m: m.load("CCR2")),
+    ("ccr2_project", "ccr2_project/load.py", lambda m: m.load(),       REF_SDF),
+    ("ccr2_mubd",    "ccr2_mubd/load.py",    lambda m: m.load(),       REF_SDF),
+    ("created_CCR2", "created/load.py",      lambda m: m.load("CCR2"), REF_SDF),
 ]
 
 FAST_METHODS = ["equal_weight", "s3_weighted", "differential_mmfp", "pharm2d"]
@@ -72,10 +78,15 @@ def _load_loader(relpath):
     return mod
 
 
-def load_bench(relpath, caller) -> tuple[BenchData, dict]:
+def load_bench(relpath, caller, ref_sdf) -> tuple[BenchData, dict]:
+    if not ref_sdf or not os.path.exists(ref_sdf):
+        raise NotImplementedError(
+            f"dataset '{relpath}' has no valid reference SDF ({ref_sdf!r}). The ref-based "
+            "scorers need per-target references; CCR2 refs are NOT valid for other targets. "
+            "Supply a target-specific SDF in DATASET_SPECS, or run PRISM-only on this set.")
     mod = _load_loader(relpath)
     actives, decoys, meta = caller(mod)
-    data = BenchData.from_lists(actives, decoys, REF_SDF)
+    data = BenchData.from_lists(actives, decoys, ref_sdf)
     return data, meta
 
 
@@ -280,9 +291,9 @@ def main():
 
     print(f"Bake-off: methods={methods}\n          datasets={[s[0] for s in specs]}")
     results, bedroc_by_ds = {}, {}
-    for ds_name, relpath, caller in specs:
+    for ds_name, relpath, caller, ref_sdf in specs:
         try:
-            data, _meta = load_bench(relpath, caller)
+            data, _meta = load_bench(relpath, caller, ref_sdf)
         except Exception as e:
             print(f"\n### {ds_name}: LOAD FAILED: {type(e).__name__}: {e}")
             continue
