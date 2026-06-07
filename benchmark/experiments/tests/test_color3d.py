@@ -5,7 +5,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from color3d import per_type_overlap, embed, feature_points, align_decompose  # noqa: E402
+from color3d import per_type_overlap, embed, feature_points, align_decompose, charge_points, esp_overlap  # noqa: E402
 from harness import P4  # noqa: E402  ["donor","acceptor","anion","cation","hydrophobe","rings"]
 
 
@@ -65,3 +65,26 @@ def test_align_decompose_self_is_high_color():
 
 def test_align_decompose_returns_zero_vector_on_bad_input():
     assert np.allclose(align_decompose(None, None, alpha=0.5), 0.0)
+
+
+def test_esp_overlap_identical_is_one():
+    xyz = np.array([[0,0,0],[1.5,0,0]], float); q = np.array([0.3,-0.3], float)
+    assert abs(esp_overlap(xyz, q, xyz, q, alpha=0.3) - 1.0) < 1e-9
+
+def test_esp_overlap_sign_flip_is_minus_one():
+    xyz = np.array([[0,0,0]], float)
+    assert abs(esp_overlap(xyz, np.array([0.5]), xyz, np.array([-0.5]), alpha=0.3) + 1.0) < 1e-9
+
+def test_esp_overlap_far_apart_near_zero():
+    assert abs(esp_overlap(np.array([[0,0,0]]), np.array([0.5]),
+                           np.array([[50,0,0]]), np.array([0.5]), alpha=0.3)) < 1e-6
+
+def test_charge_points_returns_coords_and_charges():
+    m = embed("c1ccccc1O", nconf=1, seed=42)
+    xyz, q = charge_points(m, m.GetConformer(0).GetId())
+    assert xyz.shape[0] == q.shape[0] >= 1 and np.isfinite(q).all()
+
+def test_align_decompose_with_esp_has_seven_columns():
+    m = embed("c1ccc(CCN)cc1O", nconf=2, seed=42)
+    vec = align_decompose(m, m, alpha=0.5, with_esp=True)
+    assert vec.shape == (7,) and np.isfinite(vec).all()

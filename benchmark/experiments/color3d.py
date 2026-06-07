@@ -71,19 +71,59 @@ def feature_points(mol, conf_id: int) -> dict:
     return {t: np.asarray(v, float).reshape(-1, 3) for t, v in acc.items()}
 
 
-def align_decompose(query_mol, template_mol, alpha: float = 0.5) -> np.ndarray:
-    """Align query to template (shape+color pose) and return the 6 per-type color overlaps.
+def charge_points(mol, conf_id: int):
+    """(coords (n,3), gasteiger charges (n,)) for the given conformer."""
+    if not mol.GetAtomWithIdx(0).HasProp("_GasteigerCharge"):
+        AllChem.ComputeGasteigerCharges(mol)
+    conf = mol.GetConformer(conf_id)
+    xyz, q = [], []
+    for a in mol.GetAtoms():
+        c = a.GetDoubleProp("_GasteigerCharge")
+        if not np.isfinite(c):
+            c = 0.0
+        p = conf.GetAtomPosition(a.GetIdx())
+        xyz.append([p.x, p.y, p.z])
+        q.append(c)
+    return np.asarray(xyz, float), np.asarray(q, float)
+
+
+def _q_gauss(A_xyz, A_q, B_xyz, B_q, alpha):
+    if len(A_xyz) == 0 or len(B_xyz) == 0:
+        return 0.0
+    d2 = ((A_xyz[:, None, :] - B_xyz[None, :, :]) ** 2).sum(-1)
+    return float((np.outer(A_q, B_q) * np.exp(-alpha * d2)).sum())
+
+
+def esp_overlap(A_xyz, A_q, B_xyz, B_q, alpha: float = 0.3) -> float:
+    """Carbo electrostatic-similarity index in [-1,1]; same-sign charges that coincide
+    score high. C = O_AB / sqrt(O_AA*O_BB)."""
+    o_ab = _q_gauss(A_xyz, A_q, B_xyz, B_q, alpha)
+    o_aa = _q_gauss(A_xyz, A_q, A_xyz, A_q, alpha)
+    o_bb = _q_gauss(B_xyz, B_q, B_xyz, B_q, alpha)
+    denom = (o_aa * o_bb) ** 0.5
+    return float(o_ab / denom) if denom > 1e-12 else 0.0
+
+
+def align_decompose(query_mol, template_mol, alpha: float = 0.5,
+                    with_esp: bool = False) -> np.ndarray:
+    """Align query to template (shape+color pose) and return per-type color overlaps.
+
+    When with_esp=False (default) returns a length-6 array (per-P4-type 3D color
+    overlaps); when with_esp=True returns length-7 — the 6 color overlaps plus a
+    Carbo ESP scalar computed on the same best-color pose (consistent with prism).
 
     Template uses its first conformer; the query is tried over all its conformers and the
-    pose with the largest total per-type overlap is kept. rdShapeAlign mutates the probe
-    copy's coordinates to the aligned pose, which feature_points() then reads."""
+    pose with the largest total per-type color overlap is kept. rdShapeAlign mutates the
+    probe copy's coordinates to the aligned pose, which feature_points() then reads."""
+    width = len(P4) + (1 if with_esp else 0)
     if query_mol is None or template_mol is None:
-        return np.zeros(len(P4), dtype=float)
+        return np.zeros(width, dtype=float)
     if query_mol.GetNumConformers() == 0 or template_mol.GetNumConformers() == 0:
-        return np.zeros(len(P4), dtype=float)
+        return np.zeros(width, dtype=float)
     ref_conf = template_mol.GetConformer(0).GetId()
     ref_pts = feature_points(template_mol, ref_conf)
-    best, best_sum = np.zeros(len(P4), dtype=float), -1.0
+    ref_cxyz, ref_cq = charge_points(template_mol, ref_conf) if with_esp else (None, None)
+    best, best_sum = np.zeros(width, dtype=float), -1.0
     for qc in query_mol.GetConformers():
         probe = Chem.Mol(query_mol)
         try:
@@ -91,8 +131,10 @@ def align_decompose(query_mol, template_mol, alpha: float = 0.5) -> np.ndarray:
                                   probeConfId=qc.GetId(), useColors=True, opt_param=0.5)
         except (RuntimeError, ValueError):
             continue
-        qry_pts = feature_points(probe, qc.GetId())
-        vec = per_type_overlap(ref_pts, qry_pts, alpha)
-        if vec.sum() > best_sum:
-            best, best_sum = vec, vec.sum()
+        vec = per_type_overlap(ref_pts, feature_points(probe, qc.GetId()), alpha)
+        if with_esp:
+            q_cxyz, q_cq = charge_points(probe, qc.GetId())
+            vec = np.append(vec, esp_overlap(ref_cxyz, ref_cq, q_cxyz, q_cq, alpha=0.3))
+        if vec[:len(P4)].sum() > best_sum:
+            best, best_sum = vec, vec[:len(P4)].sum()
     return best
