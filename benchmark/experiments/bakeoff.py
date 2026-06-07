@@ -180,9 +180,10 @@ def friedman_nemenyi(bedroc_by_ds, methods):
 
 
 def write_report(results, fried, methods, args):
-    os.makedirs(RESULTS_DIR, exist_ok=True)
-    tsv = os.path.join(RESULTS_DIR, "bakeoff_master.tsv")
-    md = os.path.join(RESULTS_DIR, "BAKEOFF.md")
+    out_dir = getattr(args, "out_dir", "") or RESULTS_DIR
+    os.makedirs(out_dir, exist_ok=True)
+    tsv = os.path.join(out_dir, "bakeoff_master.tsv")
+    md = os.path.join(out_dir, "BAKEOFF.md")
 
     with open(tsv, "w") as f:
         f.write("dataset\tverdict\tmethod\tBEDROC\tBEDROC_lo\tBEDROC_hi\tAUC\tAUC_lo\tAUC_hi\t"
@@ -282,6 +283,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--test-frac", type=float, default=0.25)
     ap.add_argument("--bootstrap", type=int, default=1000)
+    ap.add_argument("--out-dir", dest="out_dir", default="",
+                    help="results dir (default benchmark/results); per-seed runs set this")
     args = ap.parse_args()
 
     discover()
