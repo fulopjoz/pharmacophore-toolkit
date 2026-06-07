@@ -52,7 +52,8 @@ DATASET_SPECS = [
 ]
 
 FAST_METHODS = ["equal_weight", "s3_weighted", "differential_mmfp", "pharm2d"]
-SLOW_METHODS = ["shape_combo_rdkit", "rdshape_ensemble", "learned_scorer", "prism"]
+SLOW_METHODS = ["shape_combo_rdkit", "rdshape_ensemble", "learned_scorer",
+                "prism", "prism_fixed", "prism_esp"]
 ALL_METHODS = FAST_METHODS + SLOW_METHODS
 BASELINE = "s3_weighted"
 
