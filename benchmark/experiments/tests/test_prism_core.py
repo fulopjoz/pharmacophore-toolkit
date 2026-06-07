@@ -29,3 +29,13 @@ def test_feature_matrix_color_only_shape():
     X = feature_matrix(data, tmpls, with_esp=False, nconf=2, njobs=1)
     assert X.shape == (len(data.smiles), len(tmpls) * len(P4))   # K*6
     assert np.all(np.isfinite(X))
+
+
+def test_feature_matrix_with_esp_is_seven_wide():
+    """Regression guard: with_esp=True must yield K*7 columns (6 color + 1 ESP),
+    so an accidental with_esp drop can't silently degrade prism_esp to non-ESP."""
+    data = _data()
+    tmpls = make_templates(["c1ccc(CCN)cc1O"], nconf=2, max_templates=4)
+    X = feature_matrix(data, tmpls, with_esp=True, nconf=2, njobs=1)
+    assert X.shape == (len(data.smiles), len(tmpls) * (len(P4) + 1))   # K*7
+    assert np.all(np.isfinite(X))

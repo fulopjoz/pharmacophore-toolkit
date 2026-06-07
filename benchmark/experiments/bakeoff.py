@@ -66,7 +66,8 @@ BASELINE = "s3_weighted"
 # Studentized-range / sqrt(2) critical values q_alpha for Nemenyi at alpha=0.05,
 # indexed by number of methods k (Demsar 2006, Table 5).
 _Q05 = {2: 1.960, 3: 2.343, 4: 2.569, 5: 2.728, 6: 2.850, 7: 2.949,
-        8: 3.031, 9: 3.102, 10: 3.164}
+        8: 3.031, 9: 3.102, 10: 3.164, 11: 3.219, 12: 3.268, 13: 3.313,
+        14: 3.354, 15: 3.391, 16: 3.426}
 
 
 def _load_loader(relpath):
@@ -171,7 +172,7 @@ def friedman_nemenyi(bedroc_by_ds, methods):
     except Exception:
         chi2, p = float("nan"), float("nan")
 
-    q = _Q05.get(k, 3.164)
+    q = _Q05.get(k, max(_Q05.values()))   # conservative fallback for k beyond the table
     cd = q * math.sqrt(k * (k + 1) / (6.0 * N))
     return {"included": complete, "avg_ranks": dict(zip(complete, avg_ranks.tolist())),
             "friedman_chi2": float(chi2), "friedman_p": float(p), "nemenyi_cd": float(cd),
