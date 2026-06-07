@@ -32,3 +32,38 @@ Cross-dataset avg rank (lower=better): differential_mmfp 1.33 · **s3_3d 1.67** 
 - **GO** to port the per-(type × template) weights `w[t,f]` into the DrugEx production `rocs_*` color path (Phase 2/3 of `COLOR_SCORING_AUDIT_AND_PLAN.md`): a discrimination-weighted ColorTanimoto / gated PRCD color objective, with weights fit on the 74 CCR2 actives vs decoys.
 - **Power the test:** add MUV + LIT-PCBA (truly unbiased) and CCR5/CXCR4 (cross-target) so the Friedman test has N≥6 and the canary is forced down — confirming `s3_3d` robustness where even 2D memorization should fail.
 - **Structural ground-truth:** color is pose-blind; validate winning candidates with dock + PLIP essential-contact recapitulation (the project's existing endpoint), not color alone.
+
+---
+
+## Multi-seed confirmation — 10 scaffold-split seeds (job array 10411, 2026-06-07)
+
+`BAKEOFF_MULTISEED.md` — BEDROC mean ± across-seed 95% CI + PAIRED deltas (same split per
+seed). This adds the split-choice variance a single-split bootstrap cannot see. (PRISM is
+the renamed s3_3d.)
+
+**1. The learned weighting is causal — `prism − prism_fixed` is CI-separated on ALL three datasets:**
+- ccr2_project (unbiased gate): +0.040 [+0.018,+0.063], >0 in 90% of seeds
+- ccr2_mubd (max-unbiased): +0.096 [+0.026,+0.166], 80%
+- created_CCR2: +0.027 [+0.026,+0.029], 100%
+`prism_fixed` shares prism's *byte-identical* cached features, so this isolates ONLY
+learned-vs-fixed weighting. Confirmed: the discrimination weighting (not the 3D features
+alone) drives PRISM's win.
+
+**2. Electrostatics (`prism_esp`) adds real signal where it's hard, and is null where it's easy — the opposite of overfitting:**
+- ccr2_project (easy/property-matched): +0.000 [-0.001,+0.002] — NULL (CI includes 0)
+- ccr2_mubd (max-unbiased): +0.054 [+0.020,+0.087], 80% — CI-separated POSITIVE
+- created_CCR2: +0.006 [+0.005,+0.006], 100% — small CI-separated positive
+ESP helps on the unbiased/hard sets, not the biased/easy one → genuine electrostatic
+discrimination, not overfitting capacity. Keep prism_esp.
+
+**3. Top BEDROC per dataset (10-seed mean):** ccr2_project prism/prism_esp 0.981; ccr2_mubd
+prism_esp 0.310 / prism 0.257 (unweighted 3D shape_combo 0.007, rdshape 0.020 ≈ random);
+created_CCR2 prism_esp 0.954 / prism 0.948. Unweighted 3D collapses on MUBD; PRISM holds.
+
+**Honest boundary:** the 2D Morgan canary still tops MUBD (0.817) = residual decoy bias;
+and 10 seeds tighten per-dataset CIs but do NOT power the Friedman test (correlated
+resamples). Powering it needs more TARGETS (CCR5/CXCR4, MUV/LIT-PCBA) — the next step.
+
+**Production recommendation:** port the discrimination-weighted color (PRISM weights) into
+the DrugEx `rocs_*` reward as the gated PRCD color objective; optionally include the ESP
+channel. Validate winners with dock+PLIP (color is pose-blind).
