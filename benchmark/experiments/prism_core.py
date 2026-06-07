@@ -57,12 +57,24 @@ def prism_features(data: BenchData, train_idx, with_esp: bool):
     """Shared scorer preamble: TRAIN-derived templates + the (n, K*(6|7)) feature matrix.
 
     Returns ``(X, tr)`` where ``tr = np.asarray(train_idx)``, or ``(None, tr)`` if no
-    templates could be built (caller then returns a zero score vector)."""
+    templates could be built (caller then returns a zero score vector).
+
+    The (expensive, conformer-heavy) feature matrix is cached on ``data._cache`` keyed by
+    ``with_esp`` + the train split, so the three prism scorers built on the SAME data and
+    split reuse it: prism + prism_fixed (both with_esp=False) share ONE build — which both
+    avoids ~2x redundant 3D work in the bake-off AND guarantees the ablation compares
+    byte-identical features."""
     tr = np.asarray(train_idx)
+    ckey = "_prism_X_esp" if with_esp else "_prism_X_color"
+    cached = data._cache.get(ckey)
+    if cached is not None and np.array_equal(cached[0], tr):
+        return cached[1], tr
+
     train_act = [data.smiles[i] for i in tr if data.y[i] == 1]
     tmpl_mols = make_templates(train_act, nconf=NCONF, max_templates=MAX_TEMPLATES, seed=SEED)
     if not tmpl_mols:
         return None, tr
     X = feature_matrix(data, tmpl_mols, with_esp=with_esp, nconf=NCONF, njobs=NJOBS,
                        alpha=ALPHA, seed=SEED)
+    data._cache[ckey] = (tr.copy(), X)
     return X, tr
