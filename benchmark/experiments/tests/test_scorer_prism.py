@@ -1,4 +1,4 @@
-"""Smoke test for the s3_3d scorer: registers + runs end-to-end, aligned length."""
+"""Smoke test for the prism scorer: registers + runs end-to-end, aligned length."""
 import os
 import sys
 
@@ -8,9 +8,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from harness import BenchData, discover, REGISTRY  # noqa: E402
 
 
-def test_s3_3d_registers_and_scores_aligned_length():
+def test_prism_registers_and_scores_aligned_length():
     discover()
-    assert "s3_3d" in REGISTRY
+    assert "prism" in REGISTRY
     act = ["c1ccc(CCN)cc1O", "c1ccc(CCN)cc1", "c1ccc2ccccc2c1CN"]
     dec = ["CCCCCCN", "CCCCCCO", "CCCCCCCC"]
     ref = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..",
@@ -18,6 +18,6 @@ def test_s3_3d_registers_and_scores_aligned_length():
     data = BenchData.from_lists(act, dec, ref)
     train_idx = np.array([0, 1, 3, 4])
     test_idx = np.array([2, 5])
-    scores = REGISTRY["s3_3d"](data, train_idx, test_idx)
+    scores = REGISTRY["prism"](data, train_idx, test_idx)
     assert scores.shape == (2,)
     assert np.all(np.isfinite(scores))
