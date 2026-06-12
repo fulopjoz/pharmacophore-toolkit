@@ -1,5 +1,10 @@
 # PRISM beyond CCR2 — cold-start, low-diversity & a point-cloud consensus P4
 
+> **STATUS: PARKED FINDINGS (not active work).** §4 (point-cloud registration + diffusion
+> pharmacophore generation) and the broader cold-start research are documented here for the
+> future but are explicitly **deferred** — the active plan is to *finish* the validated CCR2
+> production path (PRISM → DrugEx reward), see `docs/research/PRISM_DRUGEX_PORT_PLAN.md`.
+
 **Date:** 2026-06-07 · scite literature sweep + scientific-critical-thinking + superpowers planning.
 **Why:** PRISM is validated on CCR2 (learned discrimination weighting is causal; ESP helps on unbiased decoys; 10-seed `BAKEOFF_MULTISEED.md`). The open challenge is *new* targets whose data breaks PRISM's two requirements — **supervision (actives + decoys)** and **chemotype diversity (multiple templates)**:
 - **IDP target, 1 known binder** (a green-tea natural product — almost certainly EGCG): no supervision, no diversity.
